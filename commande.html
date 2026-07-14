@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer ma chanson - Lamio Melody</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --gold: #d4af37;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --error: #ef4444;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body { background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 100px; }
+
+        header { background: var(--card); padding: 1rem; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        header h1 { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .container { max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+
+        .progress-container { margin-bottom: 2rem; }
+        .progress-bar { height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--gold)); width: 12.5%; transition: width 0.4s ease; }
+        .step-indicator { text-align: center; margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-light); font-weight: 600; }
+
+        .step { display: none; animation: fadeIn 0.3s ease; }
+        .step.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h2 { font-size: 1.4rem; margin-bottom: 0.5rem; text-align: center; }
+        .subtitle { text-align: center; color: var(--text-light); margin-bottom: 2rem; font-size: 0.95rem; }
+
+        .grid-choices { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 1.5rem; }
+        .choice-btn {
+            background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 1rem;
+            text-align: center; cursor: pointer; transition: all 0.2s; font-weight: 500; font-size: 0.95rem;
+            display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+        }
+        .choice-btn:hover { border-color: var(--primary); }
+        .choice-btn.selected { border-color: var(--primary); background: #f3f0ff; color: var(--primary-dark); font-weight: 700; }
+        .choice-btn .icon { font-size: 1.5rem; }
+
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; font-weight: 600; margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .required::after { content: " *"; color: var(--error); }
+        .optional { font-weight: 400; color: var(--text-light); font-size: 0.85rem; }
+        
+        input[type="text"], input[type="number"], input[type="email"], input[type="tel"], textarea, select {
+            width: 100%; padding: 0.875rem; border: 2px solid var(--border); border-radius: 10px;
+            font-size: 1rem; transition: border 0.2s; background: var(--card);
+        }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); }
+        textarea { resize: vertical; min-height: 100px; }
+        .helper { font-size: 0.8rem; color: var(--text-light); margin-top: 0.25rem; }
+
+        .autre-field { display: none; margin-top: 1rem; animation: fadeIn 0.3s; }
+        .autre-field.visible { display: block; }
+
+        /* Cartes d'offres améliorées */
+        .offer-card {
+            background: var(--card); border: 2px solid var(--border); border-radius: 16px; padding: 1.5rem;
+            margin-bottom: 1rem; cursor: pointer; transition: all 0.3s; position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .offer-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .offer-card.selected { border-color: var(--gold); background: linear-gradient(135deg, #fffdf5, #fff); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3); }
+        .offer-card.selected::after {
+            content: "✓ Choisi";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--gold);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .offer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .offer-title { font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .offer-price { font-weight: 800; color: var(--gold); font-size: 1.3rem; }
+        .offer-voice { font-size: 0.9rem; color: var(--primary); font-weight: 600; margin-bottom: 0.5rem; }
+        .offer-features { list-style: none; font-size: 0.85rem; color: var(--text-light); }
+        .offer-features li { padding: 0.25rem 0; }
+        .offer-features li::before { content: "✓ "; color: var(--success); font-weight: bold; margin-right: 0.25rem; }
+        .offer-plus { 
+            background: rgba(212, 175, 55, 0.1); 
+            border-left: 3px solid var(--gold); 
+            padding: 0.5rem; 
+            margin-top: 0.5rem; 
+            font-size: 0.85rem; 
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .nav-buttons { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); padding: 1rem; display: flex; gap: 1rem; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 90; }
+        .btn { flex: 1; padding: 1rem; border: none; border-radius: 10px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.2s; }
+        .btn-secondary { background: var(--border); color: var(--text); }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--gold)); color: white; }
+        .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .summary-card { background: var(--card); border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-left: 5px solid var(--gold); margin-bottom: 1.5rem; }
+        .summary-row { display: flex; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-label { font-weight: 600; color: var(--text-light); font-size: 0.9rem; }
+        .summary-value { font-weight: 600; color: var(--text); text-align: right; max-width: 60%; }
+
+        .error-msg { color: var(--error); font-size: 0.85rem; margin-top: 0.5rem; display: none; }
+        .error-msg.visible { display: block; }
+
+        @media (max-width: 480px) {
+            .grid-choices { grid-template-columns: 1fr 1fr; }
+            .container { margin: 1rem auto; }
+            .offer-price { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🎵 Lamio Melody</h1>
+</header>
+
+<div class="container">
+    <div class="progress-container">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="step-indicator" id="stepIndicator">Étape 1 sur 8</div>
+    </div>
+
+    <!-- ÉTAPE 1 : CHOISIR L'OFFRE/LM VOICE (NOUVELLE ÉTAPE 1) -->
+    <div class="step active" id="step1">
+        <h2>Choisissez votre LM Voice</h2>
+        <p class="subtitle">Sélectionnez le type de voix pour votre chanson. Chaque niveau offre plus d'options.</p>
+        
+        <div class="offer-card" data-value="LM Voice Masculin - 1500 FCFA" data-prix="1500">
+            <div class="offer-header">
+                <span class="offer-title">🎤 LM Voice Masculin</span>
+                <span class="offer-price">1 500 FCFA</span>
+            </div>
+            <div class="offer-voice">Voix d'homme professionnelle</div>
+            <ul class="offer-features">
+                <li>Paroles personnalisées</li>
+                <li>Voix masculine IA</li>
+                <li>Livraison en 48h</li>
+                <li>Format MP3 standard</li>
+            </ul>
+            <div class="offer-plus">💡 Idéal pour les hommages et chansons traditionnelles</div>
+        </div>
+
+        <div class="offer-card" data-value="LM Voice Féminin - 3000 FCFA" data-prix="3000">
+            <div class="offer-header">
+                <span class="offer-title"> LM Voice Féminin</span>
+                <span class="offer-price">3 000 FCFA</span>
+            </div>
+            <div class="offer-voice">Voix de femme professionnelle</div>
+            <ul class="offer-features">
+                <li>Tout du pack Masculin</li>
+                <li>Voix féminine IA (plus douce)</li>
+                <li>Livraison en 24h</li>
+                <li>1 session de retouche incluse</li>
+            </ul>
+            <div class="offer-plus">✨ PLUS : Livraison 2x plus rapide + retouches possibles</div>
+        </div>
+
+        <div class="offer-card" data-value="LM Voice Duo - 5000 FCFA" data-prix="5000">
+            <div class="offer-header">
+                <span class="offer-title">👥 LM Voice Duo</span>
+                <span class="offer-price">5 000 FCFA</span>
+            </div>
+            <div class="offer-voice">Duo homme/femme professionnel</div>
+            <ul class="offer-features">
+                <li>Tout du pack Féminin</li>
+                <li>Duo vocal (2 voix qui chantent)</li>
+                <li>Livraison express 12h</li>
+                <li>Retouches illimitées</li>
+                <li>Fichier qualité studio (WAV)</li>
+            </ul>
+            <div class="offer-plus"> PLUS : Duo harmonieux + qualité studio + livraison ultra-rapide</div>
+        </div>
+        <div class="error-msg" id="errorOffre">Veuillez choisir une offre LM Voice.</div>
+    </div>
+
+    <!-- ÉTAPE 2 : L'OCCASION -->
+    <div class="step" id="step2">
+        <h2>Quel type de chanson ?</h2>
+        <p class="subtitle">Choisissez l'occasion pour laquelle vous créez cette chanson.</p>
+        
+        <div class="grid-choices" id="occasionGrid">
+            <div class="choice-btn" data-value="Déclaration d'amour"><span class="icon">❤️</span>Déclaration</div>
+            <div class="choice-btn" data-value="Pour mon/ma partenaire"><span class="icon">💕</span>Partenaire</div>
+            <div class="choice-btn" data-value="Mariage"><span class="icon">💍</span>Mariage</div>
+            <div class="choice-btn" data-value="Anniversaire"><span class="icon">🎂</span>Anniversaire</div>
+            <div class="choice-btn" data-value="Naissance"><span class="icon"></span>Naissance</div>
+            <div class="choice-btn" data-value="Gospel"><span class="icon">🙏</span>Gospel</div>
+            <div class="choice-btn" data-value="Réussite / Diplôme"><span class="icon">🎓</span>Réussite</div>
+            <div class="choice-btn" data-value="Famille"><span class="icon">👨‍👩</span>Famille</div>
+            <div class="choice-btn" data-value="Hommage"><span class="icon">🕊️</span>Hommage</div>
+            <div class="choice-btn" data-value="Surprise"><span class="icon">🎁</span>Surprise</div>
+            <div class="choice-btn" data-value="Noël"><span class="icon"></span>Noël</div>
+            <div class="choice-btn" data-value="Autre" id="btnAutreOccasion"><span class="icon">✨</span>Autre</div>
+        </div>
+        <div class="autre-field" id="fieldAutreOccasion">
+            <label>Précisez l'occasion <span class="optional">(optionnel)</span></label>
+            <input type="text" id="inputAutreOccasion" placeholder="Ex: Départ à la retraite...">
+        </div>
+    </div>
+
+    <!-- ÉTAPE 3 : LA PERSONNE -->
+    <div class="step" id="step3">
+        <h2>Pour qui est cette chanson ?</h2>
+        <p class="subtitle">Parlez-nous de la personne qui va la recevoir.</p>
+
+        <div class="form-group">
+            <label class="required">Prénom</label>
+            <input type="text" id="prenom" placeholder="Ex: Grâce">
+            <div class="error-msg" id="errorPrenom">Le prénom est obligatoire.</div>
+        </div>
+
+        <div class="form-group">
+            <label class="required">Relation</label>
+            <div class="grid-choices" id="relationGrid">
+                <div class="choice-btn" data-value="Ma femme">Ma femme</div>
+                <div class="choice-btn" data-value="Mon mari">Mon mari</div>
+                <div class="choice-btn" data-value="Ma copine">Ma copine</div>
+                <div class="choice-btn" data-value="Mon copain">Mon copain</div>
+                <div class="choice-btn" data-value="Ma mère">Ma mère</div>
+                <div class="choice-btn" data-value="Mon père">Mon père</div>
+                <div class="choice-btn" data-value="Mon frère">Mon frère</div>
+                <div class="choice-btn" data-value="Ma sœur">Ma sœur</div>
+                <div class="choice-btn" data-value="Mon ami(e)">Mon ami(e)</div>
+                <div class="choice-btn" data-value="Mon enfant">Mon enfant</div>
+                <div class="choice-btn" data-value="Moi-même">Moi-même</div>
+                <div class="choice-btn" data-value="Autre" id="btnAutreRelation">Autre</div>
+            </div>
+            <div class="autre-field" id="fieldAutreRelation">
+                <input type="text" id="inputAutreRelation" placeholder="Précisez la relation...">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Surnom <span class="optional">(optionnel)</span></label>
+            <input type="text" id="surnom" placeholder="Ex: Mon cœur, Champion...">
+        </div>
+
+        <div class="form-group">
+            <label>Âge <span class="optional">(optionnel)</span></label>
+            <input type="number" id="age" placeholder="Ex: 25">
+        </div>
+    </div>
+
+    <!-- ÉTAPE 4 : L'HISTOIRE -->
+    <div class="step" id="step4">
+        <h2>L'histoire de votre chanson</h2>
+        <p class="subtitle">C'est ici que nous trouvons l'inspiration pour les paroles.</p>
+
+        <div class="form-group">
+            <label class="required">Pourquoi souhaitez-vous lui offrir cette chanson ?</label>
+            <textarea id="pourquoi" placeholder="Ex: Pour lui montrer à quel point elle compte pour moi..."></textarea>
+            <div class="error-msg" id="errorPourquoi">Ce champ est obligatoire.</div>
+        </div>
+
+        <div class="form-group">
+            <label>Quel est votre plus beau souvenir ensemble ? <span class="optional">(optionnel mais conseillé)</span></label>
+            <textarea id="souvenir" placeholder="Ex: Notre rencontre à la plage de Nangui..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label class="required">Que voulez-vous absolument lui dire ?</label>
+            <textarea id="message" placeholder="Ex: Je t'aime plus que tout, merci d'être là..."></textarea>
+            <div class="error-msg" id="errorMessage">Ce champ est obligatoire.</div>
+        </div>
+    </div>
+
+    <!-- ÉTAPE 5 : ÉMOTIONS -->
+    <div class="step" id="step5">
+        <h2>Le ton de la chanson</h2>
+        <p class="subtitle">Quelle émotion doit ressortir à l'écoute ?</p>
+
+        <div class="grid-choices" id="tonGrid">
+            <div class="choice-btn" data-value="Romantique"><span class="icon">❤️</span>Romantique</div>
+            <div class="choice-btn" data-value="Joyeux"><span class="icon">😊</span>Joyeux</div>
+            <div class="choice-btn" data-value="Émouvant"><span class="icon">😭</span>Émouvant</div>
+            <div class="choice-btn" data-value="Spirituel"><span class="icon">🙏</span>Spirituel</div>
+            <div class="choice-btn" data-value="Motivant"><span class="icon">💪</span>Motivant</div>
+            <div class="choice-btn" data-value="Drôle"><span class="icon">😄</span>Drôle</div>
+            <div class="choice-btn" data-value="Élégant"><span class="icon">✨</span>Élégant</div>
+        </div>
+    </div>
+
+    <!-- ÉTAPE 6 : STYLE MUSICAL -->
+    <div class="step" id="step6">
+        <h2>Style musical</h2>
+        <p class="subtitle">Choisissez le rythme qui correspond le mieux.</p>
+
+        <div class="form-group">
+            <label class="required">Style musical</label>
+            <div class="grid-choices" id="styleGrid">
+                <div class="choice-btn" data-value="Gospel"><span class="icon">🎤</span>Gospel</div>
+                <div class="choice-btn" data-value="Afro"><span class="icon">🌍</span>Afro</div>
+                <div class="choice-btn" data-value="Rumba"><span class="icon">🎷</span>Rumba</div>
+                <div class="choice-btn" data-value="Pop"><span class="icon">🎶</span>Pop</div>
+                <div class="choice-btn" data-value="RnB"><span class="icon">🎧</span>RnB</div>
+                <div class="choice-btn" data-value="Zouk"><span class="icon">🎵</span>Zouk</div>
+                <div class="choice-btn" data-value="Autre" id="btnAutreStyle" style="grid-column: span 2;"><span class="icon">✨</span>Autre</div>
+            </div>
+            <div class="autre-field" id="fieldAutreStyle">
+                <input type="text" id="inputAutreStyle" placeholder="Précisez le style...">
+            </div>
+        </div>
+    </div>
+
+    <!-- ÉTAPE 7 : DÉTAILS -->
+    <div class="step" id="step7">
+        <h2>Les détails qui font la différence</h2>
+        <p class="subtitle">Ces informations rendront la chanson 100% unique. <strong>(Tout est optionnel)</strong></p>
+
+        <div class="form-group">
+            <label>Date importante <span class="optional">(optionnel)</span></label>
+            <input type="text" id="dateImportante" placeholder="Ex: 14 février 2020">
+        </div>
+        <div class="form-group">
+            <label>Lieu important <span class="optional">(optionnel)</span></label>
+            <input type="text" id="lieuImportant" placeholder="Ex: Le jardin de la maison">
+        </div>
+        <div class="form-group">
+            <label>Phrase à intégrer <span class="optional">(optionnel)</span></label>
+            <input type="text" id="phraseIntegrer" placeholder="Ex: Tu es mon soleil">
+        </div>
+        <div class="form-group">
+            <label>Nom des enfants <span class="optional">(optionnel)</span></label>
+            <input type="text" id="nomsEnfants" placeholder="Ex: Lucas et Emma">
+        </div>
+        <div class="form-group">
+            <label>Nom de famille <span class="optional">(optionnel)</span></label>
+            <input type="text" id="nomFamille" placeholder="Ex: Famille Mboumba">
+        </div>
+    </div>
+
+    <!-- ÉTAPE 8 : COORDONNÉES -->
+    <div class="step" id="step8">
+        <h2>Vos coordonnées</h2>
+        <p class="subtitle">Pour que nous puissions vous recontacter et vous livrer la chanson.</p>
+
+        <div class="form-group">
+            <label class="required">Votre prénom</label>
+            <input type="text" id="clientPrenom" placeholder="Votre prénom">
+            <div class="error-msg" id="errorClientPrenom">Obligatoire.</div>
+        </div>
+        <div class="form-group">
+            <label class="required">Téléphone</label>
+            <input type="tel" id="clientTel" placeholder="+242 06...">
+            <div class="error-msg" id="errorClientTel">Obligatoire.</div>
+        </div>
+        <div class="form-group">
+            <label class="required">Numéro WhatsApp</label>
+            <input type="tel" id="clientWhatsapp" placeholder="+242 06...">
+            <div class="error-msg" id="errorClientWhatsapp">Obligatoire.</div>
+        </div>
+        <div class="form-group">
+            <label>Email <span class="optional">(optionnel)</span></label>
+            <input type="email" id="clientEmail" placeholder="votre@email.com">
+        </div>
+    </div>
+
+    <!-- ÉTAPE 9 : RÉSUMÉ -->
+    <div class="step" id="step9">
+        <h2>🎉 Vérifiez votre projet</h2>
+        <p class="subtitle">Voici le résumé de votre commande avant envoi.</p>
+
+        <div class="summary-card" id="summaryContent">
+            <!-- Généré par JS -->
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-secondary" onclick="prevStep()">⬅ Modifier</button>
+            <button class="btn btn-primary" onclick="sendToWhatsApp()">📲 Envoyer sur WhatsApp</button>
+        </div>
+    </div>
+
+</div>
+
+<div class="nav-buttons" id="navButtons">
+    <button class="btn btn-secondary" id="btnPrev" onclick="prevStep()" style="display: none;">Retour</button>
+    <button class="btn btn-primary" id="btnNext" onclick="nextStep()">Suivant</button>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 9;
+    const formData = {};
+
+    function setupChoiceGrid(gridId, fieldName, isSingle = true) {
+        const grid = document.getElementById(gridId);
+        const btns = grid.querySelectorAll('.choice-btn');
+        
+        btns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (isSingle) {
+                    btns.forEach(b => b.classList.remove('selected'));
+                }
+                btn.classList.toggle('selected');
+                
+                const val = btn.getAttribute('data-value');
+                
+                if (val === 'Autre') {
+                    const autreFieldId = 'fieldAutre' + fieldName;
+                    const field = document.getElementById(autreFieldId);
+                    if(field) field.classList.add('visible');
+                } else {
+                    const autreFieldId = 'fieldAutre' + fieldName;
+                    const field = document.getElementById(autreFieldId);
+                    if(field) field.classList.remove('visible');
+                }
+
+                formData[fieldName] = val;
+            });
+        });
+    }
+
+    setupChoiceGrid('occasionGrid', 'occasion');
+    setupChoiceGrid('relationGrid', 'relation');
+    setupChoiceGrid('tonGrid', 'ton');
+    setupChoiceGrid('styleGrid', 'style');
+
+    // Gestion des offres LM Voice
+    document.querySelectorAll('.offer-card').forEach(card => {
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.offer-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            formData.offre = card.getAttribute('data-value');
+            formData.prix = card.getAttribute('data-prix');
+            document.getElementById('errorOffre').classList.remove('visible');
+        });
+    });
+
+    function updateUI() {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById(`step${currentStep}`).classList.add('active');
+        
+        const progress = (currentStep / totalSteps) * 100;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+        document.getElementById('stepIndicator').textContent = currentStep === totalSteps ? 'Récapitulatif' : `Étape ${currentStep} sur ${totalSteps - 1}`;
+
+        document.getElementById('btnPrev').style.display = currentStep === 1 || currentStep === totalSteps ? 'none' : 'block';
+        document.getElementById('navButtons').style.display = currentStep === totalSteps ? 'none' : 'flex';
+        
+        if (currentStep === totalSteps - 1) {
+            document.getElementById('btnNext').textContent = 'Voir le récapitulatif';
+        } else {
+            document.getElementById('btnNext').textContent = 'Suivant';
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function nextStep() {
+        if (validateStep(currentStep)) {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                if (currentStep === totalSteps) generateSummary();
+                updateUI();
+            }
+        }
+    }
+
+    function prevStep() {
+        if (currentStep > 1) {
+            currentStep--;
+            updateUI();
+        }
+    }
+
+    function showError(id, show) {
+        const el = document.getElementById(id);
+        if(el) el.classList.toggle('visible', show);
+    }
+
+    function validateStep(step) {
+        let isValid = true;
+
+        if (step === 1) {
+            if (!formData.offre) { 
+                showError('errorOffre', true); 
+                isValid = false; 
+                alert("Veuillez choisir une offre LM Voice pour continuer.");
+            }
+        }
+
+        if (step === 2) {
+            if (!formData.occasion) { 
+                isValid = false; 
+                alert("Veuillez sélectionner une occasion.");
+            }
+            if (formData.occasion === 'Autre') {
+                const val = document.getElementById('inputAutreOccasion').value.trim();
+                if (val) {
+                    formData.occasionDetail = val;
+                }
+                // "Autre" n'est PLUS obligatoire - on laisse passer même si vide
+            }
+        }
+
+        if (step === 3) {
+            const prenom = document.getElementById('prenom').value.trim();
+            if (!prenom) { showError('errorPrenom', true); isValid = false; alert("Le prénom est obligatoire."); } 
+            else { formData.prenom = prenom; showError('errorPrenom', false); }
+            
+            if (!formData.relation) { 
+                isValid = false; 
+                alert("Veuillez sélectionner votre relation avec la personne.");
+            }
+            if (formData.relation === 'Autre') {
+                const val = document.getElementById('inputAutreRelation').value.trim();
+                if (val) {
+                    formData.relationDetail = val;
+                }
+                // "Autre" relation n'est plus obligatoire
+            }
+            
+            formData.surnom = document.getElementById('surnom').value.trim();
+            formData.age = document.getElementById('age').value.trim();
+        }
+
+        if (step === 4) {
+            const pourquoi = document.getElementById('pourquoi').value.trim();
+            if (!pourquoi) { showError('errorPourquoi', true); isValid = false; alert("Dites-nous pourquoi vous offrez cette chanson."); } 
+            else { formData.pourquoi = pourquoi; showError('errorPourquoi', false); }
+            
+            formData.souvenir = document.getElementById('souvenir').value.trim();
+            
+            const message = document.getElementById('message').value.trim();
+            if (!message) { showError('errorMessage', true); isValid = false; alert("Que voulez-vous lui dire ?"); } 
+            else { formData.message = message; showError('errorMessage', false); }
+        }
+
+        if (step === 5) {
+            if (!formData.ton) { isValid = false; alert("Veuillez choisir un ton pour la chanson."); }
+        }
+
+        if (step === 6) {
+            if (!formData.style) { isValid = false; alert("Veuillez choisir un style musical."); }
+            if (formData.style === 'Autre') {
+                const val = document.getElementById('inputAutreStyle').value.trim();
+                if (val) {
+                    formData.styleDetail = val;
+                }
+                // "Autre" style n'est plus obligatoire
+            }
+        }
+
+        if (step === 7) {
+            formData.dateImportante = document.getElementById('dateImportante').value.trim();
+            formData.lieuImportant = document.getElementById('lieuImportant').value.trim();
+            formData.phraseIntegrer = document.getElementById('phraseIntegrer').value.trim();
+            formData.nomsEnfants = document.getElementById('nomsEnfants').value.trim();
+            formData.nomFamille = document.getElementById('nomFamille').value.trim();
+            // Tout est optionnel ici - pas de validation
+        }
+
+        if (step === 8) {
+            const cp = document.getElementById('clientPrenom').value.trim();
+            if (!cp) { showError('errorClientPrenom', true); isValid = false; alert("Votre prénom est obligatoire."); } 
+            else { formData.clientPrenom = cp; showError('errorClientPrenom', false); }
+            
+            const ct = document.getElementById('clientTel').value.trim();
+            if (!ct) { showError('errorClientTel', true); isValid = false; alert("Votre téléphone est obligatoire."); } 
+            else { formData.clientTel = ct; showError('errorClientTel', false); }
+            
+            const cw = document.getElementById('clientWhatsapp').value.trim();
+            if (!cw) { showError('errorClientWhatsapp', true); isValid = false; alert("Votre WhatsApp est obligatoire."); } 
+            else { formData.clientWhatsapp = cw; showError('errorClientWhatsapp', false); }
+            
+            formData.clientEmail = document.getElementById('clientEmail').value.trim();
+        }
+
+        return isValid;
+    }
+
+    function generateSummary() {
+        let relationAffichee = formData.relation;
+        if (formData.relation === 'Autre' && formData.relationDetail) {
+            relationAffichee = formData.relationDetail;
+        }
+
+        let styleAffiche = formData.style;
+        if (formData.style === 'Autre' && formData.styleDetail) {
+            styleAffiche = formData.styleDetail;
+        }
+
+        const rows = [
+            ['🎵 LM Voice', formData.offre],
+            ['💰 Prix', `${formData.prix} FCFA`],
+            ['📌 Occasion', formData.occasion],
+            ['👤 Destinataire', `${formData.prenom} (${relationAffichee})`],
+            ['✨ Surnom / Âge', `${formData.surnom || '-'} / ${formData.age || '-'}`],
+            ['❤️ Ton', formData.ton],
+            ['🎶 Style', styleAffiche],
+            ['📝 Pourquoi', formData.pourquoi],
+            ['🌟 Souvenir', formData.souvenir || 'Non précisé'],
+            ['💬 Message', formData.message],
+            ['📍 Détails', `${formData.dateImportante || ''} ${formData.lieuImportant || ''} ${formData.phraseIntegrer || ''}`.trim() || 'Aucun'],
+            [' Client', `${formData.clientPrenom} - ${formData.clientWhatsapp}`]
+        ];
+
+        let html = '';
+        rows.forEach(([label, value]) => {
+            html += `<div class="summary-row"><span class="summary-label">${label}</span><span class="summary-value">${value}</span></div>`;
+        });
+        document.getElementById('summaryContent').innerHTML = html;
+    }
+
+    function sendToWhatsApp() {
+        let relationAffichee = formData.relation;
+        if (formData.relation === 'Autre' && formData.relationDetail) {
+            relationAffichee = formData.relationDetail;
+        }
+
+        let styleAffiche = formData.style;
+        if (formData.style === 'Autre' && formData.styleDetail) {
+            styleAffiche = formData.styleDetail;
+        }
+
+        const message = `Bonjour Lamio Melody 🎵,\n\nJe suis ${formData.clientPrenom}, je vous contacte depuis le site Lamio Melody. Je souhaite commander une chanson pour ${formData.prenom} (${relationAffichee}).\n\nVoici les détails de ma commande :\n\n` +
+            `💎 LM Voice choisie : ${formData.offre}\n` +
+            `💰 Prix : ${formData.prix} FCFA\n\n` +
+            `📌 Occasion : ${formData.occasion}\n` +
+            `👤 Destinataire : ${formData.prenom}\n` +
+            `💕 Relation : ${relationAffichee}\n` +
+            `${formData.surnom ? `✨ Surnom : ${formData.surnom}\n` : ''}` +
+            `${formData.age ? `🎂 Âge : ${formData.age} ans\n` : ''}\n` +
+            `🎶 Style : ${styleAffiche}\n` +
+            `❤️ Ton : ${formData.ton}\n\n` +
+            `📝 Pourquoi cette chanson :\n${formData.pourquoi}\n\n` +
+            `🌟 Plus beau souvenir :\n${formData.souvenir || 'Non précisé'}\n\n` +
+            `💌 Message principal :\n${formData.message}\n\n` +
+            `${formData.dateImportante ? `📅 Date importante : ${formData.dateImportante}\n` : ''}` +
+            `${formData.lieuImportant ? `📍 Lieu important : ${formData.lieuImportant}\n` : ''}` +
+            `${formData.phraseIntegrer ? `💬 Phrase à intégrer : ${formData.phraseIntegrer}\n` : ''}\n` +
+            ` Mes coordonnées :\n- Nom : ${formData.clientPrenom}\n- Tél : ${formData.clientTel}\n- WhatsApp : ${formData.clientWhatsapp}\n${formData.clientEmail ? `- Email : ${formData.clientEmail}\n` : ''}\n` +
+            `Merci d'avance pour ce beau projet ! 🙏`;
+
+        const encoded = encodeURIComponent(message);
+        window.open(`https://wa.me/242065186967?text=${encoded}`, '_blank');
+    }
+
+    updateUI();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Lamio Melody</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --violet: #8b5cf6;
+            --violet-dark: #7c3aed;
+            --gold: #d4af37;
+            --navy: #1e3a8a;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --error: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--text); line-height: 1.6; }
+
+        /* Login Screen */
+        .login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--navy) 0%, #0f172a 100%);
+        }
+        .login-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .login-box h2 { text-align: center; color: var(--navy); margin-bottom: 0.5rem; }
+        .login-box p { text-align: center; color: var(--text-light); margin-bottom: 2rem; font-size: 0.9rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; }
+        .form-input {
+            width: 100%; padding: 0.875rem; border: 2px solid var(--border);
+            border-radius: 10px; font-size: 1rem;
+        }
+        .form-input:focus { outline: none; border-color: var(--violet); }
+        .btn {
+            width: 100%; padding: 1rem; border: none; border-radius: 10px;
+            font-weight: 600; cursor: pointer; font-size: 1rem; transition: 0.2s;
+        }
+        .btn-primary { background: var(--violet); color: white; }
+        .btn-primary:hover { background: var(--violet-dark); }
+        .error-msg { color: var(--error); font-size: 0.9rem; text-align: center; margin-top: 1rem; }
+
+        /* Admin Dashboard */
+        .admin-container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .admin-header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .admin-header h1 { color: var(--navy); font-size: 1.8rem; }
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .stat-card h3 { color: var(--text-light); font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .stat-card .stat-value { font-size: 2rem; font-weight: 800; color: var(--navy); }
+
+        .orders-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .orders-container h2 { color: var(--navy); margin-bottom: 1.5rem; }
+
+        .order-card {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+        .order-card:hover { border-color: var(--violet); box-shadow: 0 4px 15px rgba(139, 92, 246, 0.1); }
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .order-title { font-size: 1.2rem; font-weight: 700; color: var(--navy); }
+        .order-date { font-size: 0.85rem; color: var(--text-light); }
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .order-detail { color: var(--text-light); }
+        .order-detail strong { color: var(--text); }
+        .order-description {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        .status-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+            white-space: nowrap;
+        }
+        .status-en_attente_validation { background: var(--warning); }
+        .status-validee { background: #3b82f6; }
+        .status-payee { background: var(--success); }
+        .status-en_cours { background: var(--violet); }
+        .status-livree { background: #059669; }
+
+        .order-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .btn-upload { background: var(--violet); color: white; }
+        .btn-upload:hover { background: var(--violet-dark); }
+        .btn-status { background: var(--navy); color: white; }
+        .btn-status:hover { background: #152c6e; }
+        .btn-delete { background: var(--error); color: white; }
+        .btn-delete:hover { background: #dc2626; }
+
+        select.status-select {
+            padding: 0.5rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+        .upload-area.active { display: block; }
+        .upload-area input[type="file"] { margin: 1rem 0; }
+
+        .audio-preview {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 8px;
+        }
+        .audio-preview audio { width: 100%; margin-top: 0.5rem; }
+
+        .btn-logout {
+            background: var(--error);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-bar select {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .admin-container { padding: 1rem; }
+            .admin-header { flex-direction: column; gap: 1rem; }
+            .order-header { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Écran de connexion -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-box">
+            <h2>🔒 Admin Lamio Melody</h2>
+            <p>Accès réservé à l'administrateur</p>
+            <div class="form-group">
+                <label class="form-label">Email admin</label>
+                <input type="email" class="form-input" id="adminEmail" placeholder="admin@lamiomelody.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Mot de passe</label>
+                <input type="password" class="form-input" id="adminPassword" placeholder="••••••••">
+            </div>
+            <button class="btn btn-primary" onclick="adminLogin()">Se connecter</button>
+            <p class="error-msg" id="loginError"></p>
+        </div>
+    </div>
+
+    <!-- Dashboard Admin -->
+    <div id="adminDashboard" style="display: none;">
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1>🎵 Dashboard Admin - Lamio Melody</h1>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <span id="adminName" style="color: var(--text-light);"></span>
+                    <button class="btn-logout" onclick="adminLogout()">🚪 Déconnexion</button>
+                </div>
+            </div>
+
+            <!-- Statistiques -->
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <h3>Total commandes</h3>
+                    <div class="stat-value" id="statTotal">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>En attente</h3>
+                    <div class="stat-value" id="statPending" style="color: var(--warning);">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Payées</h3>
+                    <div class="stat-value" id="statPaid" style="color: var(--success);">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Livrées</h3>
+                    <div class="stat-value" id="statDelivered" style="color: #059669;">0</div>
+                </div>
+            </div>
+
+            <!-- Liste des commandes -->
+            <div class="orders-container">
+                <h2>📋 Commandes</h2>
+                <div class="filter-bar">
+                    <select id="filterStatus" onchange="loadOrders()">
+                        <option value="all">Tous les statuts</option>
+                        <option value="en_attente_validation">En attente</option>
+                        <option value="validee">Validées</option>
+                        <option value="payee">Payées</option>
+                        <option value="en_cours">En cours</option>
+                        <option value="livree">Livrées</option>
+                    </select>
+                    <select id="sortBy" onchange="loadOrders()">
+                        <option value="newest">Plus récentes</option>
+                        <option value="oldest">Plus anciennes</option>
+                    </select>
+                </div>
+                <div id="ordersList">
+                    <p style="text-align: center; color: var(--text-light); padding: 2rem;">Chargement...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // CONFIGURATION SUPABASE
+        // ==========================================
+        const SUPABASE_URL = 'https://cfneuwhgmopaguemjchf.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_a5hxJyzGt03kuCTUnkAxig_BksoIlH0';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const ADMIN_EMAIL = 'talamiomeurphy7@gmail.com'; // Ton email admin
+        let currentAdmin = null;
+
+        // ==========================================
+        // CONNEXION ADMIN
+        // ==========================================
+        window.addEventListener('load', async () => {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session?.user?.email === ADMIN_EMAIL) {
+                currentAdmin = session.user;
+                showDashboard();
+            }
+        });
+
+        async function adminLogin() {
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const errorEl = document.getElementById('loginError');
+
+            if (!email || !password) {
+                errorEl.textContent = 'Veuillez remplir tous les champs';
+                return;
+            }
+
+            if (email !== ADMIN_EMAIL) {
+                errorEl.textContent = ' Accès refusé. Cet email n\'est pas autorisé.';
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+
+                currentAdmin = data.user;
+                showDashboard();
+            } catch (error) {
+                errorEl.textContent = 'Erreur : ' + error.message;
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            document.getElementById('adminName').textContent = currentAdmin.email;
+            loadOrders();
+        }
+
+        async function adminLogout() {
+            if (confirm('Voulez-vous vous déconnecter ?')) {
+                await supabaseClient.auth.signOut();
+                location.reload();
+            }
+        }
+
+        // ==========================================
+        // CHARGEMENT DES COMMANDES
+        // ==========================================
+        async function loadOrders() {
+            const filterStatus = document.getElementById('filterStatus').value;
+            const sortBy = document.getElementById('sortBy').value;
+
+            let query = supabaseClient.from('orders').select('*');
+
+            if (filterStatus !== 'all') {
+                query = query.eq('statut', filterStatus);
+            }
+
+            query = query.order('created_at', { ascending: sortBy === 'oldest' });
+
+            const { data: orders, error } = await query;
+
+            if (error) {
+                console.error('Erreur:', error);
+                document.getElementById('ordersList').innerHTML = '<p style="color: var(--error);">Erreur de chargement</p>';
+                return;
+            }
+
+            updateStats(orders);
+            displayOrders(orders);
+        }
+
+        function updateStats(orders) {
+            document.getElementById('statTotal').textContent = orders.length;
+            document.getElementById('statPending').textContent = orders.filter(o => o.statut === 'en_attente_validation').length;
+            document.getElementById('statPaid').textContent = orders.filter(o => o.statut === 'payee').length;
+            document.getElementById('statDelivered').textContent = orders.filter(o => o.statut === 'livree').length;
+        }
+
+        function displayOrders(orders) {
+            const container = document.getElementById('ordersList');
+
+            if (!orders || orders.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-light); padding: 2rem;">Aucune commande</p>';
+                return;
+            }
+
+            container.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <div class="order-title">🎵 ${order.lm_voice} - ${order.occasion}</div>
+                            <div class="order-date">${new Date(order.created_at).toLocaleString('fr-FR')}</div>
+                        </div>
+                        <span class="status-badge status-${order.statut.replace(/ /g, '_')}">${order.statut.replace(/_/g, ' ')}</span>
+                    </div>
+
+                    <div class="order-details">
+                        <div class="order-detail"><strong>Destinataire :</strong> ${order.dest_prenom} (${order.dest_relation})</div>
+                        <div class="order-detail"><strong>Style :</strong> ${order.style_musical}</div>
+                        <div class="order-detail"><strong>Ton :</strong> ${order.ton}</div>
+                        <div class="order-detail"><strong>Client :</strong> ${order.client_prenom}</div>
+                        <div class="order-detail"><strong>WhatsApp :</strong> ${order.client_whatsapp}</div>
+                        <div class="order-detail"><strong>Email :</strong> ${order.client_email || 'N/A'}</div>
+                    </div>
+
+                    <div class="order-description">
+                        <strong>🌟 Description :</strong> ${order.histoire_description || 'N/A'}
+                        ${order.histoire_souvenir ? `<br><strong>💌 Souvenir :</strong> ${order.histoire_souvenir}` : ''}
+                    </div>
+
+                    ${order.file_url ? `
+                        <div class="audio-preview">
+                            <strong> Chanson uploadée :</strong>
+                            <audio controls src="${order.file_url}"></audio>
+                        </div>
+                    ` : ''}
+
+                    <div class="order-actions">
+                        <select class="status-select" onchange="updateStatus('${order.id}', this.value)">
+                            <option value="en_attente_validation" ${order.statut === 'en_attente_validation' ? 'selected' : ''}>En attente</option>
+                            <option value="validee" ${order.statut === 'validee' ? 'selected' : ''}>Validée</option>
+                            <option value="payee" ${order.statut === 'payee' ? 'selected' : ''}>Payée</option>
+                            <option value="en_cours" ${order.statut === 'en_cours' ? 'selected' : ''}>En cours</option>
+                            <option value="livree" ${order.statut === 'livree' ? 'selected' : ''}>Livrée</option>
+                        </select>
+
+                        <button class="btn-small btn-upload" onclick="toggleUpload('${order.id}')">
+                            ${order.file_url ? ' Remplacer MP3' : '📤 Upload MP3'}
+                        </button>
+
+                        ${order.file_url ? `<a href="${order.file_url}" download class="btn-small" style="background: var(--success); color: white; text-decoration: none;">📥 Télécharger</a>` : ''}
+
+                        <button class="btn-small btn-delete" onclick="deleteOrder('${order.id}')">🗑️ Supprimer</button>
+                    </div>
+
+                    <div class="upload-area" id="upload-${order.id}">
+                        <p><strong>Uploader la chanson pour ${order.dest_prenom}</strong></p>
+                        <input type="file" id="file-${order.id}" accept="audio/mpeg,audio/mp3" onchange="uploadFile('${order.id}', this.files[0])">
+                        <p style="font-size: 0.85rem; color: var(--text-light);">Format MP3 uniquement</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ==========================================
+        // ACTIONS ADMIN
+        // ==========================================
+        async function updateStatus(orderId, newStatus) {
+            try {
+                const { error } = await supabaseClient
+                    .from('orders')
+                    .update({ statut: newStatus })
+                    .eq('id', orderId);
+
+                if (error) throw error;
+                alert('✅ Statut mis à jour');
+                loadOrders();
+            } catch (error) {
+                alert('Erreur : ' + error.message);
+            }
+        }
+
+        function toggleUpload(orderId) {
+            const uploadArea = document.getElementById(`upload-${orderId}`);
+            uploadArea.classList.toggle('active');
+        }
+
+        async function uploadFile(orderId, file) {
+            if (!file) return;
+
+            if (!file.type.includes('audio')) {
+                alert('❌ Veuillez sélectionner un fichier audio');
+                return;
+            }
+
+            const fileName = `commande_${orderId}_${Date.now()}.mp3`;
+            const filePath = `${fileName}`;
+
+            try {
+                // Upload vers Supabase Storage
+                const { data, error } = await supabaseClient.storage
+                    .from('chansons')
+                    .upload(filePath, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+
+                if (error) throw error;
+
+                // Récupérer l'URL publique
+                const { data: { publicUrl } } = supabaseClient.storage
+                    .from('chansons')
+                    .getPublicUrl(filePath);
+
+                // Mettre à jour la commande avec le lien
+                const { error: updateError } = await supabaseClient
+                    .from('orders')
+                    .update({ file_url: publicUrl, statut: 'livree' })
+                    .eq('id', orderId);
+
+                if (updateError) throw updateError;
+
+                alert('✅ Chanson uploadée et commande marquée comme livrée !');
+                loadOrders();
+            } catch (error) {
+                alert('Erreur upload : ' + error.message);
+            }
+        }
+
+        async function deleteOrder(orderId) {
+            if (!confirm('Voulez-vous vraiment supprimer cette commande ?')) return;
+
+            try {
+                const { error } = await supabaseClient
+                    .from('orders')
+                    .delete()
+                    .eq('id', orderId);
+
+                if (error) throw error;
+                alert('✅ Commande supprimée');
+                loadOrders();
+            } catch (error) {
+                alert('Erreur : ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
