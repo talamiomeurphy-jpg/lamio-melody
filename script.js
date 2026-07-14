@@ -562,9 +562,3 @@ function showInspirationQuestions() {
     // Scroll doux vers la boîte pour que l'utilisateur la voie bien
     helperDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
-// ==========================================
-// INITIALISATION
-// ==========================================
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Lamio Melody - Formulaire prêt');
-});

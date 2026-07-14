@@ -897,38 +897,78 @@
         </section>
 
         <!-- Exemples -->
-        <section id="exemples" class="examples">
-            <div class="container">
-                <div class="section-header">
-                    <p class="section-label">DES ÉMOTIONS, EN MUSIQUE</p>
-                    <h2 class="section-title">Ils nous ont fait <span class="highlight">confiance</span></h2>
-                    <p class="section-subtitle">Découvrez quelques créations inspirées de vraies histoires.</p>
+        <!-- Exemples -->
+<section id="exemples" class="examples">
+    <div class="container">
+        <div class="section-header">
+            <p class="section-label">DES ÉMOTIONS, EN MUSIQUE</p>
+            <h2 class="section-title">Ils nous ont fait <span class="highlight">confiance</span></h2>
+            <p class="section-subtitle">Découvrez quelques créations inspirées de vraies histoires.</p>
+        </div>
+        <div class="examples-slider">
+            <div class="example-card">
+                <div class="example-image">
+                    <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&q=80" alt="Couple" onerror="this.src='https://via.placeholder.com/600x400/8b5cf6/ffffff?text=Amour'">
+                    <div class="play-overlay">
+                        <button class="play-btn" onclick="playAudio('musique/Aujourdhui_cest_ton_jour_1.mp3', this, 'duration-0')">▶</button>
+                    </div>
                 </div>
-                <div class="examples-slider">
-                    <div class="example-card">
-                        <div class="example-image">
-                            <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&q=80" alt="Couple">
-                            <div class="play-overlay"><button class="play-btn">▶</button></div>
-                        </div>
-                        <div class="example-info"><h4>Notre amour éternel</h4><div class="example-meta"><span class="style">Zouk Love</span><span>0:58</span></div></div>
-                    </div>
-                    <div class="example-card">
-                        <div class="example-image">
-                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80" alt="Mère">
-                            <div class="play-overlay"><button class="play-btn">▶</button></div>
-                        </div>
-                        <div class="example-info"><h4>Merci Maman</h4><div class="example-meta"><span class="style">Gospel</span><span>1:02</span></div></div>
-                    </div>
-                    <div class="example-card">
-                        <div class="example-image">
-                            <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Anniversaire">
-                            <div class="play-overlay"><button class="play-btn">▶</button></div>
-                        </div>
-                        <div class="example-info"><h4>Joyeux Anniversaire</h4><div class="example-meta"><span class="style">Afrobeat</span><span>0:55</span></div></div>
+                <div class="example-info">
+                    <h4>Aujourd'hui c'est ton jour</h4>
+                    <div class="example-meta">
+                        <span class="style">Pop</span>
+                        <span id="duration-0">--:--</span>
                     </div>
                 </div>
             </div>
-        </section>
+            <div class="example-card">
+                <div class="example-image">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80" alt="Mère" onerror="this.src='https://via.placeholder.com/600x400/d4af37/ffffff?text=Famille'">
+                    <div class="play-overlay">
+                        <button class="play-btn" onclick="playAudio('musique/Merci_Mamounette_1.mp3', this, 'duration-1')">▶</button>
+                    </div>
+                </div>
+                <div class="example-info">
+                    <h4>Merci Mamounette</h4>
+                    <div class="example-meta">
+                        <span class="style">Gospel</span>
+                        <span id="duration-1">--:--</span>
+                    </div>
+                </div>
+            </div>
+            <div class="example-card">
+                <div class="example-image">
+                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&q=80" alt="Réussite" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=Reussite'">
+                    <div class="play-overlay">
+                        <button class="play-btn" onclick="playAudio('musique/Mon_Evidence_1.mp3', this, 'duration-2')">▶</button>
+                    </div>
+                </div>
+                <div class="example-info">
+                    <h4>Mon Évidence</h4>
+                    <div class="example-meta">
+                        <span class="style">RnB</span>
+                        <span id="duration-2">--:--</span>
+                    </div>
+                </div>
+            </div>
+            <div class="example-card">
+                <div class="example-image">
+                    <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Anniversaire" onerror="this.src='https://via.placeholder.com/600x400/f59e0b/ffffff?text=Anniversaire'">
+                    <div class="play-overlay">
+                        <button class="play-btn" onclick="playAudio('musique/Tu_las_fait_1.mp3', this, 'duration-3')">▶</button>
+                    </div>
+                </div>
+                <div class="example-info">
+                    <h4>Tu l'as fait</h4>
+                    <div class="example-meta">
+                        <span class="style">Afrobeat</span>
+                        <span id="duration-3">--:--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
         <!-- Tarifs -->
         <section id="tarifs" class="pricing">
@@ -1055,12 +1095,12 @@
                     <div class="form-group">
                         <label class="form-label">Pour quelle occasion est cette chanson ? *</label>
                         <div class="occasion-grid">
-                            <div class="occasion-card" data-field="occasion" data-value="Anniversaire"><div class="occasion-icon">🎂</div><div class="occasion-label">Anniversaire</div></div>
+                            <div class="occasion-card" data-field="occasion" data-value="Anniversaire"><div class="occasion-icon"></div><div class="occasion-label">Anniversaire</div></div>
                             <div class="occasion-card" data-field="occasion" data-value="Amour"><div class="occasion-icon">❤️</div><div class="occasion-label">Amour</div></div>
-                            <div class="occasion-card" data-field="occasion" data-value="Mariage"><div class="occasion-icon">💍</div><div class="occasion-label">Mariage</div></div>
+                            <div class="occasion-card" data-field="occasion" data-value="Mariage"><div class="occasion-icon"></div><div class="occasion-label">Mariage</div></div>
                             <div class="occasion-card" data-field="occasion" data-value="Naissance"><div class="occasion-icon">👶</div><div class="occasion-label">Naissance</div></div>
-                            <div class="occasion-card" data-field="occasion" data-value="Réussite"><div class="occasion-icon">🏆</div><div class="occasion-label">Réussite</div></div>
-                            <div class="occasion-card" data-field="occasion" data-value="Hommage"><div class="occasion-icon">🕊️</div><div class="occasion-label">Hommage</div></div>
+                            <div class="occasion-card" data-field="occasion" data-value="Réussite"><div class="occasion-icon"></div><div class="occasion-label">Réussite</div></div>
+                            <div class="occasion-card" data-field="occasion" data-value="Hommage"><div class="occasion-icon">️</div><div class="occasion-label">Hommage</div></div>
                             <div class="occasion-card" data-field="occasion" data-value="Fête"><div class="occasion-icon">🎉</div><div class="occasion-label">Fête</div></div>
                             <div class="occasion-card" data-field="occasion" data-value="Autre"><div class="occasion-icon">✨</div><div class="occasion-label">Autre</div></div>
                         </div>
@@ -1104,8 +1144,8 @@
                             <div class="occasion-card" data-field="style" data-value="Ndombolo"><div class="occasion-icon">🥁</div><div class="occasion-label">Ndombolo</div></div>
                             <div class="occasion-card" data-field="style" data-value="Gospel"><div class="occasion-icon">🙏</div><div class="occasion-label">Gospel</div></div>
                             <div class="occasion-card" data-field="style" data-value="Zouk Love"><div class="occasion-icon">💕</div><div class="occasion-label">Zouk Love</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Pop"><div class="occasion-icon">🎵</div><div class="occasion-label">Pop</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Rap/RnB"><div class="occasion-icon">🎤</div><div class="occasion-label">Rap / RnB</div></div>
+                            <div class="occasion-card" data-field="style" data-value="Pop"><div class="occasion-icon"></div><div class="occasion-label">Pop</div></div>
+                            <div class="occasion-card" data-field="style" data-value="Rap/RnB"><div class="occasion-icon"></div><div class="occasion-label">Rap / RnB</div></div>
                             <div class="occasion-card" data-field="style" data-value="Acoustique"><div class="occasion-icon">🎸</div><div class="occasion-label">Acoustique</div></div>
                             <div class="occasion-card" data-field="style" data-value="Jazz"><div class="occasion-icon">🎷</div><div class="occasion-label">Jazz</div></div>
                             <div class="occasion-card" data-field="style" data-value="Reggae"><div class="occasion-icon">🇯🇲</div><div class="occasion-label">Reggae</div></div>
@@ -1166,7 +1206,7 @@
                             <ul id="inspirationQuestionsList">
                                 <!-- Les questions seront injectées ici par JavaScript -->
                             </ul>
-                            <p class="helper-tip">💡 Astuce : Répondre à 1 ou 2 de ces questions dans le champ ci-dessus suffit pour nous donner de la matière !</p>
+                            <p class="helper-tip"> Astuce : Répondre à 1 ou 2 de ces questions dans le champ ci-dessus suffit pour nous donner de la matière !</p>
                         </div>
                     </div>
                     <div class="form-navigation">
@@ -1199,7 +1239,7 @@
                     <div class="form-group">
                         <label class="form-label"> Y a-t-il un mot ou une expression qu'il/elle dit souvent ?</label>
                         <input type="text" class="form-input" id="expressionFrequente" placeholder="Ex: 'Nzambe apambola yo', 'On ne lâche rien', 'Toza ensemble'...">
-                        <div class="example-text">💡 Intégrer ses propres mots rend la chanson incroyablement personnelle.</div>
+                        <div class="example-text"> Intégrer ses propres mots rend la chanson incroyablement personnelle.</div>
                     </div>
                     <div class="form-group">
                         <label class="form-label">✨ Une phrase ou un message spécifique à intégrer dans les paroles ?</label>
@@ -1220,7 +1260,7 @@
                         <div class="char-counter">0/300</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">📍 Un lieu important pour vous deux ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
+                        <label class="form-label"> Un lieu important pour vous deux ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
                         <input type="text" class="form-input" id="lieuImportant" placeholder="Ex: La plage de Nangui, le jardin de la maison...">
                     </div>
                     <div class="form-group">
@@ -1273,5 +1313,66 @@
     </section>
 
     <script src="script.js"></script>
+    <script>
+        // ==========================================
+        // LECTEUR AUDIO POUR LES EXEMPLES
+        // ==========================================
+        let currentAudio = null;
+        let currentBtn = null;
+        let currentDurationId = null;
+
+        function playAudio(src, btn, durationId) {
+            // Si on clique sur le même bouton, on pause/play
+            if (currentAudio && currentBtn === btn) {
+                if (currentAudio.paused) {
+                    currentAudio.play();
+                    btn.textContent = '⏸';
+                } else {
+                    currentAudio.pause();
+                    btn.textContent = '▶';
+                }
+                return;
+            }
+            
+            // Stop l'audio précédent
+            if (currentAudio) {
+                currentAudio.pause();
+                if (currentBtn) currentBtn.textContent = '▶';
+            }
+            
+            // Nouveau audio
+            currentAudio = new Audio(src);
+            currentBtn = btn;
+            currentDurationId = durationId;
+            
+            // Afficher la durée quand chargée
+            currentAudio.addEventListener('loadedmetadata', function() {
+                const duration = formatTime(currentAudio.duration);
+                const durationEl = document.getElementById(durationId);
+                if (durationEl) durationEl.textContent = duration;
+            });
+            
+            // Quand fini, reset
+            currentAudio.addEventListener('ended', function() {
+                btn.textContent = '▶';
+            });
+            
+            // Gérer les erreurs
+            currentAudio.addEventListener('error', function() {
+                console.error('Erreur de chargement audio:', src);
+                btn.textContent = '❌';
+                alert('Le fichier audio n\'a pas pu être chargé. Vérifiez que le fichier existe dans le dossier musique/');
+            });
+            
+            currentAudio.play();
+            btn.textContent = '⏸';
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+    </script>
 </body>
 </html>
