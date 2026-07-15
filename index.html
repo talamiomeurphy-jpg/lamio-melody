@@ -777,6 +777,56 @@
             transform: translateY(-2px);
         }
 
+        /* NOUVELLES CLASSES POUR LE VERROUILLAGE ET LA LOGIQUE DYNAMIQUE */
+        .form-section-locked {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .formula-info {
+            background: linear-gradient(135deg, var(--violet) 0%, var(--gold) 100%);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .formula-info h4 {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+        .formula-info p {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        .voice-selection-prompt {
+            background: var(--bg-light);
+            border: 2px solid var(--violet);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .voice-selection-prompt p {
+            color: var(--dark);
+            font-weight: 600;
+            margin: 0;
+        }
+        .voice-card.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+            filter: grayscale(100%);
+        }
+        .locked-badge {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--dark);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 0.5rem;
+        }
+
         /* Responsive */
         @media (max-width: 968px) {
             .hero-content { grid-template-columns: 1fr; }
@@ -964,64 +1014,62 @@
         </section>
 
         <!-- Tarifs -->
-       
-        <!-- Section Tarifs mise à jour -->
-<section id="tarifs" class="pricing">
-    <div class="container">
-        <div class="section-header" style="text-align: center;">
-            <p class="section-label">NOS OFFRES</p>
-            <h2 class="section-title">Choisissez la <span class="highlight">formule</span> qui vous convient</h2>
-            <p class="section-subtitle">Chaque formule inclut des paroles 100% personnalisées écrites avec émotion.</p>
-        </div>
-        <div class="pricing-grid">
-            <div class="pricing-card">
-                <div class="pricing-icon">🥉</div>
-                <div class="pricing-name">ESSENTIELLE</div>
-                <div class="pricing-price">1.500 <span>FCFA</span></div>
-                <ul class="pricing-features">
-                    <li><span class="check">✓</span> Voix Masculine</li>
-                    <li><span class="check">✓</span> 1 chanson personnalisée</li>
-                    <li><span class="check">✓</span> Durée standard (30s à 1min)</li>
-                    <li><span class="check">✓</span> Livraison rapide</li>
-                    <li><span class="check">✓</span> Format MP3</li>
-                </ul>
-                <button class="btn-choose" onclick="selectTarif('Essentielle')">Choisir cette formule</button>
-            </div>
-            <div class="pricing-card featured">
-                <div class="popular-badge">LA PLUS CHOISIE</div>
-                <div class="pricing-icon">🥈</div>
-                <div class="pricing-name">PREMIUM</div>
-                <div class="pricing-price">3.000 <span>FCFA</span></div>
-                <ul class="pricing-features">
-                    <li><span class="check">✓</span> Voix Masculine ou Féminine au choix</li>
-                    <li><span class="check">✓</span> Chanson plus longue (1min30 à 2min)</li>
-                    <li><span class="check">✓</span> Production plus travaillée</li>
-                    <li><span class="check">✓</span> Pochette personnalisée</li>
-                    <li><span class="check">✓</span> Format MP3</li>
-                </ul>
-                <button class="btn-choose" onclick="selectTarif('Premium')">Choisir cette formule →</button>
-            </div>
-            <div class="pricing-card">
-                <div class="pricing-icon">🥇</div>
-                <div class="pricing-name">PRESTIGE</div>
-                <div class="pricing-price">5.000 <span>FCFA</span></div>
-                <div style="background: linear-gradient(135deg, var(--gold) 0%, var(--violet) 100%); color: var(--dark); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-weight: 700; text-align: center; font-size: 0.9rem;">
-                    🎁 PROMOTION : 2 versions au choix incluses !
+        <section id="tarifs" class="pricing">
+            <div class="container">
+                <div class="section-header" style="text-align: center;">
+                    <p class="section-label">NOS OFFRES</p>
+                    <h2 class="section-title">Choisissez la <span class="highlight">formule</span> qui vous convient</h2>
+                    <p class="section-subtitle">Chaque formule inclut des paroles 100% personnalisées écrites avec émotion.</p>
                 </div>
-                <ul class="pricing-features">
-                    <li><span class="check">✓</span> <strong>Toutes voix disponibles (Masc./Fém./Duo)</strong></li>
-                    <li><span class="check">✓</span> Chanson complète (2min à 3min+)</li>
-                    <li><span class="check">✓</span> <strong>2 versions au choix (vous choisissez !)</strong></li>
-                    <li><span class="check">✓</span> Pochette personnalisée</li>
-                    <li><span class="check">✓</span> Message personnalisé intégré</li>
-                    <li><span class="check">✓</span> Livraison prioritaire</li>
-                    <li><span class="check">✓</span> Format MP3</li>
-                </ul>
-                <button class="btn-choose" onclick="selectTarif('Prestige')">Choisir cette formule →</button>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="pricing-icon">🥉</div>
+                        <div class="pricing-name">ESSENTIELLE</div>
+                        <div class="pricing-price">1.500 <span>FCFA</span></div>
+                        <ul class="pricing-features">
+                            <li><span class="check">✓</span> Voix Masculine</li>
+                            <li><span class="check">✓</span> 1 chanson personnalisée</li>
+                            <li><span class="check">✓</span> Durée standard (30s à 1min)</li>
+                            <li><span class="check">✓</span> Livraison rapide</li>
+                            <li><span class="check">✓</span> Format MP3</li>
+                        </ul>
+                        <button class="btn-choose" onclick="selectTarif('Essentielle')">Choisir cette formule</button>
+                    </div>
+                    <div class="pricing-card featured">
+                        <div class="popular-badge">LA PLUS CHOISIE</div>
+                        <div class="pricing-icon">🥈</div>
+                        <div class="pricing-name">PREMIUM</div>
+                        <div class="pricing-price">3.000 <span>FCFA</span></div>
+                        <ul class="pricing-features">
+                            <li><span class="check">✓</span> Voix Masculine ou Féminine au choix</li>
+                            <li><span class="check">✓</span> Chanson plus longue (1min30 à 2min)</li>
+                            <li><span class="check">✓</span> Production plus travaillée</li>
+                            <li><span class="check">✓</span> Pochette personnalisée</li>
+                            <li><span class="check">✓</span> Format MP3</li>
+                        </ul>
+                        <button class="btn-choose" onclick="selectTarif('Premium')">Choisir cette formule →</button>
+                    </div>
+                    <div class="pricing-card">
+                        <div class="pricing-icon">🥇</div>
+                        <div class="pricing-name">PRESTIGE</div>
+                        <div class="pricing-price">5.000 <span>FCFA</span></div>
+                        <div style="background: linear-gradient(135deg, var(--gold) 0%, var(--violet) 100%); color: var(--dark); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-weight: 700; text-align: center; font-size: 0.9rem;">
+                            🎁 PROMOTION : 2 versions au choix incluses !
+                        </div>
+                        <ul class="pricing-features">
+                            <li><span class="check">✓</span> <strong>Toutes voix disponibles (Masc./Fém./Duo)</strong></li>
+                            <li><span class="check">✓</span> Chanson complète (2min à 3min+)</li>
+                            <li><span class="check">✓</span> <strong>2 versions au choix (vous choisissez !)</strong></li>
+                            <li><span class="check">✓</span> Pochette personnalisée</li>
+                            <li><span class="check">✓</span> Message personnalisé intégré</li>
+                            <li><span class="check">✓</span> Livraison prioritaire</li>
+                            <li><span class="check">✓</span> Format MP3</li>
+                        </ul>
+                        <button class="btn-choose" onclick="selectTarif('Prestige')">Choisir cette formule →</button>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
         <!-- CTA Final -->
         <section class="cta-final">
@@ -1088,11 +1136,11 @@
 
             <form id="orderForm" onsubmit="return false;">
                 <!-- Étape 1 : Les Bases -->
-                <div class="form-step active" data-step="1">
+                <div class="form-step active" data-step="1" id="step1">
                     <h3 class="step-title">🎉 Les bases de votre projet</h3>
                     <div class="form-group">
                         <label class="form-label">Pour quelle occasion est cette chanson ? *</label>
-                        <div class="occasion-grid">
+                        <div class="occasion-grid" id="occasionGrid">
                             <div class="occasion-card" data-field="occasion" data-value="Anniversaire"><div class="occasion-icon">🎂</div><div class="occasion-label">Anniversaire</div></div>
                             <div class="occasion-card" data-field="occasion" data-value="Amour"><div class="occasion-icon">❤️</div><div class="occasion-label">Amour</div></div>
                             <div class="occasion-card" data-field="occasion" data-value="Mariage"><div class="occasion-icon">💍</div><div class="occasion-label">Mariage</div></div>
@@ -1131,11 +1179,13 @@
                 </div>
 
                 <!-- Étape 2 : Univers Musical & Formule -->
-                <div class="form-step" data-step="2">
+                <div class="form-step" data-step="2" id="step2">
                     <h3 class="step-title">🎵 L'univers musical</h3>
-                    <div class="form-group">
+                    
+                    <!-- Section Style Musical -->
+                    <div class="form-group" id="styleSection">
                         <label class="form-label">Style musical préféré *</label>
-                        <div class="occasion-grid">
+                        <div class="occasion-grid" id="styleGrid">
                             <div class="occasion-card" data-field="style" data-value="Afrobeat"><div class="occasion-icon">🌍</div><div class="occasion-label">Afrobeat</div></div>
                             <div class="occasion-card" data-field="style" data-value="Rumba"><div class="occasion-icon">🎷</div><div class="occasion-label">Rumba</div></div>
                             <div class="occasion-card" data-field="style" data-value="Soukous"><div class="occasion-icon">🎸</div><div class="occasion-label">Soukous</div></div>
@@ -1155,9 +1205,10 @@
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label class="form-label">🎤 Choisissez votre Formule & Voix *</label>
-                        <div class="occasion-grid voix-grid">
+                    <!-- Section Formule -->
+                    <div class="form-group" id="formuleSection">
+                        <label class="form-label">🎤 Choisissez votre Formule *</label>
+                        <div class="occasion-grid voix-grid" id="formuleGrid">
                             <div class="occasion-card" data-field="formule" data-value="Essentielle - Voix Masculine (1500 FCFA)">
                                 <div class="occasion-icon">🥉</div>
                                 <div class="occasion-label">Essentielle</div>
@@ -1176,9 +1227,30 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <!-- Section Voix (dynamique) -->
+                    <div class="form-group" id="voiceSection" style="display: none;">
+                        <div class="voice-selection-prompt" id="voicePrompt">
+                            <p id="voicePromptText">👉 Choisissez maintenant la voix que vous préférez :</p>
+                        </div>
+                        <div class="occasion-grid voix-grid" id="voiceGrid">
+                            <div class="occasion-card voice-card" data-field="voix" data-value="Masculine">
+                                <div class="occasion-icon">👨</div>
+                                <div class="occasion-label">Voix Masculine</div>
+                            </div>
+                            <div class="occasion-card voice-card" data-field="voix" data-value="Féminine">
+                                <div class="occasion-icon">👩</div>
+                                <div class="occasion-label">Voix Féminine</div>
+                            </div>
+                            <div class="occasion-card voice-card" data-field="voix" data-value="Duo">
+                                <div class="occasion-icon">👥</div>
+                                <div class="occasion-label">Duo (H+F)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="emotionSection">
                         <label class="form-label">😊 Quelle émotion doit-il/elle ressentir en l'écoutant ? *</label>
-                        <div class="occasion-grid">
+                        <div class="occasion-grid" id="emotionGrid">
                             <div class="occasion-card" data-field="emotion" data-value="Sourire"><div class="occasion-icon">😊</div><div class="occasion-label">Sourire</div></div>
                             <div class="occasion-card" data-field="emotion" data-value="Pleurer d'émotion"><div class="occasion-icon">😭</div><div class="occasion-label">Pleurer</div></div>
                             <div class="occasion-card" data-field="emotion" data-value="Se sentir aimé"><div class="occasion-icon">❤️</div><div class="occasion-label">Se sentir aimé</div></div>
@@ -1187,6 +1259,7 @@
                             <div class="occasion-card" data-field="emotion" data-value="Faire la fête"><div class="occasion-icon">🎉</div><div class="occasion-label">Faire la fête</div></div>
                         </div>
                     </div>
+                    
                     <div class="form-navigation">
                         <button type="button" class="btn-prev" onclick="prevStep()">← Précédent</button>
                         <button type="button" class="btn-next" onclick="nextStep()">Suivant →</button>
@@ -1194,7 +1267,7 @@
                 </div>
 
                 <!-- Étape 3 : L'Histoire (AVEC LE NOUVEAU SYSTÈME D'INSPIRATION) -->
-                <div class="form-step" data-step="3">
+                <div class="form-step" data-step="3" id="step3">
                     <h3 class="step-title">📖 Le cœur de l'histoire</h3>
                     <div class="form-group">
                         <label class="form-label">⭐ Pourquoi cette personne est-elle spéciale ou importante pour vous ? *</label>
@@ -1228,11 +1301,11 @@
                 </div>
 
                 <!-- Étape 4 : Les Détails Uniques -->
-                <div class="form-step" data-step="4">
+                <div class="form-step" data-step="4" id="step4">
                     <h3 class="step-title">✨ Les détails qui font la différence</h3>
                     <div class="form-group">
                         <label class="form-label">🏆 Quelles sont ses principales qualités ? (Cochez-en plusieurs)</label>
-                        <div class="quality-grid">
+                        <div class="quality-grid" id="qualityGrid">
                             <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Gentil(le)"><span class="quality-label">Gentil(le)</span></label>
                             <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Courageux(se)"><span class="quality-label">Courageux(se)</span></label>
                             <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Travailleur(se)"><span class="quality-label">Travailleur(se)</span></label>
@@ -1264,7 +1337,7 @@
                 </div>
 
                 <!-- Étape 5 : Le Message Final & Options -->
-                <div class="form-step" data-step="5">
+                <div class="form-step" data-step="5" id="step5">
                     <h3 class="step-title"> Le message final</h3>
                     <div class="form-group">
                         <label class="form-label">💌 Quel message voulez-vous qu'il/elle retienne après avoir écouté la chanson ? *</label>
@@ -1286,7 +1359,7 @@
                 </div>
 
                 <!-- Étape 6 : Coordonnées & Résumé -->
-                <div class="form-step" data-step="6">
+                <div class="form-step" data-step="6" id="step6">
                     <h3 class="step-title">📱 Vos coordonnées</h3>
                     <div class="form-group">
                         <label class="form-label">Votre prénom *</label>
@@ -1381,7 +1454,7 @@
         }
 
         // ==========================================
-        // GESTION DU CHOIX FORMULE (NOUVEAU)
+        // GESTION DYNAMIQUE DES VOIX SELON LA FORMULE
         // ==========================================
         document.querySelectorAll('[data-field="formule"]').forEach(card => {
             card.addEventListener('click', function() {
@@ -1390,6 +1463,56 @@
                 this.classList.add('selected');
                 if (typeof formData !== 'undefined') {
                     formData.formule = this.getAttribute('data-value');
+                }
+                updateVoiceSelection(this.getAttribute('data-value'));
+            });
+        });
+
+        function updateVoiceSelection(formuleValue) {
+            const voiceSection = document.getElementById('voiceSection');
+            const voicePromptText = document.getElementById('voicePromptText');
+            const voiceCards = document.querySelectorAll('.voice-card');
+            
+            voiceSection.style.display = 'block';
+            
+            voiceCards.forEach(card => {
+                card.classList.remove('selected', 'disabled');
+            });
+            if (typeof formData !== 'undefined') {
+                formData.voix = '';
+            }
+
+            if (formuleValue.includes('Essentielle')) {
+                voicePromptText.textContent = '🎵 Vous avez choisi la formule Essentielle. La voix masculine est sélectionnée automatiquement.';
+                voiceCards.forEach(card => {
+                    if (card.getAttribute('data-value') === 'Masculine') {
+                        card.classList.add('selected');
+                        if (typeof formData !== 'undefined') formData.voix = 'Masculine';
+                    } else {
+                        card.classList.add('disabled');
+                    }
+                });
+            } else if (formuleValue.includes('Premium')) {
+                voicePromptText.textContent = '🎵 Vous avez choisi la formule Premium. Choisissez maintenant la voix que vous préférez pour votre chanson :';
+                voiceCards.forEach(card => {
+                    if (card.getAttribute('data-value') === 'Duo') {
+                        card.classList.add('disabled');
+                    }
+                });
+            } else if (formuleValue.includes('Prestige')) {
+                voicePromptText.textContent = '🎵 Vous avez choisi la formule Prestige. Choisissez maintenant le type de voix que vous préférez :';
+            }
+        }
+
+        document.querySelectorAll('.voice-card').forEach(card => {
+            card.addEventListener('click', function() {
+                if (this.classList.contains('disabled')) return;
+                
+                const grid = this.parentElement;
+                grid.querySelectorAll('.voice-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                if (typeof formData !== 'undefined') {
+                    formData.voix = this.getAttribute('data-value');
                 }
             });
         });
@@ -1405,13 +1528,26 @@
                 
                 if (formuleValue && typeof formData !== 'undefined') {
                     formData.formule = formuleValue;
-                    const cards = document.querySelectorAll('[data-step="2"] [data-field="formule"]');
+                    const cards = document.querySelectorAll('#formuleGrid .occasion-card');
                     cards.forEach(card => {
                         card.classList.remove('selected');
                         if (card.getAttribute('data-value') === formuleValue) {
                             card.classList.add('selected');
                         }
                     });
+                    
+                    const formuleSection = document.getElementById('formuleSection');
+                    formuleSection.classList.add('form-section-locked');
+                    
+                    const label = formuleSection.querySelector('.form-label');
+                    if (!label.querySelector('.locked-badge')) {
+                        const badge = document.createElement('span');
+                        badge.className = 'locked-badge';
+                        badge.textContent = '🔒 Choix verrouillé';
+                        label.appendChild(badge);
+                    }
+
+                    updateVoiceSelection(formuleValue);
                 }
             }, 300);
         }

@@ -46,7 +46,6 @@ document.querySelectorAll('[data-field="occasion"]').forEach(card => {
         const value = this.getAttribute('data-value');
         formData.occasion = value;
         
-        // Afficher/masquer le champ "Autre"
         const autreField = document.getElementById('occasionAutreField');
         if (value === 'Autre') {
             autreField.style.display = 'block';
@@ -67,7 +66,6 @@ document.querySelectorAll('[data-field="style"]').forEach(card => {
         const value = this.getAttribute('data-value');
         formData.style = value;
         
-        // Afficher/masquer le champ "Autre"
         const autreField = document.getElementById('styleAutreField');
         if (value === 'Autre') {
             autreField.style.display = 'block';
@@ -78,11 +76,13 @@ document.querySelectorAll('[data-field="style"]').forEach(card => {
     });
 });
 
-// Voix
-document.querySelectorAll('[data-field="voix"]').forEach(card => {
+// Voix (Dynamique)
+document.querySelectorAll('.voice-card').forEach(card => {
     card.addEventListener('click', function() {
+        if (this.classList.contains('disabled')) return;
+        
         const grid = this.parentElement;
-        grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
+        grid.querySelectorAll('.voice-card').forEach(c => c.classList.remove('selected'));
         this.classList.add('selected');
         formData.voix = this.getAttribute('data-value');
     });
@@ -95,6 +95,17 @@ document.querySelectorAll('[data-field="emotion"]').forEach(card => {
         grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
         this.classList.add('selected');
         formData.emotion = this.getAttribute('data-value');
+    });
+});
+
+// Formule
+document.querySelectorAll('[data-field="formule"]').forEach(card => {
+    card.addEventListener('click', function() {
+        const grid = this.parentElement;
+        grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+        formData.formule = this.getAttribute('data-value');
+        updateVoiceSelection(this.getAttribute('data-value'));
     });
 });
 
@@ -158,7 +169,6 @@ function validateStep() {
                 alert('Veuillez sélectionner une occasion.');
                 return false;
             }
-            // Si "Autre" est sélectionné, vérifier que le champ est rempli
             if (formData.occasion === 'Autre') {
                 const occasionAutre = document.getElementById('occasionAutre').value.trim();
                 if (!occasionAutre) {
@@ -187,7 +197,6 @@ function validateStep() {
                 alert('Veuillez sélectionner un style musical.');
                 return false;
             }
-            // Si "Autre" est sélectionné, vérifier que le champ est rempli
             if (formData.style === 'Autre') {
                 const styleAutre = document.getElementById('styleAutre').value.trim();
                 if (!styleAutre) {
@@ -196,7 +205,10 @@ function validateStep() {
                 }
                 formData.styleDetail = styleAutre;
             }
-            
+            if (!formData.formule) {
+                alert('Veuillez choisir une formule.');
+                return false;
+            }
             if (!formData.voix) {
                 alert('Veuillez sélectionner un type de voix.');
                 return false;
@@ -223,7 +235,6 @@ function validateStep() {
             return true;
         
         case 4:
-            // Récupérer les qualités cochées
             const qualites = [];
             document.querySelectorAll('.quality-checkbox:checked').forEach(cb => {
                 qualites.push(cb.value);
@@ -268,16 +279,50 @@ function validateStep() {
 }
 
 // ==========================================
+// GESTION DYNAMIQUE DES VOIX SELON LA FORMULE
+// ==========================================
+function updateVoiceSelection(formuleValue) {
+    const voiceSection = document.getElementById('voiceSection');
+    const voicePromptText = document.getElementById('voicePromptText');
+    const voiceCards = document.querySelectorAll('.voice-card');
+    
+    voiceSection.style.display = 'block';
+    
+    voiceCards.forEach(card => {
+        card.classList.remove('selected', 'disabled');
+    });
+    formData.voix = '';
+
+    if (formuleValue.includes('Essentielle')) {
+        voicePromptText.textContent = '🎵 Vous avez choisi la formule Essentielle. La voix masculine est sélectionnée automatiquement.';
+        voiceCards.forEach(card => {
+            if (card.getAttribute('data-value') === 'Masculine') {
+                card.classList.add('selected');
+                formData.voix = 'Masculine';
+            } else {
+                card.classList.add('disabled');
+            }
+        });
+    } else if (formuleValue.includes('Premium')) {
+        voicePromptText.textContent = '🎵 Vous avez choisi la formule Premium. Choisissez maintenant la voix que vous préférez pour votre chanson :';
+        voiceCards.forEach(card => {
+            if (card.getAttribute('data-value') === 'Duo') {
+                card.classList.add('disabled');
+            }
+        });
+    } else if (formuleValue.includes('Prestige')) {
+        voicePromptText.textContent = '🎵 Vous avez choisi la formule Prestige. Choisissez maintenant le type de voix que vous préférez :';
+    }
+}
+
+// ==========================================
 // GÉNÉRATION DU RÉSUMÉ
 // ==========================================
 function generateSummary() {
-    const formule = getFormuleFromVoix();
-    const prix = getPrixFromVoix();
+    const formule = getFormuleDisplayName();
+    const prix = getFormulePrice();
     
-    // Déterminer l'occasion finale
     const occasionFinale = formData.occasion === 'Autre' ? (formData.occasionDetail || 'Autre') : formData.occasion;
-    
-    // Déterminer le style final
     const styleFinal = formData.style === 'Autre' ? (formData.styleDetail || 'Autre') : formData.style;
     
     const summaryHTML = `
@@ -372,51 +417,55 @@ function generateSummary() {
     document.getElementById('summaryContent').innerHTML = summaryHTML;
 }
 
-function getFormuleFromVoix() {
-    if (formData.voix && formData.voix.includes('Masculin')) return 'Essentielle';
-    if (formData.voix && formData.voix.includes('Féminin')) return 'Premium';
-    if (formData.voix && formData.voix.includes('Duo')) return 'Prestige';
-    return 'Non spécifiée';
+function getFormuleDisplayName() {
+    if (!formData.formule) return 'Non spécifiée';
+    if (formData.formule.includes('Essentielle')) return 'Essentielle';
+    if (formData.formule.includes('Premium')) return 'Premium';
+    if (formData.formule.includes('Prestige')) return 'Prestige';
+    return formData.formule;
 }
 
-function getPrixFromVoix() {
-    if (formData.voix && formData.voix.includes('1500')) return '1 500 FCFA';
-    if (formData.voix && formData.voix.includes('3000')) return '3 000 FCFA';
-    if (formData.voix && formData.voix.includes('5000')) return '5 000 FCFA';
+function getFormulePrice() {
+    if (!formData.formule) return '';
+    if (formData.formule.includes('1500')) return '1 500 FCFA';
+    if (formData.formule.includes('3000')) return '3 000 FCFA';
+    if (formData.formule.includes('5000')) return '5 000 FCFA';
     return '';
 }
 
 // ==========================================
 // SOUMISSION DE LA COMMANDE
 // ==========================================
+// ==========================================
+// SOUMISSION DE LA COMMANDE
+// ==========================================
 async function submitOrder() {
-    // Déterminer les valeurs finales
     const occasionFinale = formData.occasion === 'Autre' ? (formData.occasionDetail || 'Autre') : formData.occasion;
     const styleFinal = formData.style === 'Autre' ? (formData.styleDetail || 'Autre') : formData.style;
-    const formule = getFormuleFromVoix();
-    const prix = getPrixFromVoix();
+    const formule = getFormuleDisplayName();
+    const prix = getFormulePrice();
     
-    // Générer le message WhatsApp
-    const whatsappMessage = ` Nouvelle commande Lamio Melody\n\n` +
-        `🎉 Occasion : ${occasionFinale}\n` +
-        `👤 Destinataire : ${formData.destPrenom} (${formData.destRelation})\n` +
-        `🎵 Style : ${styleFinal}\n` +
-        `🎤 Voix : ${formData.voix}\n` +
-        `😊 Émotion : ${formData.emotion}\n\n` +
-        `⭐ Pourquoi important(e) :\n${formData.pourquoiImportante}\n\n` +
-        `📖 Souvenir :\n${formData.souvenir}\n\n` +
-        `${formData.qualites && formData.qualites.length > 0 ? ` Qualités : ${formData.qualites.join(', ')}\n\n` : ''}` +
-        `${formData.surnom ? `😂 Surnom : ${formData.surnom}\n\n` : ''}` +
-        `${formData.expressionFrequente ? `🙏 Expression fréquente : ${formData.expressionFrequente}\n\n` : ''}` +
-        `${formData.phraseIntegrer ? `✨ Phrase à intégrer : ${formData.phraseIntegrer}\n\n` : ''}` +
-        `💌 Message final :\n${formData.messageFinal}\n\n` +
-        `${formData.lieuImportant ? `📍 Lieu important : ${formData.lieuImportant}\n` : ''}` +
-        `${formData.dateImportante ? ` Date importante : ${formData.dateImportante}\n` : ''}\n` +
-        ` Client : ${formData.clientPrenom}\n` +
-        `📲 WhatsApp : ${formData.clientWhatsapp}\n` +
-        `${formData.clientEmail ? `📧 Email : ${formData.clientEmail}\n` : ''}\n\n` +
-        ` Formule : ${formule} (${prix})\n\n` +
-        `Merci de confirmer ma commande 🙏`;
+    // Utiliser de vrais émojis compatibles WhatsApp
+    const whatsappMessage = `🎵 *Nouvelle commande Lamio Melody* 🎵\n\n` +
+        `🎉 *Occasion :* ${occasionFinale}\n` +
+        `👤 *Destinataire :* ${formData.destPrenom} (${formData.destRelation})\n` +
+        `🎵 *Style :* ${styleFinal}\n` +
+        `🎤 *Voix :* ${formData.voix}\n` +
+        `😊 *Émotion :* ${formData.emotion}\n\n` +
+        `⭐ *Pourquoi important(e) :*\n${formData.pourquoiImportante}\n\n` +
+        `📖 *Souvenir :*\n${formData.souvenir}\n\n` +
+        `${formData.qualites && formData.qualites.length > 0 ? ` *Qualités :* ${formData.qualites.join(', ')}\n\n` : ''}` +
+        `${formData.surnom ? `😂 *Surnom :* ${formData.surnom}\n\n` : ''}` +
+        `${formData.expressionFrequente ? `💬 *Expression fréquente :* ${formData.expressionFrequente}\n\n` : ''}` +
+        `${formData.phraseIntegrer ? `✨ *Phrase à intégrer :* ${formData.phraseIntegrer}\n\n` : ''}` +
+        `💌 *Message final :*\n${formData.messageFinal}\n\n` +
+        `${formData.lieuImportant ? `📍 *Lieu important :* ${formData.lieuImportant}\n` : ''}` +
+        `${formData.dateImportante ? `📅 *Date importante :* ${formData.dateImportante}\n` : ''}\n` +
+        ` *Client :* ${formData.clientPrenom}\n` +
+        `📲 *WhatsApp :* ${formData.clientWhatsapp}\n` +
+        `${formData.clientEmail ? `📧 *Email :* ${formData.clientEmail}\n` : ''}\n\n` +
+        `💎 *Formule :* ${formule} (${prix})\n\n` +
+        `🙏 *Merci de confirmer ma commande*`;
     
     // Sauvegarder dans Supabase (si configuré)
     try {
@@ -461,29 +510,51 @@ async function submitOrder() {
     document.getElementById('formulaire').classList.remove('active');
     document.getElementById('confirmation').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Rafraîchir la page après 3 secondes (comme Ctrl+F5)
+    setTimeout(() => {
+        window.location.reload(true);
+    }, 3000);
 }
 
 // ==========================================
-// SÉLECTION DE TARIF
+// SÉLECTION DE TARIF (DEPUIS LA PAGE D'ACCUEIL)
 // ==========================================
 function selectTarif(formule) {
     showFormulaire();
     
     setTimeout(() => {
-        let voixValue = '';
-        if (formule === 'Essentielle') voixValue = 'Masculin (Essentielle - 1500 FCFA)';
-        else if (formule === 'Premium') voixValue = 'Féminin (Premium - 3000 FCFA)';
-        else if (formule === 'Prestige') voixValue = 'Duo (Prestige - 5000 FCFA)';
+        let formuleValue = '';
+        if (formule === 'Essentielle') formuleValue = 'Essentielle - Voix Masculine (1500 FCFA)';
+        else if (formule === 'Premium') formuleValue = 'Premium - Voix au choix (3000 FCFA)';
+        else if (formule === 'Prestige') formuleValue = 'Prestige - Toutes voix + Duo (5000 FCFA)';
         
-        if (voixValue) {
-            formData.voix = voixValue;
-            const cards = document.querySelectorAll('[data-step="2"] .occasion-card');
+        if (formuleValue) {
+            formData.formule = formuleValue;
+            
+            // Sélectionner la carte de formule
+            const cards = document.querySelectorAll('#formuleGrid .occasion-card');
             cards.forEach(card => {
                 card.classList.remove('selected');
-                if (card.getAttribute('data-value') === voixValue) {
+                if (card.getAttribute('data-value') === formuleValue) {
                     card.classList.add('selected');
                 }
             });
+            
+            // Verrouiller la section formule
+            const formuleSection = document.getElementById('formuleSection');
+            formuleSection.classList.add('form-section-locked');
+            
+            const label = formuleSection.querySelector('.form-label');
+            if (!label.querySelector('.locked-badge')) {
+                const badge = document.createElement('span');
+                badge.className = 'locked-badge';
+                badge.textContent = '🔒 Choix verrouillé';
+                label.appendChild(badge);
+            }
+
+            // Mettre à jour les voix disponibles
+            updateVoiceSelection(formuleValue);
         }
     }, 300);
 }
@@ -538,27 +609,19 @@ function showInspirationQuestions() {
     const helperDiv = document.getElementById('inspirationHelper');
     const list = document.getElementById('inspirationQuestionsList');
 
-    // Si c'est déjà ouvert, on le ferme
     if (helperDiv.style.display === 'block') {
         helperDiv.style.display = 'none';
         return;
     }
 
-    // Récupérer l'occasion choisie, ou utiliser une valeur par défaut
     let occasion = formData.occasion;
     if (!occasion || occasion === 'Autre') {
-        occasion = 'Anniversaire'; // Fallback intelligent
+        occasion = 'Anniversaire';
     }
 
-    // Récupérer les questions correspondantes
     const questions = inspirationData[occasion] || inspirationData['Anniversaire'];
-
-    // Injecter les questions dans la liste
     list.innerHTML = questions.map(q => `<li>${q}</li>`).join('');
 
-    // Afficher la boîte
     helperDiv.style.display = 'block';
-    
-    // Scroll doux vers la boîte pour que l'utilisateur la voie bien
     helperDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
