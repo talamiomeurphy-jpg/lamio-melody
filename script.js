@@ -625,3 +625,35 @@ function showInspirationQuestions() {
     helperDiv.style.display = 'block';
     helperDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
+function toggleMobileMenu() {
+    const navMenu = document.getElementById('navMenu');
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    
+    if (window.innerWidth <= 768) {
+        navMenu.classList.toggle('active');
+        if (navMenu.classList.contains('active')) {
+            mobileMenuToggle.textContent = '✕';
+        } else {
+            mobileMenuToggle.textContent = '';
+        }
+    }
+}
+
+// Afficher le bouton menu sur mobile
+window.addEventListener('resize', function() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    if (window.innerWidth <= 768) {
+        mobileMenuToggle.style.display = 'block';
+    } else {
+        mobileMenuToggle.style.display = 'none';
+        document.getElementById('navMenu').classList.remove('active');
+    }
+});
+
+// Initialiser au chargement
+window.addEventListener('load', function() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    if (window.innerWidth <= 768) {
+        mobileMenuToggle.style.display = 'block';
+    }
+});

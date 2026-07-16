@@ -852,19 +852,25 @@
 
     <!-- Navigation -->
     <nav class="navbar">
-        <div class="nav-container">
-            <a href="#" onclick="showHome()" class="logo">
-                <img src="images/logoLamioMelody.png" alt="Lamio Melody">
-            </a>
-            <ul class="nav-menu">
-                <li><a href="#accueil" onclick="scrollToSection('accueil')" class="nav-link active">Accueil</a></li>
-                <li><a href="#comment" onclick="scrollToSection('comment')" class="nav-link">Comment ça marche</a></li>
-                <li><a href="#exemples" onclick="scrollToSection('exemples')" class="nav-link">Exemples</a></li>
-                <li><a href="#tarifs" onclick="scrollToSection('tarifs')" class="nav-link">Tarifs</a></li>
-                <li><button class="btn-commander" onclick="showFormulaire()">Commander ma chanson</button></li>
-            </ul>
-        </div>
-    </nav>
+    <div class="nav-container">
+        <a href="#" onclick="showHome()" class="logo">
+            <img src="images/logoLamioMelody.png" alt="Lamio Melody">
+        </a>
+        
+        <!-- Bouton menu mobile -->
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" style="display: none; background: none; border: none; color: var(--gold); font-size: 1.5rem; cursor: pointer;">
+            ☰
+        </button>
+        
+        <ul class="nav-menu" id="navMenu">
+            <li><a href="#accueil" onclick="scrollToSection('accueil'); toggleMobileMenu()" class="nav-link active">Accueil</a></li>
+            <li><a href="#comment" onclick="scrollToSection('comment'); toggleMobileMenu()" class="nav-link">Comment ça marche</a></li>
+            <li><a href="#exemples" onclick="scrollToSection('exemples'); toggleMobileMenu()" class="nav-link">Exemples</a></li>
+            <li><a href="#tarifs" onclick="scrollToSection('tarifs'); toggleMobileMenu()" class="nav-link">Tarifs</a></li>
+            <li><button class="btn-commander" onclick="showFormulaire(); toggleMobileMenu()">Commander ma chanson</button></li>
+        </ul>
+    </div>
+</nav>
 
     <!-- PAGE D'ACCUEIL -->
     <div id="homePage">
