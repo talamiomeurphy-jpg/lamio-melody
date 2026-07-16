@@ -846,6 +846,117 @@
             .steps-grid { grid-template-columns: 1fr; }
             .footer-content { grid-template-columns: 1fr; }
         }
+        
+/* ==========================================
+   RESPONSIVE & MENU MOBILE (Version propre et unique)
+   ========================================== */
+
+/* Bouton hamburger (caché sur desktop) */
+.mobile-menu-btn {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001;
+}
+
+.mobile-menu-btn span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: var(--gold);
+    border-radius: 3px;
+    transition: all 0.3s;
+}
+
+/* Animation X quand actif */
+.mobile-menu-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.mobile-menu-btn.active span:nth-child(2) {
+    opacity: 0;
+}
+.mobile-menu-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Overlay (caché par défaut) */
+.nav-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999;
+}
+.nav-overlay.active {
+    display: block;
+}
+
+/* Styles Mobile (<= 768px) */
+@media (max-width: 768px) {
+    /* Afficher le bouton hamburger */
+    .mobile-menu-btn {
+        display: flex;
+    }
+    
+    /* Menu caché par défaut (décalé à droite) */
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 75%;
+        max-width: 300px;
+        height: 100vh;
+        background: rgba(19, 8, 35, 0.98);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        padding: 100px 2rem 2rem;
+        gap: 1.5rem;
+        transition: right 0.3s ease;
+        border-left: 1px solid rgba(212, 175, 55, 0.2);
+        z-index: 1000;
+        display: flex; /* Nécessaire pour le layout interne, mais hors écran grâce à right: -100% */
+    }
+    
+    /* Menu visible quand la classe .active est ajoutée par le JS */
+    .nav-menu.active {
+        right: 0;
+    }
+    
+    .nav-menu li {
+        width: 100%;
+    }
+    
+    .nav-link, .btn-commander {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+    
+    /* Autres ajustements responsive */
+    .hero-content { grid-template-columns: 1fr; text-align: center; }
+    .hero-visual { display: none; }
+    .hero-buttons { justify-content: center; flex-direction: column; }
+    .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+    .hero-features { grid-template-columns: 1fr; text-align: left; }
+    .occasion-grid { grid-template-columns: repeat(2, 1fr); }
+    .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .pricing-card.featured { transform: scale(1); }
+    .footer-content { grid-template-columns: 1fr; text-align: center; }
+    .social-links { justify-content: center; }
+}
+
+/* Très petits écrans */
+@media (max-width: 480px) {
+    .occasion-grid { grid-template-columns: 1fr; }
+    .nav-menu { width: 85%; }
+}
     </style>
 </head>
 <body>
@@ -857,17 +968,19 @@
             <img src="images/logoLamioMelody.png" alt="Lamio Melody">
         </a>
         
-        <!-- Bouton menu mobile -->
-        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()" style="display: none; background: none; border: none; color: var(--gold); font-size: 1.5rem; cursor: pointer;">
-            ☰
+        <!-- BOUTON HAMBURGER -->
+        <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
         </button>
         
         <ul class="nav-menu" id="navMenu">
-            <li><a href="#accueil" onclick="scrollToSection('accueil'); toggleMobileMenu()" class="nav-link active">Accueil</a></li>
-            <li><a href="#comment" onclick="scrollToSection('comment'); toggleMobileMenu()" class="nav-link">Comment ça marche</a></li>
-            <li><a href="#exemples" onclick="scrollToSection('exemples'); toggleMobileMenu()" class="nav-link">Exemples</a></li>
-            <li><a href="#tarifs" onclick="scrollToSection('tarifs'); toggleMobileMenu()" class="nav-link">Tarifs</a></li>
-            <li><button class="btn-commander" onclick="showFormulaire(); toggleMobileMenu()">Commander ma chanson</button></li>
+            <li><a href="#accueil" onclick="scrollToSection('accueil')" class="nav-link active">Accueil</a></li>
+            <li><a href="#comment" onclick="scrollToSection('comment')" class="nav-link">Comment ça marche</a></li>
+            <li><a href="#exemples" onclick="scrollToSection('exemples')" class="nav-link">Exemples</a></li>
+            <li><a href="#tarifs" onclick="scrollToSection('tarifs')" class="nav-link">Tarifs</a></li>
+            <li><button class="btn-commander" onclick="showFormulaire()">Commander ma chanson</button></li>
         </ul>
     </div>
 </nav>

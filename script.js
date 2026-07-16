@@ -625,35 +625,36 @@ function showInspirationQuestions() {
     helperDiv.style.display = 'block';
     helperDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
-function toggleMobileMenu() {
+// Garde ta fonction toggleMenu() telle quelle
+function toggleMenu() {
     const navMenu = document.getElementById('navMenu');
-    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    const body = document.body;
     
-    if (window.innerWidth <= 768) {
-        navMenu.classList.toggle('active');
-        if (navMenu.classList.contains('active')) {
-            mobileMenuToggle.textContent = '✕';
-        } else {
-            mobileMenuToggle.textContent = '';
-        }
+    let overlay = document.querySelector('.nav-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'nav-overlay';
+        overlay.onclick = toggleMenu;
+        body.appendChild(overlay);
+    }
+    
+    navMenu.classList.toggle('active');
+    menuBtn.classList.toggle('active');
+    overlay.classList.toggle('active');
+    
+    if (navMenu.classList.contains('active')) {
+        body.style.overflow = 'hidden';
+    } else {
+        body.style.overflow = '';
     }
 }
 
-// Afficher le bouton menu sur mobile
-window.addEventListener('resize', function() {
-    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-    if (window.innerWidth <= 768) {
-        mobileMenuToggle.style.display = 'block';
-    } else {
-        mobileMenuToggle.style.display = 'none';
-        document.getElementById('navMenu').classList.remove('active');
-    }
-});
-
-// Initialiser au chargement
-window.addEventListener('load', function() {
-    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-    if (window.innerWidth <= 768) {
-        mobileMenuToggle.style.display = 'block';
-    }
+// Ferme le menu au clic sur un lien
+document.querySelectorAll('.nav-link, .btn-commander').forEach(item => {
+    item.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            toggleMenu();
+        }
+    });
 });
