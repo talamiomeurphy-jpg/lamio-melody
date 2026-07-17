@@ -915,6 +915,607 @@
             .occasion-grid { grid-template-columns: 1fr; }
             .nav-menu { width: 85%; }
         }
+        /* ==========================================
+   RESPONSIVE COMPLET - TABLETTES ET MOBILES
+   ========================================== */
+
+/* Tablettes (768px - 1024px) */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 1.5rem;
+    }
+    
+    .hero-content {
+        gap: 2rem;
+    }
+    
+    .hero-text h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+    }
+    
+    .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Petites tablettes et grands mobiles (481px - 768px) */
+@media (max-width: 768px) {
+    /* Navigation */
+    .navbar {
+        padding: 0.75rem 1rem;
+    }
+    
+    .logo img {
+        max-height: 40px;
+    }
+    
+    /* Hero Section */
+    .hero {
+        padding: 6rem 1rem 3rem;
+    }
+    
+    .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2rem;
+    }
+    
+    .hero-visual {
+        display: none;
+    }
+    
+    .hero-text h1 {
+        font-size: 1.8rem;
+        line-height: 1.2;
+    }
+    
+    .hero-text > p {
+        font-size: 1rem;
+        max-width: 100%;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        justify-content: center;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .hero-features {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: left;
+    }
+    
+    /* Sections */
+    .how-it-works, .examples, .pricing, .cta-final {
+        padding: 4rem 1rem;
+    }
+    
+    .section-header {
+        margin-bottom: 2.5rem;
+    }
+    
+    .section-title {
+        font-size: 1.75rem;
+    }
+    
+    /* Steps */
+    .steps-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .step-card {
+        padding: 1.5rem;
+    }
+    
+    .step-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    /* Exemples */
+    .example-card {
+        flex: 0 0 240px;
+    }
+    
+    /* Tarifs */
+    .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .pricing-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .pricing-card.featured {
+        transform: scale(1);
+    }
+    
+    .pricing-price {
+        font-size: 2.5rem;
+    }
+    
+    /* Footer */
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 2rem;
+    }
+    
+    .social-links {
+        justify-content: center;
+    }
+    
+    /* Formulaire */
+    .formulaire-container {
+        padding: 2rem 1rem;
+    }
+    
+    .formulaire-header h2 {
+        font-size: 2rem;
+    }
+    
+    .step-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .occasion-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .occasion-card {
+        padding: 1rem 0.5rem;
+    }
+    
+    .occasion-icon {
+        font-size: 1.5rem;
+    }
+    
+    .quality-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .quality-label {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+    
+    .form-input, .form-textarea, .form-select {
+        padding: 0.75rem;
+        font-size: 14px; /* Empêche le zoom sur iOS */
+    }
+    
+    .form-label {
+        font-size: 0.95rem;
+    }
+    
+    .btn-prev, .btn-next, .btn-submit {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+    }
+    
+    /* Summary */
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Petits mobiles (320px - 480px) */
+@media (max-width: 480px) {
+    /* Base */
+    html {
+        font-size: 14px;
+    }
+    
+    body {
+        overflow-x: hidden;
+        max-width: 100vw;
+    }
+    
+    /* Navigation */
+    .navbar {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .logo img {
+        max-height: 35px;
+    }
+    
+    .nav-menu {
+        width: 85%;
+        padding: 80px 1rem 1rem;
+    }
+    
+    /* Hero */
+    .hero {
+        padding: 5rem 0.75rem 2rem;
+    }
+    
+    .hero-text h1 {
+        font-size: 1.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+    }
+    
+    .hero-text > p {
+        font-size: 0.9rem;
+    }
+    
+    .feature-text h4 {
+        font-size: 0.85rem;
+    }
+    
+    .feature-text p {
+        font-size: 0.75rem;
+    }
+    
+    /* Sections */
+    .how-it-works, .examples, .pricing, .cta-final {
+        padding: 3rem 0.75rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .section-label {
+        font-size: 0.75rem;
+    }
+    
+    .section-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    /* Steps */
+    .steps-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .step-card {
+        padding: 1.25rem;
+    }
+    
+    .step-number {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+        left: 1rem;
+        top: -12px;
+    }
+    
+    .step-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+    }
+    
+    .step-card h3 {
+        font-size: 1rem;
+    }
+    
+    .step-card p {
+        font-size: 0.85rem;
+    }
+    
+    /* Exemples */
+    .example-card {
+        flex: 0 0 220px;
+    }
+    
+    .example-image {
+        height: 160px;
+    }
+    
+    .play-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .example-info h4 {
+        font-size: 0.9rem;
+    }
+    
+    .example-meta {
+        font-size: 0.75rem;
+    }
+    
+    /* Tarifs */
+    .pricing-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .pricing-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.25rem;
+    }
+    
+    .pricing-name {
+        font-size: 0.8rem;
+    }
+    
+    .pricing-price {
+        font-size: 2rem;
+    }
+    
+    .pricing-features li {
+        font-size: 0.85rem;
+        padding: 0.5rem 0;
+    }
+    
+    .popular-badge {
+        font-size: 0.65rem;
+        padding: 0.4rem 1rem;
+    }
+    
+    .btn-choose {
+        padding: 0.875rem;
+        font-size: 0.9rem;
+    }
+    
+    /* CTA */
+    .cta-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .cta-content p {
+        font-size: 1rem;
+    }
+    
+    /* Formulaire */
+    .formulaire-container {
+        padding: 1.5rem 0.75rem;
+        border-radius: 12px;
+    }
+    
+    .formulaire-header h2 {
+        font-size: 1.75rem;
+    }
+    
+    .formulaire-header p {
+        font-size: 0.9rem;
+    }
+    
+    .progress-steps {
+        gap: 0.35rem;
+        margin-bottom: 2rem;
+    }
+    
+    .step-circle {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+    
+    .step-title {
+        font-size: 1.3rem;
+        margin-bottom: 1.25rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .occasion-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+    
+    .occasion-card {
+        padding: 0.75rem 0.5rem;
+        border-radius: 8px;
+    }
+    
+    .occasion-icon {
+        font-size: 1.25rem;
+        margin-bottom: 0.35rem;
+    }
+    
+    .occasion-label {
+        font-size: 0.8rem;
+    }
+    
+    .price-tag {
+        font-size: 0.7rem;
+    }
+    
+    .voix-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quality-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quality-label {
+        font-size: 0.85rem;
+        padding: 0.625rem;
+    }
+    
+    .form-input, .form-textarea, .form-select {
+        padding: 0.625rem;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+    
+    .form-textarea {
+        min-height: 100px;
+    }
+    
+    .char-counter {
+        font-size: 0.75rem;
+    }
+    
+    .example-text {
+        font-size: 0.75rem;
+        padding: 0.625rem;
+    }
+    
+    .btn-inspiration {
+        font-size: 0.8rem;
+    }
+    
+    .inspiration-helper {
+        padding: 1rem;
+    }
+    
+    .inspiration-helper h4 {
+        font-size: 0.9rem;
+    }
+    
+    .inspiration-helper li {
+        font-size: 0.85rem;
+    }
+    
+    .btn-prev, .btn-next, .btn-submit {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9rem;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .form-navigation {
+        gap: 0.75rem;
+        flex-direction: column;
+    }
+    
+    /* Summary */
+    .summary-box {
+        padding: 1.25rem;
+    }
+    
+    .summary-grid {
+        gap: 0.75rem;
+    }
+    
+    .summary-item {
+        padding: 0.75rem;
+    }
+    
+    .summary-label {
+        font-size: 0.8rem;
+    }
+    
+    .summary-item p, .summary-section p {
+        font-size: 0.9rem;
+    }
+    
+    .summary-section {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Confirmation */
+    .check-icon {
+        width: 100px;
+        height: 100px;
+        font-size: 3rem;
+    }
+    
+    .confirmation-content h2 {
+        font-size: 2rem;
+    }
+    
+    .confirmation-content p {
+        font-size: 1rem;
+    }
+    
+    .btn-home {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* Très petits écrans (moins de 360px) */
+@media (max-width: 360px) {
+    html {
+        font-size: 13px;
+    }
+    
+    .hero-text h1 {
+        font-size: 1.3rem;
+    }
+    
+    .section-title {
+        font-size: 1.3rem;
+    }
+    
+    .occasion-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .quality-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .btn-primary, .btn-secondary, .btn-commander {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+    }
+}
+
+/* Correction des débordements */
+img, video, iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Empêcher le texte de déborder */
+* {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+}
+
+/* Forcer le conteneur à ne pas déborder */
+.container, .formulaire-container, .hero-content {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Ajustement pour les écrans très étroits */
+@media screen and (max-width: 320px) {
+    .hero-text h1 {
+        font-size: 1.2rem;
+    }
+    
+    .btn-primary, .btn-secondary {
+        padding: 0.625rem 1rem;
+        font-size: 0.8rem;
+    }
+}
     </style>
 </head>
 <body>
