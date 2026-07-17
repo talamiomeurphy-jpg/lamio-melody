@@ -33,7 +33,7 @@ function showFormulaire() {
 }
 
 // ==========================================
-// GESTION DES CHOIX "AUTRE"
+// GESTION DES CHOIX "AUTRE" ET "MOI"
 // ==========================================
 
 // Occasion - Afficher/masquer le champ "Autre"
@@ -75,6 +75,113 @@ document.querySelectorAll('[data-field="style"]').forEach(card => {
         }
     });
 });
+
+// Relation - Gestion complète de "Moi" et "Autre"
+function handleRelationChange() {
+    const relation = document.getElementById('destRelation').value;
+    const relationAutreField = document.getElementById('relationAutreField');
+    const moiMessage = document.getElementById('moiMessage');
+    
+    const destPrenomLabel = document.getElementById('destPrenomLabel');
+    const destPrenomInput = document.getElementById('destPrenom');
+    const relationLabel = document.getElementById('relationLabel');
+    
+    const step3Title = document.getElementById('step3Title');
+    const pourquoiLabel = document.getElementById('pourquoiLabel');
+    const pourquoiInput = document.getElementById('pourquoiImportante');
+    const souvenirLabel = document.getElementById('souvenirLabel');
+    const souvenirInput = document.getElementById('souvenir');
+    const souvenirExample = document.getElementById('souvenirExample');
+    
+    const qualitesLabel = document.getElementById('qualitesLabel');
+    const surnomLabel = document.getElementById('surnomLabel');
+    const surnomInput = document.getElementById('surnom');
+    const expressionLabel = document.getElementById('expressionLabel');
+    const expressionInput = document.getElementById('expressionFrequente');
+    
+    const messageFinalLabel = document.getElementById('messageFinalLabel');
+    const messageFinalInput = document.getElementById('messageFinal');
+    const lieuLabel = document.getElementById('lieuLabel');
+    const lieuInput = document.getElementById('lieuImportant');
+
+    if (relation === 'Moi') {
+        // === ÉTAPE 1 ===
+        relationLabel.innerHTML = '❤️ Cette chanson est pour : <span style="color: var(--gold);">MOI-MÊME</span> ✨';
+        moiMessage.style.display = 'block';
+        relationAutreField.style.display = 'none';
+        
+        destPrenomLabel.textContent = ' Votre prénom *';
+        destPrenomInput.placeholder = 'Votre prénom';
+        
+        // === ÉTAPE 3 ===
+        step3Title.textContent = '📖 Votre histoire';
+        pourquoiLabel.textContent = '⭐ Pourquoi est-il important pour vous de créer cette chanson ? *';
+        pourquoiInput.placeholder = 'Ex: Parce que je veux me rappeler qui je suis, ou parce que je ne baisse jamais les bras...';
+        
+        souvenirLabel.textContent = ' Racontez-nous ce souvenir en quelques lignes *';
+        souvenirInput.placeholder = 'Décrivez un moment précis de votre vie...';
+        souvenirExample.textContent = ' Exemple : "Le jour de mon examen, j\'avais tellement peur que je voulais abandonner. Mais j\'ai persévéré et quand j\'ai reçu mon résultat, j\'ai pleuré de joie."';
+        
+        // === ÉTAPE 4 ===
+        qualitesLabel.textContent = '🏆 Quelles sont vos principales qualités ? (Cochez-en plusieurs)';
+        surnomLabel.textContent = ' Avez-vous un surnom ?';
+        surnomInput.placeholder = 'Ex: Chocho, Bébé, Boss...';
+        expressionLabel.textContent = ' Y a-t-il un mot ou une expression que vous dites souvent ?';
+        expressionInput.placeholder = 'Ex: \'Je peux le faire\', \'On ne lâche rien\', \'Je suis fort(e)\'...';
+        
+        // === ÉTAPE 5 ===
+        messageFinalLabel.textContent = '💌 Quel message voulez-vous vous rappeler après avoir écouté la chanson ? *';
+        messageFinalInput.placeholder = 'Ex: Je veux me rappeler que je suis fort(e), ou que je peux tout accomplir...';
+        lieuLabel.innerHTML = ' Un lieu important pour vous ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
+        lieuInput.placeholder = 'Ex: La plage de Nangui, mon bureau, ma chambre...';
+        
+        // Mettre à jour inspirationData pour le cas "Moi"
+        if (typeof inspirationData !== 'undefined') {
+            inspirationData['Moi'] = [
+                "⭐ Qu'est-ce qui vous rend unique ou spécial(e) à vos propres yeux ?",
+                "📖 Racontez un moment de votre vie dont vous êtes particulièrement fier/fière.",
+                "💡 Quelle qualité ou force personnelle souhaitez-vous célébrer dans cette chanson ?"
+            ];
+        }
+        
+    } else {
+        // === ÉTAPE 1 ===
+        relationLabel.innerHTML = '❤️ Votre relation avec cette personne *';
+        moiMessage.style.display = 'none';
+        
+        if (relation === 'Autre') {
+            relationAutreField.style.display = 'block';
+        } else {
+            relationAutreField.style.display = 'none';
+            document.getElementById('relationAutre').value = '';
+        }
+        
+        destPrenomLabel.textContent = ' Prénom du destinataire *';
+        destPrenomInput.placeholder = 'Ex: Jeannette, Marie, Jojo...';
+        
+        // === ÉTAPE 3 ===
+        step3Title.textContent = '📖 Le cœur de l\'histoire';
+        pourquoiLabel.textContent = '⭐ Pourquoi cette personne est-elle spéciale ou importante pour vous ? *';
+        pourquoiInput.placeholder = 'Ex: Parce qu\'elle m\'a toujours soutenu, ou parce qu\'elle ne baisse jamais les bras...';
+        
+        souvenirLabel.textContent = ' Racontez-nous ce souvenir en quelques lignes *';
+        souvenirInput.placeholder = 'Décrivez un moment précis...';
+        souvenirExample.textContent = ' Exemple : "Le jour de son examen, elle avait tellement peur qu\'elle voulait abandonner. Nous l\'avons encouragée jusqu\'au dernier moment. Quand elle a reçu son résultat, nous avons tous pleuré de joie."';
+        
+        // === ÉTAPE 4 ===
+        qualitesLabel.textContent = '🏆 Quelles sont ses principales qualités ? (Cochez-en plusieurs)';
+        surnomLabel.textContent = '😂 Avez-vous un surnom pour cette personne ?';
+        surnomInput.placeholder = 'Ex: Chocho, Bébé, Maman Jo, Boss...';
+        expressionLabel.textContent = ' Y a-t-il un mot ou une expression qu\'il/elle dit souvent ?';
+        expressionInput.placeholder = 'Ex: \'Nzambe apambola yo\', \'On ne lâche rien\', \'Toza ensemble\'...';
+        
+        // === ÉTAPE 5 ===
+        messageFinalLabel.textContent = '💌 Quel message voulez-vous qu\'il/elle retienne après avoir écouté la chanson ? *';
+        messageFinalInput.placeholder = 'Ex: Je veux qu\'il sache que je suis fier de lui, ou qu\'elle comprenne que je serai toujours là...';
+        lieuLabel.innerHTML = ' Un lieu important pour vous deux ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
+        lieuInput.placeholder = 'Ex: La plage de Nangui, le jardin de la maison...';
+    }
+}
 
 // Voix (Dynamique)
 document.querySelectorAll('.voice-card').forEach(card => {
@@ -181,12 +288,20 @@ function validateStep() {
             const prenom = document.getElementById('destPrenom').value.trim();
             const relation = document.getElementById('destRelation').value;
             if (!prenom) {
-                alert('Veuillez entrer le prénom du destinataire.');
+                alert('Veuillez entrer le prénom.');
                 return false;
             }
             if (!relation) {
                 alert('Veuillez sélectionner votre relation.');
                 return false;
+            }
+            if (relation === 'Autre') {
+                const relationAutre = document.getElementById('relationAutre').value.trim();
+                if (!relationAutre) {
+                    alert('Veuillez préciser votre relation.');
+                    return false;
+                }
+                formData.relationDetail = relationAutre;
             }
             formData.destPrenom = prenom;
             formData.destRelation = relation;
@@ -223,7 +338,7 @@ function validateStep() {
             const pourquoi = document.getElementById('pourquoiImportante').value.trim();
             const souvenir = document.getElementById('souvenir').value.trim();
             if (!pourquoi) {
-                alert('Veuillez expliquer pourquoi cette personne est importante.');
+                alert('Veuillez expliquer pourquoi c\'est important.');
                 return false;
             }
             if (!souvenir) {
@@ -324,6 +439,8 @@ function generateSummary() {
     
     const occasionFinale = formData.occasion === 'Autre' ? (formData.occasionDetail || 'Autre') : formData.occasion;
     const styleFinal = formData.style === 'Autre' ? (formData.styleDetail || 'Autre') : formData.style;
+    const relationAffichee = formData.destRelation === 'Moi' ? 'Moi-même ✨' : (formData.relationDetail || formData.destRelation);
+    const destinataireAffiche = formData.destRelation === 'Moi' ? `Moi-même (${formData.destPrenom})` : `${formData.destPrenom} (${relationAffichee})`;
     
     const summaryHTML = `
         <div class="summary-grid">
@@ -333,7 +450,7 @@ function generateSummary() {
             </div>
             <div class="summary-item">
                 <p class="summary-label">👤 Destinataire</p>
-                <p>${formData.destPrenom} (${formData.destRelation})</p>
+                <p>${destinataireAffiche}</p>
             </div>
             <div class="summary-item">
                 <p class="summary-label">🎵 Style musical</p>
@@ -354,7 +471,7 @@ function generateSummary() {
         </div>
         ${formData.pourquoiImportante ? `
         <div class="summary-section">
-            <p class="summary-label">⭐ Pourquoi important(e)</p>
+            <p class="summary-label">⭐ Pourquoi c'est important</p>
             <p>${formData.pourquoiImportante}</p>
         </div>
         ` : ''}
@@ -436,38 +553,54 @@ function getFormulePrice() {
 // ==========================================
 // SOUMISSION DE LA COMMANDE
 // ==========================================
-// ==========================================
-// SOUMISSION DE LA COMMANDE
-// ==========================================
 async function submitOrder() {
+    // Récupérer TOUTES les données AVANT tout
+    const clientPrenom = document.getElementById('clientPrenom').value.trim();
+    const clientWhatsapp = document.getElementById('clientWhatsapp').value.trim();
+    const clientEmail = document.getElementById('clientEmail').value.trim();
+    
+    if (!clientPrenom || !clientWhatsapp) {
+        alert('Veuillez remplir vos coordonnées (prénom et WhatsApp).');
+        return false;
+    }
+    
+    formData.clientPrenom = clientPrenom;
+    formData.clientWhatsapp = clientWhatsapp;
+    formData.clientEmail = clientEmail;
+    
     const occasionFinale = formData.occasion === 'Autre' ? (formData.occasionDetail || 'Autre') : formData.occasion;
     const styleFinal = formData.style === 'Autre' ? (formData.styleDetail || 'Autre') : formData.style;
+    const relationAffichee = formData.destRelation === 'Moi' ? 'Moi-même' : (formData.relationDetail || formData.destRelation);
     const formule = getFormuleDisplayName();
     const prix = getFormulePrice();
     
-    // Utiliser de vrais émojis compatibles WhatsApp
-    const whatsappMessage = `🎵 *Nouvelle commande Lamio Melody* 🎵\n\n` +
+    // Adapter le message si c'est pour "Moi"
+    const estPourMoi = formData.destRelation === 'Moi';
+    const titreMessage = estPourMoi ? '🎵 *Ma chanson personnelle - Lamio Melody* 🎵' : '🎵 *Nouvelle commande Lamio Melody* 🎵';
+    const destinataireText = estPourMoi ? `👤 *Pour :* Moi-même (${formData.destPrenom})` : `👤 *Destinataire :* ${formData.destPrenom} (${relationAffichee})`;
+    
+    const whatsappMessage = `${titreMessage}\n\n` +
         `🎉 *Occasion :* ${occasionFinale}\n` +
-        `👤 *Destinataire :* ${formData.destPrenom} (${formData.destRelation})\n` +
+        `${destinataireText}\n` +
         `🎵 *Style :* ${styleFinal}\n` +
         `🎤 *Voix :* ${formData.voix}\n` +
         `😊 *Émotion :* ${formData.emotion}\n\n` +
-        `⭐ *Pourquoi important(e) :*\n${formData.pourquoiImportante}\n\n` +
+        `⭐ *Pourquoi c'est important :*\n${formData.pourquoiImportante}\n\n` +
         `📖 *Souvenir :*\n${formData.souvenir}\n\n` +
-        `${formData.qualites && formData.qualites.length > 0 ? ` *Qualités :* ${formData.qualites.join(', ')}\n\n` : ''}` +
+        `${formData.qualites && formData.qualites.length > 0 ? `🏆 *Qualités :* ${formData.qualites.join(', ')}\n\n` : ''}` +
         `${formData.surnom ? `😂 *Surnom :* ${formData.surnom}\n\n` : ''}` +
         `${formData.expressionFrequente ? `💬 *Expression fréquente :* ${formData.expressionFrequente}\n\n` : ''}` +
         `${formData.phraseIntegrer ? `✨ *Phrase à intégrer :* ${formData.phraseIntegrer}\n\n` : ''}` +
         `💌 *Message final :*\n${formData.messageFinal}\n\n` +
         `${formData.lieuImportant ? `📍 *Lieu important :* ${formData.lieuImportant}\n` : ''}` +
         `${formData.dateImportante ? `📅 *Date importante :* ${formData.dateImportante}\n` : ''}\n` +
-        ` *Client :* ${formData.clientPrenom}\n` +
+        `👤 *Client :* ${formData.clientPrenom}\n` +
         `📲 *WhatsApp :* ${formData.clientWhatsapp}\n` +
         `${formData.clientEmail ? `📧 *Email :* ${formData.clientEmail}\n` : ''}\n\n` +
         `💎 *Formule :* ${formule} (${prix})\n\n` +
         `🙏 *Merci de confirmer ma commande*`;
     
-    // Sauvegarder dans Supabase (si configuré)
+    // Sauvegarder dans Supabase
     try {
         const SUPABASE_URL = 'https://cfneuwhgmopaguemjchf.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_a5hxJyzGt03kuCTUnkAxig_BksoIlH0';
@@ -477,7 +610,7 @@ async function submitOrder() {
             lm_voice: formData.voix,
             occasion: occasionFinale,
             dest_prenom: formData.destPrenom,
-            dest_relation: formData.destRelation,
+            dest_relation: relationAffichee,
             style_musical: styleFinal,
             emotion: formData.emotion,
             pourquoi_importante: formData.pourquoiImportante,
@@ -494,24 +627,26 @@ async function submitOrder() {
             client_email: formData.clientEmail,
             formule: formule,
             prix: prix,
+            est_pour_moi: estPourMoi,
             statut: 'en_attente_validation',
             created_at: new Date().toISOString()
         }]);
         
         if (error) console.error('Erreur Supabase:', error);
     } catch (e) {
-        console.log('Supabase non configuré');
+        console.log('Erreur Supabase:', e);
     }
     
     // Ouvrir WhatsApp
-    window.open(`https://wa.me/242065186967?text=${encodeURIComponent(whatsappMessage)}`, '_blank');
+    const whatsappUrl = `https://wa.me/242065186967?text=${encodeURIComponent(whatsappMessage)}`;
+    window.open(whatsappUrl, '_blank');
     
     // Afficher confirmation
     document.getElementById('formulaire').classList.remove('active');
     document.getElementById('confirmation').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    // Rafraîchir la page après 3 secondes (comme Ctrl+F5)
+    // Rafraîchir la page après 3 secondes
     setTimeout(() => {
         window.location.reload(true);
     }, 3000);
@@ -532,7 +667,6 @@ function selectTarif(formule) {
         if (formuleValue) {
             formData.formule = formuleValue;
             
-            // Sélectionner la carte de formule
             const cards = document.querySelectorAll('#formuleGrid .occasion-card');
             cards.forEach(card => {
                 card.classList.remove('selected');
@@ -541,7 +675,6 @@ function selectTarif(formule) {
                 }
             });
             
-            // Verrouiller la section formule
             const formuleSection = document.getElementById('formuleSection');
             formuleSection.classList.add('form-section-locked');
             
@@ -553,7 +686,6 @@ function selectTarif(formule) {
                 label.appendChild(badge);
             }
 
-            // Mettre à jour les voix disponibles
             updateVoiceSelection(formuleValue);
         }
     }, 300);
@@ -625,7 +757,10 @@ function showInspirationQuestions() {
     helperDiv.style.display = 'block';
     helperDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
-// Garde ta fonction toggleMenu() telle quelle
+
+// ==========================================
+// MENU MOBILE
+// ==========================================
 function toggleMenu() {
     const navMenu = document.getElementById('navMenu');
     const menuBtn = document.querySelector('.mobile-menu-btn');
@@ -650,7 +785,6 @@ function toggleMenu() {
     }
 }
 
-// Ferme le menu au clic sur un lien
 document.querySelectorAll('.nav-link, .btn-commander').forEach(item => {
     item.addEventListener('click', () => {
         if (window.innerWidth <= 768) {

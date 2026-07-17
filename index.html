@@ -37,7 +37,6 @@
 
         h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
 
-        /* Navigation */
         .navbar {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -92,7 +91,6 @@
             transform: translateY(-2px);
         }
 
-        /* Sections communes */
         .container {
             max-width: 1400px; margin: 0 auto; padding: 0 2rem;
         }
@@ -114,7 +112,6 @@
             color: var(--text-muted); font-size: 1.1rem;
         }
 
-        /* Hero Section */
         .hero {
             min-height: 100vh;
             display: flex; align-items: center;
@@ -226,7 +223,6 @@
             color: var(--dark);
         }
 
-        /* Comment ça marche */
         .how-it-works {
             padding: 6rem 2rem; background: var(--white); color: var(--dark);
         }
@@ -262,7 +258,6 @@
             font-size: 0.9rem; color: var(--text-muted);
         }
 
-        /* Exemples */
         .examples {
             padding: 6rem 2rem; background: var(--dark);
         }
@@ -317,7 +312,6 @@
         }
         .example-meta .style { color: var(--gold); }
 
-        /* Tarifs */
         .pricing {
             padding: 6rem 2rem; background: var(--white); color: var(--dark);
         }
@@ -402,7 +396,6 @@
             background: var(--gold-light);
         }
 
-        /* CTA Final */
         .cta-final {
             padding: 6rem 2rem;
             background: linear-gradient(135deg, var(--dark) 0%, var(--violet-dark) 100%);
@@ -427,7 +420,6 @@
             margin-bottom: 2rem; font-size: 1.1rem;
         }
 
-        /* Footer */
         footer {
             background: var(--dark);
             padding: 4rem 2rem 2rem;
@@ -474,7 +466,6 @@
             color: var(--text-muted); font-size: 0.85rem;
         }
 
-        /* Formulaire Section */
         .formulaire-section {
             display: none;
             min-height: 100vh;
@@ -672,7 +663,6 @@
             color: var(--dark); line-height: 1.6;
         }
 
-        /* NOUVEAU : Style pour le bouton d'inspiration */
         .btn-inspiration {
             background: none;
             border: none;
@@ -731,7 +721,6 @@
             font-style: italic;
         }
 
-        /* Page de confirmation */
         .confirmation-page {
             display: none;
             min-height: 100vh;
@@ -777,7 +766,6 @@
             transform: translateY(-2px);
         }
 
-        /* NOUVELLES CLASSES POUR LE VERROUILLAGE ET LA LOGIQUE DYNAMIQUE */
         .form-section-locked {
             opacity: 0.6;
             pointer-events: none;
@@ -827,7 +815,6 @@
             margin-left: 0.5rem;
         }
 
-        /* Responsive */
         @media (max-width: 968px) {
             .hero-content { grid-template-columns: 1fr; }
             .hero-visual { display: none; }
@@ -847,153 +834,116 @@
             .footer-content { grid-template-columns: 1fr; }
         }
         
-/* ==========================================
-   RESPONSIVE & MENU MOBILE (Version propre et unique)
-   ========================================== */
-
-/* Bouton hamburger (caché sur desktop) */
-.mobile-menu-btn {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    z-index: 1001;
-}
-
-.mobile-menu-btn span {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background: var(--gold);
-    border-radius: 3px;
-    transition: all 0.3s;
-}
-
-/* Animation X quand actif */
-.mobile-menu-btn.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-.mobile-menu-btn.active span:nth-child(2) {
-    opacity: 0;
-}
-.mobile-menu-btn.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -6px);
-}
-
-/* Overlay (caché par défaut) */
-.nav-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 999;
-}
-.nav-overlay.active {
-    display: block;
-}
-
-/* Styles Mobile (<= 768px) */
-@media (max-width: 768px) {
-    /* Afficher le bouton hamburger */
-    .mobile-menu-btn {
-        display: flex;
-    }
-    
-    /* Menu caché par défaut (décalé à droite) */
-    .nav-menu {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 75%;
-        max-width: 300px;
-        height: 100vh;
-        background: rgba(19, 8, 35, 0.98);
-        backdrop-filter: blur(10px);
-        flex-direction: column;
-        padding: 100px 2rem 2rem;
-        gap: 1.5rem;
-        transition: right 0.3s ease;
-        border-left: 1px solid rgba(212, 175, 55, 0.2);
-        z-index: 1000;
-        display: flex; /* Nécessaire pour le layout interne, mais hors écran grâce à right: -100% */
-    }
-    
-    /* Menu visible quand la classe .active est ajoutée par le JS */
-    .nav-menu.active {
-        right: 0;
-    }
-    
-    .nav-menu li {
-        width: 100%;
-    }
-    
-    .nav-link, .btn-commander {
-        display: block;
-        width: 100%;
-        text-align: center;
-        padding: 1rem;
-        font-size: 1.1rem;
-    }
-    
-    /* Autres ajustements responsive */
-    .hero-content { grid-template-columns: 1fr; text-align: center; }
-    .hero-visual { display: none; }
-    .hero-buttons { justify-content: center; flex-direction: column; }
-    .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-    .hero-features { grid-template-columns: 1fr; text-align: left; }
-    .occasion-grid { grid-template-columns: repeat(2, 1fr); }
-    .steps-grid { grid-template-columns: repeat(2, 1fr); }
-    .pricing-grid { grid-template-columns: 1fr; }
-    .pricing-card.featured { transform: scale(1); }
-    .footer-content { grid-template-columns: 1fr; text-align: center; }
-    .social-links { justify-content: center; }
-}
-
-/* Très petits écrans */
-@media (max-width: 480px) {
-    .occasion-grid { grid-template-columns: 1fr; }
-    .nav-menu { width: 85%; }
-}
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001;
+        }
+        .mobile-menu-btn span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: var(--gold);
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+        .nav-overlay.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: flex; }
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 75%;
+                max-width: 300px;
+                height: 100vh;
+                background: rgba(19, 8, 35, 0.98);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 100px 2rem 2rem;
+                gap: 1.5rem;
+                transition: right 0.3s ease;
+                border-left: 1px solid rgba(212, 175, 55, 0.2);
+                z-index: 1000;
+                display: flex;
+            }
+            .nav-menu.active { right: 0; }
+            .nav-menu li { width: 100%; }
+            .nav-link, .btn-commander {
+                display: block;
+                width: 100%;
+                text-align: center;
+                padding: 1rem;
+                font-size: 1.1rem;
+            }
+            .hero-content { grid-template-columns: 1fr; text-align: center; }
+            .hero-visual { display: none; }
+            .hero-buttons { justify-content: center; flex-direction: column; }
+            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+            .hero-features { grid-template-columns: 1fr; text-align: left; }
+            .occasion-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps-grid { grid-template-columns: repeat(2, 1fr); }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .pricing-card.featured { transform: scale(1); }
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            .social-links { justify-content: center; }
+        }
+        @media (max-width: 480px) {
+            .occasion-grid { grid-template-columns: 1fr; }
+            .nav-menu { width: 85%; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Navigation -->
     <nav class="navbar">
-    <div class="nav-container">
-        <a href="#" onclick="showHome()" class="logo">
-            <img src="images/logoLamioMelody.png" alt="Lamio Melody">
-        </a>
-        
-        <!-- BOUTON HAMBURGER -->
-        <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-        
-        <ul class="nav-menu" id="navMenu">
-            <li><a href="#accueil" onclick="scrollToSection('accueil')" class="nav-link active">Accueil</a></li>
-            <li><a href="#comment" onclick="scrollToSection('comment')" class="nav-link">Comment ça marche</a></li>
-            <li><a href="#exemples" onclick="scrollToSection('exemples')" class="nav-link">Exemples</a></li>
-            <li><a href="#tarifs" onclick="scrollToSection('tarifs')" class="nav-link">Tarifs</a></li>
-            <li><button class="btn-commander" onclick="showFormulaire()">Commander ma chanson</button></li>
-        </ul>
-    </div>
-</nav>
+        <div class="nav-container">
+            <a href="#" onclick="showHome()" class="logo">
+                <img src="images/logoLamioMelody.png" alt="Lamio Melody">
+            </a>
+            <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#accueil" onclick="scrollToSection('accueil')" class="nav-link active">Accueil</a></li>
+                <li><a href="#comment" onclick="scrollToSection('comment')" class="nav-link">Comment ça marche</a></li>
+                <li><a href="#exemples" onclick="scrollToSection('exemples')" class="nav-link">Exemples</a></li>
+                <li><a href="#tarifs" onclick="scrollToSection('tarifs')" class="nav-link">Tarifs</a></li>
+                <li><button class="btn-commander" onclick="showFormulaire()">Commander ma chanson</button></li>
+            </ul>
+        </div>
+    </nav>
 
-    <!-- PAGE D'ACCUEIL -->
     <div id="homePage">
-        <!-- Hero -->
         <section id="accueil" class="hero">
             <div class="hero-overlay"></div>
             <div class="hero-content">
                 <div class="hero-text">
                     <p class="hero-subtitle">✨ BIENVENUE CHEZ LAMIO MELODY</p>
-                <h1>Transformez votre histoire en une <span class="highlight">chanson unique.</span></h1>
+                    <h1>Transformez votre histoire en une <span class="highlight">chanson unique.</span></h1>
                     <p>Offrez une chanson personnalisée écrite avec émotion, interprétée par LM Voices et produite avec passion.</p>
                     <div class="hero-buttons">
                         <button class="btn-primary" onclick="showFormulaire()"> Créer ma chanson</button>
@@ -1023,7 +973,6 @@
             </div>
         </section>
 
-        <!-- Comment ça marche -->
         <section id="comment" class="how-it-works">
             <div class="container">
                 <div class="section-header">
@@ -1059,141 +1008,138 @@
             </div>
         </section>
 
-        <!-- Exemples -->
-       <section id="exemples" class="examples">
-    <div class="container">
-        <div class="section-header">
-            <p class="section-label">DES ÉMOTIONS, EN MUSIQUE</p>
-            <h2 class="section-title">Ils nous ont fait <span class="highlight">confiance</span></h2>
-            <p class="section-subtitle">Découvrez quelques créations inspirées de vraies histoires.</p>
-        </div>
-        <div class="examples-slider">
-            <div class="example-card">
-                <div class="example-image">
-                    <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&q=80" alt="Studio musique" onerror="this.src='https://via.placeholder.com/600x400/8b5cf6/ffffff?text=Lamio+Melody'">
-                    <div class="play-overlay">
-                        <button class="play-btn" onclick="playAudio('musique/Lamio_Melody.mp3', this, 'duration-0')">▶</button>
-                    </div>
+        <section id="exemples" class="examples">
+            <div class="container">
+                <div class="section-header">
+                    <p class="section-label">DES ÉMOTIONS, EN MUSIQUE</p>
+                    <h2 class="section-title">Ils nous ont fait <span class="highlight">confiance</span></h2>
+                    <p class="section-subtitle">Découvrez quelques créations inspirées de vraies histoires.</p>
                 </div>
-                <div class="example-info">
-                    <h4>Lamio Melody</h4>
-                    <div class="example-meta">
-                        <span class="style">Lamio song</span>
-                        <span id="duration-0">--:--</span>
+                <div class="examples-slider">
+                    <div class="example-card">
+                        <div class="example-image">
+                            <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&q=80" alt="Studio musique" onerror="this.src='https://via.placeholder.com/600x400/8b5cf6/ffffff?text=Lamio+Melody'">
+                            <div class="play-overlay">
+                                <button class="play-btn" onclick="playAudio('musique/Lamio_Melody.mp3', this, 'duration-0')">▶</button>
+                            </div>
+                        </div>
+                        <div class="example-info">
+                            <h4>Lamio Melody</h4>
+                            <div class="example-meta">
+                                <span class="style">Lamio song</span>
+                                <span id="duration-0">--:--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="example-card">
+                        <div class="example-image">
+                            <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Anniversaire" onerror="this.src='https://via.placeholder.com/600x400/f59e0b/ffffff?text=Anniversaire'">
+                            <div class="play-overlay">
+                                <button class="play-btn" onclick="playAudio('musique/Joyeux_Anniversaire_Teuf.mp3', this, 'duration-1')">▶</button>
+                            </div>
+                        </div>
+                        <div class="example-info">
+                            <h4>Joyeux anniversaire</h4>
+                            <div class="example-meta">
+                                <span class="style">Pop</span>
+                                <span id="duration-1">--:--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="example-card">
+                        <div class="example-image">
+                            <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80" alt="Musique Afro" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=Afro'">
+                            <div class="play-overlay">
+                                <button class="play-btn" onclick="playAudio('musique/Tu_connais_déjà.mp3', this, 'duration-2')">▶</button>
+                            </div>
+                        </div>
+                        <div class="example-info">
+                            <h4>Tu connais déja</h4>
+                            <div class="example-meta">
+                                <span class="style">afro</span>
+                                <span id="duration-2">--:--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="example-card">
+                        <div class="example-image">
+                            <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&q=80" alt="Couple amoureux" onerror="this.src='https://via.placeholder.com/600x400/8b5cf6/ffffff?text=Amour'">
+                            <div class="play-overlay">
+                                <button class="play-btn" onclick="playAudio('musique/Vannessa_Mon_Évidence.mp3', this, 'duration-3')">▶</button>
+                            </div>
+                        </div>
+                        <div class="example-info">
+                            <h4>Vanessa mon évidence</h4>
+                            <div class="example-meta">
+                                <span class="style">love</span>
+                                <span id="duration-3">--:--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="example-card">
+                        <div class="example-image">
+                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80" alt="Famille" onerror="this.src='https://via.placeholder.com/600x400/d4af37/ffffff?text=Famille'">
+                            <div class="play-overlay">
+                                <button class="play-btn" onclick="playAudio('musique/Merci_Mamounette_1.mp3', this, 'duration-4')">▶</button>
+                            </div>
+                        </div>
+                        <div class="example-info">
+                            <h4>Merci Mamounette</h4>
+                            <div class="example-meta">
+                                <span class="style">Gospel</span>
+                                <span id="duration-4">--:--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="example-card">
+                        <div class="example-image">
+                            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&q=80" alt="Réussite" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=Reussite'">
+                            <div class="play-overlay">
+                                <button class="play-btn" onclick="playAudio('musique/Mon_Evidence_1.mp3', this, 'duration-5')">▶</button>
+                            </div>
+                        </div>
+                        <div class="example-info">
+                            <h4>Mon Évidence</h4>
+                            <div class="example-meta">
+                                <span class="style">RnB</span>
+                                <span id="duration-5">--:--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="example-card">
+                        <div class="example-image">
+                            <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Célébration" onerror="this.src='https://via.placeholder.com/600x400/f59e0b/ffffff?text=Célébration'">
+                            <div class="play-overlay">
+                                <button class="play-btn" onclick="playAudio('musique/Aujourdhui_cest_ton_jour_1.mp3', this, 'duration-6')">▶</button>
+                            </div>
+                        </div>
+                        <div class="example-info">
+                            <h4>Aujourd'hui c'est ton jour</h4>
+                            <div class="example-meta">
+                                <span class="style">Pop</span>
+                                <span id="duration-6">--:--</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="example-card">
+                        <div class="example-image">
+                            <img src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=600&q=80" alt="Succès" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=Succès'">
+                            <div class="play-overlay">
+                                <button class="play-btn" onclick="playAudio('musique/Tu_las_fait_1.mp3', this, 'duration-7')">▶</button>
+                            </div>
+                        </div>
+                        <div class="example-info">
+                            <h4>Tu l'as fait</h4>
+                            <div class="example-meta">
+                                <span class="style">Afrobeat</span>
+                                <span id="duration-7">--:--</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="example-card">
-                <div class="example-image">
-                    <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Anniversaire" onerror="this.src='https://via.placeholder.com/600x400/f59e0b/ffffff?text=Anniversaire'">
-                    <div class="play-overlay">
-                        <button class="play-btn" onclick="playAudio('musique/Joyeux_Anniversaire_Teuf.mp3', this, 'duration-1')">▶</button>
-                    </div>
-                </div>
-                <div class="example-info">
-                    <h4>Joyeux anniversaire</h4>
-                    <div class="example-meta">
-                        <span class="style">Pop</span>
-                        <span id="duration-1">--:--</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="example-card">
-                <div class="example-image">
-                    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80" alt="Musique Afro" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=Afro'">
-                    <div class="play-overlay">
-                        <button class="play-btn" onclick="playAudio('musique/Tu_connais_déjà.mp3', this, 'duration-2')">▶</button>
-                    </div>
-                </div>
-                <div class="example-info">
-                    <h4>Tu connais déja</h4>
-                    <div class="example-meta">
-                        <span class="style">afro</span>
-                        <span id="duration-2">--:--</span>
-                    </div>
-                </div>
-            </div>
-            <div class="example-card">
-                <div class="example-image">
-                    <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&q=80" alt="Couple amoureux" onerror="this.src='https://via.placeholder.com/600x400/8b5cf6/ffffff?text=Amour'">
-                    <div class="play-overlay">
-                        <button class="play-btn" onclick="playAudio('musique/Vannessa_Mon_Évidence.mp3', this, 'duration-3')">▶</button>
-                    </div>
-                </div>
-                <div class="example-info">
-                    <h4>Vanessa mon évidence</h4>
-                    <div class="example-meta">
-                        <span class="style">love</span>
-                        <span id="duration-3">--:--</span>
-                    </div>
-                </div>
-            </div>
-            <div class="example-card">
-                <div class="example-image">
-                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80" alt="Famille" onerror="this.src='https://via.placeholder.com/600x400/d4af37/ffffff?text=Famille'">
-                    <div class="play-overlay">
-                        <button class="play-btn" onclick="playAudio('musique/Merci_Mamounette_1.mp3', this, 'duration-4')">▶</button>
-                    </div>
-                </div>
-                <div class="example-info">
-                    <h4>Merci Mamounette</h4>
-                    <div class="example-meta">
-                        <span class="style">Gospel</span>
-                        <span id="duration-4">--:--</span>
-                    </div>
-                </div>
-            </div>
-            <div class="example-card">
-                <div class="example-image">
-                    <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&q=80" alt="Réussite" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=Reussite'">
-                    <div class="play-overlay">
-                        <button class="play-btn" onclick="playAudio('musique/Mon_Evidence_1.mp3', this, 'duration-5')">▶</button>
-                    </div>
-                </div>
-                <div class="example-info">
-                    <h4>Mon Évidence</h4>
-                    <div class="example-meta">
-                        <span class="style">RnB</span>
-                        <span id="duration-5">--:--</span>
-                    </div>
-                </div>
-            </div>
-            <div class="example-card">
-                <div class="example-image">
-                    <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Célébration" onerror="this.src='https://via.placeholder.com/600x400/f59e0b/ffffff?text=Célébration'">
-                    <div class="play-overlay">
-                        <button class="play-btn" onclick="playAudio('musique/Aujourdhui_cest_ton_jour_1.mp3', this, 'duration-6')">▶</button>
-                    </div>
-                </div>
-                <div class="example-info">
-                    <h4>Aujourd'hui c'est ton jour</h4>
-                    <div class="example-meta">
-                        <span class="style">Pop</span>
-                        <span id="duration-6">--:--</span>
-                    </div>
-                </div>
-            </div>
-            <div class="example-card">
-                <div class="example-image">
-                    <img src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=600&q=80" alt="Succès" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=Succès'">
-                    <div class="play-overlay">
-                        <button class="play-btn" onclick="playAudio('musique/Tu_las_fait_1.mp3', this, 'duration-7')">▶</button>
-                    </div>
-                </div>
-                <div class="example-info">
-                    <h4>Tu l'as fait</h4>
-                    <div class="example-meta">
-                        <span class="style">Afrobeat</span>
-                        <span id="duration-7">--:--</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+        </section>
 
-        <!-- Tarifs -->
         <section id="tarifs" class="pricing">
             <div class="container">
                 <div class="section-header" style="text-align: center;">
@@ -1251,7 +1197,6 @@
             </div>
         </section>
 
-        <!-- CTA Final -->
         <section class="cta-final">
             <div class="cta-content">
                 <h2>Prêt à créer une <span class="highlight">émotion inoubliable ?</span></h2>
@@ -1260,7 +1205,6 @@
             </div>
         </section>
 
-        <!-- Footer -->
         <footer>
             <div class="footer-content">
                 <div class="footer-brand">
@@ -1297,7 +1241,6 @@
         </footer>
     </div>
 
-    <!-- SECTION FORMULAIRE -->
     <section id="formulaire" class="formulaire-section">
         <div class="formulaire-container">
             <div class="formulaire-header">
@@ -1315,7 +1258,6 @@
             </div>
 
             <form id="orderForm" onsubmit="return false;">
-                <!-- Étape 1 : Les Bases -->
                 <div class="form-step active" data-step="1" id="step1">
                     <h3 class="step-title">🎉 Les bases de votre projet</h3>
                     <div class="form-group">
@@ -1336,13 +1278,14 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label"> Prénom du destinataire *</label>
+                        <label class="form-label" id="destPrenomLabel"> Prénom du destinataire *</label>
                         <input type="text" class="form-input" id="destPrenom" placeholder="Ex: Jeannette, Marie, Jojo...">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">❤️ Votre relation avec cette personne *</label>
-                        <select class="form-select" id="destRelation">
+                        <label class="form-label" id="relationLabel">❤️ Votre relation avec cette personne *</label>
+                        <select class="form-select" id="destRelation" onchange="handleRelationChange()">
                             <option value="">-- Choisir --</option>
+                            <option value="Moi">Moi (pour moi-même)</option>
                             <option value="Enfant">Enfant</option>
                             <option value="Conjoint(e)">Conjoint(e)</option>
                             <option value="Mère">Mère</option>
@@ -1352,17 +1295,21 @@
                             <option value="Autre">Autre</option>
                         </select>
                     </div>
+                    <div id="relationAutreField" style="display: none; margin-top: 1rem;">
+                        <label class="form-label">Précisez votre relation :</label>
+                        <input type="text" class="form-input" id="relationAutre" placeholder="Ex: Cousin, Collègue, Mentor...">
+                    </div>
+                    <div id="moiMessage" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 3px solid var(--violet);">
+                        <p style="color: var(--violet); font-weight: 600; margin: 0;">✨ Super choix ! Créer une chanson pour soi-même est un beau cadeau. Les questions s'adapteront pour parler de VOUS.</p>
+                    </div>
                     <div class="form-navigation">
                         <div></div>
                         <button type="button" class="btn-next" onclick="nextStep()">Suivant →</button>
                     </div>
                 </div>
 
-                <!-- Étape 2 : Univers Musical & Formule -->
                 <div class="form-step" data-step="2" id="step2">
                     <h3 class="step-title">🎵 L'univers musical</h3>
-                    
-                    <!-- Section Style Musical -->
                     <div class="form-group" id="styleSection">
                         <label class="form-label">Style musical préféré *</label>
                         <div class="occasion-grid" id="styleGrid">
@@ -1384,8 +1331,6 @@
                             <input type="text" class="form-input" id="styleAutre" placeholder="Ex: Congolais traditionnel, Makossa...">
                         </div>
                     </div>
-                    
-                    <!-- Section Formule -->
                     <div class="form-group" id="formuleSection">
                         <label class="form-label">🎤 Choisissez votre Formule *</label>
                         <div class="occasion-grid voix-grid" id="formuleGrid">
@@ -1406,8 +1351,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Section Voix (dynamique) -->
                     <div class="form-group" id="voiceSection" style="display: none;">
                         <div class="voice-selection-prompt" id="voicePrompt">
                             <p id="voicePromptText">👉 Choisissez maintenant la voix que vous préférez :</p>
@@ -1427,9 +1370,8 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-group" id="emotionSection">
-                        <label class="form-label">😊 Quelle émotion doit-il/elle ressentir en l'écoutant ? *</label>
+                        <label class="form-label" id="emotionLabel">😊 Quelle émotion doit-il/elle ressentir en l'écoutant ? *</label>
                         <div class="occasion-grid" id="emotionGrid">
                             <div class="occasion-card" data-field="emotion" data-value="Sourire"><div class="occasion-icon">😊</div><div class="occasion-label">Sourire</div></div>
                             <div class="occasion-card" data-field="emotion" data-value="Pleurer d'émotion"><div class="occasion-icon">😭</div><div class="occasion-label">Pleurer</div></div>
@@ -1439,38 +1381,28 @@
                             <div class="occasion-card" data-field="emotion" data-value="Faire la fête"><div class="occasion-icon">🎉</div><div class="occasion-label">Faire la fête</div></div>
                         </div>
                     </div>
-                    
                     <div class="form-navigation">
                         <button type="button" class="btn-prev" onclick="prevStep()">← Précédent</button>
                         <button type="button" class="btn-next" onclick="nextStep()">Suivant →</button>
                     </div>
                 </div>
 
-                <!-- Étape 3 : L'Histoire (AVEC LE NOUVEAU SYSTÈME D'INSPIRATION) -->
                 <div class="form-step" data-step="3" id="step3">
-                    <h3 class="step-title">📖 Le cœur de l'histoire</h3>
+                    <h3 class="step-title" id="step3Title">📖 Le cœur de l'histoire</h3>
                     <div class="form-group">
-                        <label class="form-label">⭐ Pourquoi cette personne est-elle spéciale ou importante pour vous ? *</label>
+                        <label class="form-label" id="pourquoiLabel">⭐ Pourquoi cette personne est-elle spéciale ou importante pour vous ? *</label>
                         <textarea class="form-textarea" id="pourquoiImportante" placeholder="Ex: Parce qu'elle m'a toujours soutenu, ou parce qu'elle ne baisse jamais les bras..." maxlength="300"></textarea>
                         <div class="char-counter">0/300</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label"> Racontez-nous ce souvenir en quelques lignes *</label>
+                        <label class="form-label" id="souvenirLabel"> Racontez-nous ce souvenir en quelques lignes *</label>
                         <textarea class="form-textarea" id="souvenir" placeholder="Décrivez un moment précis..." maxlength="500"></textarea>
-                        <div class="example-text"> Exemple : "Le jour de son examen, elle avait tellement peur qu'elle voulait abandonner. Nous l'avons encouragée jusqu'au dernier moment. Quand elle a reçu son résultat, nous avons tous pleuré de joie."</div>
+                        <div class="example-text" id="souvenirExample"> Exemple : "Le jour de son examen, elle avait tellement peur qu'elle voulait abandonner. Nous l'avons encouragée jusqu'au dernier moment. Quand elle a reçu son résultat, nous avons tous pleuré de joie."</div>
                         <div class="char-counter">0/500</div>
-                        
-                        <!-- NOUVEAU : Bouton d'aide à l'inspiration -->
-                        <button type="button" class="btn-inspiration" onclick="showInspirationQuestions()">
-                            💡 Je ne sais pas quoi écrire, aidez-moi
-                        </button>
-                        
-                        <!-- NOUVEAU : Zone d'aide dynamique -->
+                        <button type="button" class="btn-inspiration" onclick="showInspirationQuestions()">💡 Je ne sais pas quoi écrire, aidez-moi</button>
                         <div id="inspirationHelper" class="inspiration-helper">
                             <h4>👉 Répondez à ces petites questions pour vous inspirer :</h4>
-                            <ul id="inspirationQuestionsList">
-                                <!-- Les questions seront injectées ici par JavaScript -->
-                            </ul>
+                            <ul id="inspirationQuestionsList"></ul>
                             <p class="helper-tip">💡 Astuce : Répondre à 1 ou 2 de ces questions dans le champ ci-dessus suffit pour nous donner de la matière !</p>
                         </div>
                     </div>
@@ -1480,11 +1412,10 @@
                     </div>
                 </div>
 
-                <!-- Étape 4 : Les Détails Uniques -->
                 <div class="form-step" data-step="4" id="step4">
                     <h3 class="step-title">✨ Les détails qui font la différence</h3>
                     <div class="form-group">
-                        <label class="form-label">🏆 Quelles sont ses principales qualités ? (Cochez-en plusieurs)</label>
+                        <label class="form-label" id="qualitesLabel">🏆 Quelles sont ses principales qualités ? (Cochez-en plusieurs)</label>
                         <div class="quality-grid" id="qualityGrid">
                             <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Gentil(le)"><span class="quality-label">Gentil(le)</span></label>
                             <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Courageux(se)"><span class="quality-label">Courageux(se)</span></label>
@@ -1498,11 +1429,11 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">😂 Avez-vous un surnom pour cette personne ?</label>
+                        <label class="form-label" id="surnomLabel">😂 Avez-vous un surnom pour cette personne ?</label>
                         <input type="text" class="form-input" id="surnom" placeholder="Ex: Chocho, Bébé, Maman Jo, Boss...">
                     </div>
                     <div class="form-group">
-                        <label class="form-label"> Y a-t-il un mot ou une expression qu'il/elle dit souvent ?</label>
+                        <label class="form-label" id="expressionLabel"> Y a-t-il un mot ou une expression qu'il/elle dit souvent ?</label>
                         <input type="text" class="form-input" id="expressionFrequente" placeholder="Ex: 'Nzambe apambola yo', 'On ne lâche rien', 'Toza ensemble'...">
                         <div class="example-text">💡 Intégrer ses propres mots rend la chanson incroyablement personnelle.</div>
                     </div>
@@ -1516,20 +1447,19 @@
                     </div>
                 </div>
 
-                <!-- Étape 5 : Le Message Final & Options -->
                 <div class="form-step" data-step="5" id="step5">
                     <h3 class="step-title"> Le message final</h3>
                     <div class="form-group">
-                        <label class="form-label">💌 Quel message voulez-vous qu'il/elle retienne après avoir écouté la chanson ? *</label>
+                        <label class="form-label" id="messageFinalLabel">💌 Quel message voulez-vous qu'il/elle retienne après avoir écouté la chanson ? *</label>
                         <textarea class="form-textarea" id="messageFinal" placeholder="Ex: Je veux qu'il sache que je suis fier de lui, ou qu'elle comprenne que je serai toujours là..." maxlength="300"></textarea>
                         <div class="char-counter">0/300</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label"> Un lieu important pour vous deux ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
+                        <label class="form-label" id="lieuLabel"> Un lieu important pour vous deux ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
                         <input type="text" class="form-input" id="lieuImportant" placeholder="Ex: La plage de Nangui, le jardin de la maison...">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">📅 Une date importante ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
+                        <label class="form-label" id="dateLabel">📅 Une date importante ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
                         <input type="text" class="form-input" id="dateImportante" placeholder="Ex: 14 février 2020, notre rencontre en 2018...">
                     </div>
                     <div class="form-navigation">
@@ -1538,7 +1468,6 @@
                     </div>
                 </div>
 
-                <!-- Étape 6 : Coordonnées & Résumé -->
                 <div class="form-step" data-step="6" id="step6">
                     <h3 class="step-title">📱 Vos coordonnées</h3>
                     <div class="form-group">
@@ -1553,10 +1482,8 @@
                         <label class="form-label">Votre email (pour recevoir une copie) <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
                         <input type="email" class="form-input" id="clientEmail" placeholder="votre@email.com">
                     </div>
-                    
                     <h4 style="margin: 2rem 0 1rem; color: var(--violet-dark); font-size: 1.2rem;">📋 Récapitulatif de votre projet</h4>
                     <div id="summaryContent" class="summary-box"></div>
-
                     <div class="form-navigation">
                         <button type="button" class="btn-prev" onclick="prevStep()">← Modifier</button>
                         <button type="button" class="btn-submit" onclick="submitOrder()">Envoyer sur WhatsApp 💬</button>
@@ -1566,22 +1493,22 @@
         </div>
     </section>
 
-    <!-- PAGE DE CONFIRMATION -->
     <section id="confirmation" class="confirmation-page">
         <div class="confirmation-content">
             <div class="check-icon">✓</div>
             <h2>Merci ! <span class="heart">💛</span></h2>
-            <p>Votre demande détaillée a été transmise avec succès.</p>
-            <p>Nous vous répondrons rapidement sur WhatsApp pour valider les paroles et le paiement.</p>
+            <p>Votre récapitulatif a été généré avec succès.</p>
+            <p style="color: var(--gold); font-weight: bold; margin: 1.5rem 0; font-size: 1.2rem;">
+                ⚠️ ACTION REQUISE :<br>
+                N'oubliez pas d'appuyer sur "Envoyer" dans l'application WhatsApp qui vient de s'ouvrir !
+            </p>
+            <p>Nous vous répondrons rapidement pour valider les paroles et le paiement.</p>
             <button class="btn-home" onclick="showHome()">🏠 Retour à l'accueil →</button>
         </div>
     </section>
 
     <script src="script.js"></script>
     <script>
-        // ==========================================
-        // LECTEUR AUDIO POUR LES EXEMPLES
-        // ==========================================
         let currentAudio = null;
         let currentBtn = null;
         let currentDurationId = null;
@@ -1597,32 +1524,26 @@
                 }
                 return;
             }
-            
             if (currentAudio) {
                 currentAudio.pause();
                 if (currentBtn) currentBtn.textContent = '▶';
             }
-            
             currentAudio = new Audio(src);
             currentBtn = btn;
             currentDurationId = durationId;
-            
             currentAudio.addEventListener('loadedmetadata', function() {
                 const duration = formatTime(currentAudio.duration);
                 const durationEl = document.getElementById(durationId);
                 if (durationEl) durationEl.textContent = duration;
             });
-            
             currentAudio.addEventListener('ended', function() {
                 btn.textContent = '▶';
             });
-            
             currentAudio.addEventListener('error', function() {
                 console.error('Erreur de chargement audio:', src);
                 btn.textContent = '❌';
                 alert('Le fichier audio n\'a pas pu être chargé. Vérifiez que le fichier existe dans le dossier musique/');
             });
-            
             currentAudio.play();
             btn.textContent = '⏸';
         }
@@ -1633,9 +1554,109 @@
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // ==========================================
-        // GESTION DYNAMIQUE DES VOIX SELON LA FORMULE
-        // ==========================================
+        function handleRelationChange() {
+    const relation = document.getElementById('destRelation').value;
+    const relationAutreField = document.getElementById('relationAutreField');
+    const moiMessage = document.getElementById('moiMessage');
+    
+    const destPrenomLabel = document.getElementById('destPrenomLabel');
+    const destPrenomInput = document.getElementById('destPrenom');
+    const relationLabel = document.getElementById('relationLabel');
+    const emotionLabel = document.getElementById('emotionLabel'); // ✅ AJOUTÉ
+    
+    const step3Title = document.getElementById('step3Title');
+    const pourquoiLabel = document.getElementById('pourquoiLabel');
+    const pourquoiInput = document.getElementById('pourquoiImportante');
+    const souvenirLabel = document.getElementById('souvenirLabel');
+    const souvenirInput = document.getElementById('souvenir');
+    const souvenirExample = document.getElementById('souvenirExample');
+    
+    const qualitesLabel = document.getElementById('qualitesLabel');
+    const surnomLabel = document.getElementById('surnomLabel');
+    const surnomInput = document.getElementById('surnom');
+    const expressionLabel = document.getElementById('expressionLabel');
+    const expressionInput = document.getElementById('expressionFrequente');
+    
+    const messageFinalLabel = document.getElementById('messageFinalLabel');
+    const messageFinalInput = document.getElementById('messageFinal');
+    const lieuLabel = document.getElementById('lieuLabel');
+    const lieuInput = document.getElementById('lieuImportant');
+
+    if (relation === 'Moi') {
+        relationLabel.innerHTML = '❤️ Cette chanson est pour : <span style="color: var(--gold);">MOI-MÊME</span> ✨';
+        moiMessage.style.display = 'block';
+        relationAutreField.style.display = 'none';
+        
+        destPrenomLabel.textContent = ' Votre prénom *';
+        destPrenomInput.placeholder = 'Votre prénom';
+        emotionLabel.textContent = '😊 Quelle émotion voulez-vous ressentir en l\'écoutant ? *'; // ✅ AJOUTÉ
+        
+        step3Title.textContent = '📖 Votre histoire';
+        pourquoiLabel.textContent = '⭐ Pourquoi est-il important pour vous de créer cette chanson ? *';
+        pourquoiInput.placeholder = 'Ex: Parce que je veux me rappeler qui je suis, ou parce que je ne baisse jamais les bras...';
+        
+        souvenirLabel.textContent = ' Racontez-nous ce souvenir en quelques lignes *';
+        souvenirInput.placeholder = 'Décrivez un moment précis de votre vie...';
+        souvenirExample.textContent = ' Exemple : "Le jour de mon examen, j\'avais tellement peur que je voulais abandonner. Mais j\'ai persévéré et quand j\'ai reçu mon résultat, j\'ai pleuré de joie."';
+        
+        qualitesLabel.textContent = '🏆 Quelles sont vos principales qualités ? (Cochez-en plusieurs)';
+        surnomLabel.textContent = '😂 Avez-vous un surnom ?';
+        surnomInput.placeholder = 'Ex: Chocho, Bébé, Boss...';
+        
+        expressionLabel.textContent = ' Y a-t-il un mot ou une expression que vous dites souvent ?';
+        expressionInput.placeholder = 'Ex: \'Je peux le faire\', \'On ne lâche rien\', \'Je suis fort(e)\'...';
+        
+        messageFinalLabel.textContent = '💌 Quel message voulez-vous vous rappeler après avoir écouté la chanson ? *';
+        messageFinalInput.placeholder = 'Ex: Je veux me rappeler que je suis fort(e), ou que je peux tout accomplir...';
+        
+        lieuLabel.innerHTML = ' Un lieu important pour vous ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
+        lieuInput.placeholder = 'Ex: La plage de Nangui, mon bureau, ma chambre...';
+        
+        if (typeof inspirationData !== 'undefined') {
+            inspirationData['Moi'] = [
+                "⭐ Qu'est-ce qui vous rend unique ou spécial(e) à vos propres yeux ?",
+                "📖 Racontez un moment de votre vie dont vous êtes particulièrement fier/fière.",
+                "💡 Quelle qualité ou force personnelle souhaitez-vous célébrer dans cette chanson ?"
+            ];
+        }
+    } else {
+        relationLabel.innerHTML = '❤️ Votre relation avec cette personne *';
+        moiMessage.style.display = 'none';
+        
+        if (relation === 'Autre') {
+            relationAutreField.style.display = 'block';
+        } else {
+            relationAutreField.style.display = 'none';
+            document.getElementById('relationAutre').value = '';
+        }
+        
+        destPrenomLabel.textContent = ' Prénom du destinataire *';
+        destPrenomInput.placeholder = 'Ex: Jeannette, Marie, Jojo...';
+        emotionLabel.textContent = '😊 Quelle émotion doit-il/elle ressentir en l\'écoutant ? *'; // ✅ AJOUTÉ
+        
+        step3Title.textContent = '📖 Le cœur de l\'histoire';
+        pourquoiLabel.textContent = '⭐ Pourquoi cette personne est-elle spéciale ou importante pour vous ? *';
+        pourquoiInput.placeholder = 'Ex: Parce qu\'elle m\'a toujours soutenu, ou parce qu\'elle ne baisse jamais les bras...';
+        
+        souvenirLabel.textContent = ' Racontez-nous ce souvenir en quelques lignes *';
+        souvenirInput.placeholder = 'Décrivez un moment précis...';
+        souvenirExample.textContent = ' Exemple : "Le jour de son examen, elle avait tellement peur qu\'elle voulait abandonner. Nous l\'avons encouragée jusqu\'au dernier moment. Quand elle a reçu son résultat, nous avons tous pleuré de joie."';
+        
+        qualitesLabel.textContent = '🏆 Quelles sont ses principales qualités ? (Cochez-en plusieurs)';
+        surnomLabel.textContent = '😂 Avez-vous un surnom pour cette personne ?';
+        surnomInput.placeholder = 'Ex: Chocho, Bébé, Maman Jo, Boss...';
+        
+        expressionLabel.textContent = ' Y a-t-il un mot ou une expression qu\'il/elle dit souvent ?';
+        expressionInput.placeholder = 'Ex: \'Nzambe apambola yo\', \'On ne lâche rien\', \'Toza ensemble\'...';
+        
+        messageFinalLabel.textContent = '💌 Quel message voulez-vous qu\'il/elle retienne après avoir écouté la chanson ? *';
+        messageFinalInput.placeholder = 'Ex: Je veux qu\'il sache que je suis fier de lui, ou qu\'elle comprenne que je serai toujours là...';
+        
+        lieuLabel.innerHTML = ' Un lieu important pour vous deux ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
+        lieuInput.placeholder = 'Ex: La plage de Nangui, le jardin de la maison...';
+    }
+}
+
         document.querySelectorAll('[data-field="formule"]').forEach(card => {
             card.addEventListener('click', function() {
                 const grid = this.parentElement;
@@ -1654,7 +1675,6 @@
             const voiceCards = document.querySelectorAll('.voice-card');
             
             voiceSection.style.display = 'block';
-            
             voiceCards.forEach(card => {
                 card.classList.remove('selected', 'disabled');
             });
@@ -1687,7 +1707,6 @@
         document.querySelectorAll('.voice-card').forEach(card => {
             card.addEventListener('click', function() {
                 if (this.classList.contains('disabled')) return;
-                
                 const grid = this.parentElement;
                 grid.querySelectorAll('.voice-card').forEach(c => c.classList.remove('selected'));
                 this.classList.add('selected');
@@ -1699,7 +1718,6 @@
 
         function selectTarif(formule) {
             if (typeof showFormulaire === 'function') showFormulaire();
-            
             setTimeout(() => {
                 let formuleValue = '';
                 if (formule === 'Essentielle') formuleValue = 'Essentielle - Voix Masculine (1500 FCFA)';
@@ -1715,10 +1733,8 @@
                             card.classList.add('selected');
                         }
                     });
-                    
                     const formuleSection = document.getElementById('formuleSection');
                     formuleSection.classList.add('form-section-locked');
-                    
                     const label = formuleSection.querySelector('.form-label');
                     if (!label.querySelector('.locked-badge')) {
                         const badge = document.createElement('span');
@@ -1726,7 +1742,6 @@
                         badge.textContent = '🔒 Choix verrouillé';
                         label.appendChild(badge);
                     }
-
                     updateVoiceSelection(formuleValue);
                 }
             }, 300);
