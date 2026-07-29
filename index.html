@@ -815,24 +815,142 @@
             margin-left: 0.5rem;
         }
 
-        @media (max-width: 968px) {
-            .hero-content { grid-template-columns: 1fr; }
+        /* ==========================================
+           RESPONSIVE COMPLET - TABLETTES ET MOBILES
+           ========================================== */
+        @media (max-width: 1024px) {
+            .container { padding: 0 1.5rem; }
+            .hero-content { gap: 2rem; }
+            .hero-text h1 { font-size: clamp(2rem, 4vw, 3rem); }
+            .pricing-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+            .footer-content { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 0.75rem 1rem; }
+            .logo img { max-height: 40px; }
+            .hero { padding: 6rem 1rem 3rem; }
+            .hero-content { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
             .hero-visual { display: none; }
-            .occasion-grid { grid-template-columns: repeat(2, 1fr); }
-            .steps-grid { grid-template-columns: repeat(2, 1fr); }
-            .pricing-grid { grid-template-columns: 1fr; }
+            .hero-text h1 { font-size: 1.8rem; line-height: 1.2; }
+            .hero-text > p { font-size: 1rem; max-width: 100%; }
+            .hero-buttons { flex-direction: column; gap: 0.75rem; }
+            .btn-primary, .btn-secondary { width: 100%; justify-content: center; padding: 0.875rem 1.5rem; font-size: 0.95rem; }
+            .hero-features { grid-template-columns: 1fr; gap: 1rem; text-align: left; }
+            .how-it-works, .examples, .pricing, .cta-final { padding: 4rem 1rem; }
+            .section-header { margin-bottom: 2.5rem; }
+            .section-title { font-size: 1.75rem; }
+            .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+            .step-card { padding: 1.5rem; }
+            .step-icon { width: 60px; height: 60px; font-size: 1.5rem; }
+            .example-card { flex: 0 0 240px; }
+            .pricing-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .pricing-card { padding: 2rem 1.5rem; }
             .pricing-card.featured { transform: scale(1); }
-            .pricing-card.featured:hover { transform: translateY(-10px); }
-            .footer-content { grid-template-columns: 1fr 1fr; }
+            .pricing-price { font-size: 2.5rem; }
+            .footer-content { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
+            .social-links { justify-content: center; }
+            .formulaire-container { padding: 2rem 1rem; }
+            .formulaire-header h2 { font-size: 2rem; }
+            .step-title { font-size: 1.5rem; margin-bottom: 1.5rem; }
+            .occasion-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+            .occasion-card { padding: 1rem 0.5rem; }
+            .occasion-icon { font-size: 1.5rem; }
+            .quality-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+            .quality-label { font-size: 0.8rem; padding: 0.5rem; }
+            .form-input, .form-textarea, .form-select { padding: 0.75rem; font-size: 14px; }
+            .form-label { font-size: 0.95rem; }
+            .btn-prev, .btn-next, .btn-submit { padding: 0.875rem 1.5rem; font-size: 0.95rem; }
             .summary-grid { grid-template-columns: 1fr; }
         }
-        @media (max-width: 640px) {
-            .nav-menu { display: none; }
-            .occasion-grid { grid-template-columns: 1fr; }
-            .hero-features { grid-template-columns: 1fr; }
-            .steps-grid { grid-template-columns: 1fr; }
-            .footer-content { grid-template-columns: 1fr; }
+
+        @media (max-width: 480px) {
+            html { font-size: 14px; }
+            body { overflow-x: hidden; max-width: 100vw; }
+            .navbar { padding: 0.5rem 0.75rem; }
+            .logo img { max-height: 35px; }
+            .nav-menu { width: 85%; padding: 80px 1rem 1rem; }
+            .hero { padding: 5rem 0.75rem 2rem; }
+            .hero-text h1 { font-size: 1.5rem; }
+            .hero-subtitle { font-size: 0.75rem; letter-spacing: 2px; }
+            .hero-text > p { font-size: 0.9rem; }
+            .feature-text h4 { font-size: 0.85rem; }
+            .feature-text p { font-size: 0.75rem; }
+            .how-it-works, .examples, .pricing, .cta-final { padding: 3rem 0.75rem; }
+            .section-title { font-size: 1.5rem; }
+            .section-label { font-size: 0.75rem; }
+            .section-subtitle { font-size: 0.95rem; }
+            .steps-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+            .step-card { padding: 1.25rem; }
+            .step-number { width: 25px; height: 25px; font-size: 0.8rem; left: 1rem; top: -12px; }
+            .step-icon { width: 50px; height: 50px; font-size: 1.25rem; margin-bottom: 1rem; }
+            .step-card h3 { font-size: 1rem; }
+            .step-card p { font-size: 0.85rem; }
+            .example-card { flex: 0 0 220px; }
+            .example-image { height: 160px; }
+            .play-btn { width: 50px; height: 50px; font-size: 1.25rem; }
+            .example-info h4 { font-size: 0.9rem; }
+            .example-meta { font-size: 0.75rem; }
+            .pricing-card { padding: 1.5rem 1rem; }
+            .pricing-icon { width: 50px; height: 50px; font-size: 1.25rem; }
+            .pricing-name { font-size: 0.8rem; }
+            .pricing-price { font-size: 2rem; }
+            .pricing-features li { font-size: 0.85rem; padding: 0.5rem 0; }
+            .popular-badge { font-size: 0.65rem; padding: 0.4rem 1rem; }
+            .btn-choose { padding: 0.875rem; font-size: 0.9rem; }
+            .cta-content h2 { font-size: 1.5rem; }
+            .cta-content p { font-size: 1rem; }
+            .formulaire-container { padding: 1.5rem 0.75rem; border-radius: 12px; }
+            .formulaire-header h2 { font-size: 1.75rem; }
+            .formulaire-header p { font-size: 0.9rem; }
+            .progress-steps { gap: 0.35rem; margin-bottom: 2rem; }
+            .step-circle { width: 30px; height: 30px; font-size: 0.8rem; }
+            .step-title { font-size: 1.3rem; margin-bottom: 1.25rem; }
+            .form-group { margin-bottom: 1.5rem; }
+            .form-label { font-size: 0.9rem; margin-bottom: 0.5rem; }
+            .occasion-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+            .occasion-card { padding: 0.75rem 0.5rem; border-radius: 8px; }
+            .occasion-icon { font-size: 1.25rem; margin-bottom: 0.35rem; }
+            .occasion-label { font-size: 0.8rem; }
+            .price-tag { font-size: 0.7rem; }
+            .voix-grid { grid-template-columns: 1fr; }
+            .quality-grid { grid-template-columns: 1fr; }
+            .quality-label { font-size: 0.85rem; padding: 0.625rem; }
+            .form-input, .form-textarea, .form-select { padding: 0.625rem; font-size: 14px; border-radius: 8px; }
+            .form-textarea { min-height: 100px; }
+            .char-counter { font-size: 0.75rem; }
+            .example-text { font-size: 0.75rem; padding: 0.625rem; }
+            .btn-inspiration { font-size: 0.8rem; }
+            .inspiration-helper { padding: 1rem; }
+            .inspiration-helper h4 { font-size: 0.9rem; }
+            .inspiration-helper li { font-size: 0.85rem; }
+            .btn-prev, .btn-next, .btn-submit { padding: 0.75rem 1.25rem; font-size: 0.9rem; width: 100%; justify-content: center; }
+            .form-navigation { gap: 0.75rem; flex-direction: column; }
+            .summary-box { padding: 1.25rem; }
+            .summary-grid { gap: 0.75rem; }
+            .summary-item { padding: 0.75rem; }
+            .summary-label { font-size: 0.8rem; }
+            .summary-item p, .summary-section p { font-size: 0.9rem; }
+            .summary-section { padding: 1rem; margin-bottom: 1rem; }
+            .check-icon { width: 100px; height: 100px; font-size: 3rem; }
+            .confirmation-content h2 { font-size: 2rem; }
+            .confirmation-content p { font-size: 1rem; }
+            .btn-home { padding: 0.875rem 1.5rem; font-size: 0.95rem; }
         }
+
+        @media (max-width: 360px) {
+            html { font-size: 13px; }
+            .hero-text h1 { font-size: 1.3rem; }
+            .section-title { font-size: 1.3rem; }
+            .occasion-grid { grid-template-columns: 1fr; }
+            .steps-grid { grid-template-columns: 1fr; }
+            .quality-grid { grid-template-columns: 1fr; }
+            .btn-primary, .btn-secondary, .btn-commander { padding: 0.75rem 1rem; font-size: 0.85rem; }
+        }
+
+        img, video, iframe { max-width: 100%; height: auto; }
+        * { word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; }
+        .container, .formulaire-container, .hero-content { max-width: 100%; overflow-x: hidden; }
         
         .mobile-menu-btn {
             display: none;
@@ -852,15 +970,9 @@
             border-radius: 3px;
             transition: all 0.3s;
         }
-        .mobile-menu-btn.active span:nth-child(1) {
-            transform: rotate(45deg) translate(5px, 5px);
-        }
-        .mobile-menu-btn.active span:nth-child(2) {
-            opacity: 0;
-        }
-        .mobile-menu-btn.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -6px);
-        }
+        .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+        .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
+        .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
         .nav-overlay {
             display: none;
             position: fixed;
@@ -868,9 +980,8 @@
             background: rgba(0, 0, 0, 0.7);
             z-index: 999;
         }
-        .nav-overlay.active {
-            display: block;
-        }
+        .nav-overlay.active { display: block; }
+        
         @media (max-width: 768px) {
             .mobile-menu-btn { display: flex; }
             .nav-menu {
@@ -915,607 +1026,6 @@
             .occasion-grid { grid-template-columns: 1fr; }
             .nav-menu { width: 85%; }
         }
-        /* ==========================================
-   RESPONSIVE COMPLET - TABLETTES ET MOBILES
-   ========================================== */
-
-/* Tablettes (768px - 1024px) */
-@media (max-width: 1024px) {
-    .container {
-        padding: 0 1.5rem;
-    }
-    
-    .hero-content {
-        gap: 2rem;
-    }
-    
-    .hero-text h1 {
-        font-size: clamp(2rem, 4vw, 3rem);
-    }
-    
-    .pricing-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-    }
-    
-    .footer-content {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* Petites tablettes et grands mobiles (481px - 768px) */
-@media (max-width: 768px) {
-    /* Navigation */
-    .navbar {
-        padding: 0.75rem 1rem;
-    }
-    
-    .logo img {
-        max-height: 40px;
-    }
-    
-    /* Hero Section */
-    .hero {
-        padding: 6rem 1rem 3rem;
-    }
-    
-    .hero-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 2rem;
-    }
-    
-    .hero-visual {
-        display: none;
-    }
-    
-    .hero-text h1 {
-        font-size: 1.8rem;
-        line-height: 1.2;
-    }
-    
-    .hero-text > p {
-        font-size: 1rem;
-        max-width: 100%;
-    }
-    
-    .hero-buttons {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-    
-    .btn-primary, .btn-secondary {
-        width: 100%;
-        justify-content: center;
-        padding: 0.875rem 1.5rem;
-        font-size: 0.95rem;
-    }
-    
-    .hero-features {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-        text-align: left;
-    }
-    
-    /* Sections */
-    .how-it-works, .examples, .pricing, .cta-final {
-        padding: 4rem 1rem;
-    }
-    
-    .section-header {
-        margin-bottom: 2.5rem;
-    }
-    
-    .section-title {
-        font-size: 1.75rem;
-    }
-    
-    /* Steps */
-    .steps-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-    }
-    
-    .step-card {
-        padding: 1.5rem;
-    }
-    
-    .step-icon {
-        width: 60px;
-        height: 60px;
-        font-size: 1.5rem;
-    }
-    
-    /* Exemples */
-    .example-card {
-        flex: 0 0 240px;
-    }
-    
-    /* Tarifs */
-    .pricing-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .pricing-card {
-        padding: 2rem 1.5rem;
-    }
-    
-    .pricing-card.featured {
-        transform: scale(1);
-    }
-    
-    .pricing-price {
-        font-size: 2.5rem;
-    }
-    
-    /* Footer */
-    .footer-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 2rem;
-    }
-    
-    .social-links {
-        justify-content: center;
-    }
-    
-    /* Formulaire */
-    .formulaire-container {
-        padding: 2rem 1rem;
-    }
-    
-    .formulaire-header h2 {
-        font-size: 2rem;
-    }
-    
-    .step-title {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .occasion-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
-    }
-    
-    .occasion-card {
-        padding: 1rem 0.5rem;
-    }
-    
-    .occasion-icon {
-        font-size: 1.5rem;
-    }
-    
-    .quality-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.5rem;
-    }
-    
-    .quality-label {
-        font-size: 0.8rem;
-        padding: 0.5rem;
-    }
-    
-    .form-input, .form-textarea, .form-select {
-        padding: 0.75rem;
-        font-size: 14px; /* Empêche le zoom sur iOS */
-    }
-    
-    .form-label {
-        font-size: 0.95rem;
-    }
-    
-    .btn-prev, .btn-next, .btn-submit {
-        padding: 0.875rem 1.5rem;
-        font-size: 0.95rem;
-    }
-    
-    /* Summary */
-    .summary-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Petits mobiles (320px - 480px) */
-@media (max-width: 480px) {
-    /* Base */
-    html {
-        font-size: 14px;
-    }
-    
-    body {
-        overflow-x: hidden;
-        max-width: 100vw;
-    }
-    
-    /* Navigation */
-    .navbar {
-        padding: 0.5rem 0.75rem;
-    }
-    
-    .logo img {
-        max-height: 35px;
-    }
-    
-    .nav-menu {
-        width: 85%;
-        padding: 80px 1rem 1rem;
-    }
-    
-    /* Hero */
-    .hero {
-        padding: 5rem 0.75rem 2rem;
-    }
-    
-    .hero-text h1 {
-        font-size: 1.5rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 0.75rem;
-        letter-spacing: 2px;
-    }
-    
-    .hero-text > p {
-        font-size: 0.9rem;
-    }
-    
-    .feature-text h4 {
-        font-size: 0.85rem;
-    }
-    
-    .feature-text p {
-        font-size: 0.75rem;
-    }
-    
-    /* Sections */
-    .how-it-works, .examples, .pricing, .cta-final {
-        padding: 3rem 0.75rem;
-    }
-    
-    .section-title {
-        font-size: 1.5rem;
-    }
-    
-    .section-label {
-        font-size: 0.75rem;
-    }
-    
-    .section-subtitle {
-        font-size: 0.95rem;
-    }
-    
-    /* Steps */
-    .steps-grid {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-    }
-    
-    .step-card {
-        padding: 1.25rem;
-    }
-    
-    .step-number {
-        width: 25px;
-        height: 25px;
-        font-size: 0.8rem;
-        left: 1rem;
-        top: -12px;
-    }
-    
-    .step-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 1.25rem;
-        margin-bottom: 1rem;
-    }
-    
-    .step-card h3 {
-        font-size: 1rem;
-    }
-    
-    .step-card p {
-        font-size: 0.85rem;
-    }
-    
-    /* Exemples */
-    .example-card {
-        flex: 0 0 220px;
-    }
-    
-    .example-image {
-        height: 160px;
-    }
-    
-    .play-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 1.25rem;
-    }
-    
-    .example-info h4 {
-        font-size: 0.9rem;
-    }
-    
-    .example-meta {
-        font-size: 0.75rem;
-    }
-    
-    /* Tarifs */
-    .pricing-card {
-        padding: 1.5rem 1rem;
-    }
-    
-    .pricing-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 1.25rem;
-    }
-    
-    .pricing-name {
-        font-size: 0.8rem;
-    }
-    
-    .pricing-price {
-        font-size: 2rem;
-    }
-    
-    .pricing-features li {
-        font-size: 0.85rem;
-        padding: 0.5rem 0;
-    }
-    
-    .popular-badge {
-        font-size: 0.65rem;
-        padding: 0.4rem 1rem;
-    }
-    
-    .btn-choose {
-        padding: 0.875rem;
-        font-size: 0.9rem;
-    }
-    
-    /* CTA */
-    .cta-content h2 {
-        font-size: 1.5rem;
-    }
-    
-    .cta-content p {
-        font-size: 1rem;
-    }
-    
-    /* Formulaire */
-    .formulaire-container {
-        padding: 1.5rem 0.75rem;
-        border-radius: 12px;
-    }
-    
-    .formulaire-header h2 {
-        font-size: 1.75rem;
-    }
-    
-    .formulaire-header p {
-        font-size: 0.9rem;
-    }
-    
-    .progress-steps {
-        gap: 0.35rem;
-        margin-bottom: 2rem;
-    }
-    
-    .step-circle {
-        width: 30px;
-        height: 30px;
-        font-size: 0.8rem;
-    }
-    
-    .step-title {
-        font-size: 1.3rem;
-        margin-bottom: 1.25rem;
-    }
-    
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
-    
-    .form-label {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .occasion-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.5rem;
-    }
-    
-    .occasion-card {
-        padding: 0.75rem 0.5rem;
-        border-radius: 8px;
-    }
-    
-    .occasion-icon {
-        font-size: 1.25rem;
-        margin-bottom: 0.35rem;
-    }
-    
-    .occasion-label {
-        font-size: 0.8rem;
-    }
-    
-    .price-tag {
-        font-size: 0.7rem;
-    }
-    
-    .voix-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .quality-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .quality-label {
-        font-size: 0.85rem;
-        padding: 0.625rem;
-    }
-    
-    .form-input, .form-textarea, .form-select {
-        padding: 0.625rem;
-        font-size: 14px;
-        border-radius: 8px;
-    }
-    
-    .form-textarea {
-        min-height: 100px;
-    }
-    
-    .char-counter {
-        font-size: 0.75rem;
-    }
-    
-    .example-text {
-        font-size: 0.75rem;
-        padding: 0.625rem;
-    }
-    
-    .btn-inspiration {
-        font-size: 0.8rem;
-    }
-    
-    .inspiration-helper {
-        padding: 1rem;
-    }
-    
-    .inspiration-helper h4 {
-        font-size: 0.9rem;
-    }
-    
-    .inspiration-helper li {
-        font-size: 0.85rem;
-    }
-    
-    .btn-prev, .btn-next, .btn-submit {
-        padding: 0.75rem 1.25rem;
-        font-size: 0.9rem;
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .form-navigation {
-        gap: 0.75rem;
-        flex-direction: column;
-    }
-    
-    /* Summary */
-    .summary-box {
-        padding: 1.25rem;
-    }
-    
-    .summary-grid {
-        gap: 0.75rem;
-    }
-    
-    .summary-item {
-        padding: 0.75rem;
-    }
-    
-    .summary-label {
-        font-size: 0.8rem;
-    }
-    
-    .summary-item p, .summary-section p {
-        font-size: 0.9rem;
-    }
-    
-    .summary-section {
-        padding: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    /* Confirmation */
-    .check-icon {
-        width: 100px;
-        height: 100px;
-        font-size: 3rem;
-    }
-    
-    .confirmation-content h2 {
-        font-size: 2rem;
-    }
-    
-    .confirmation-content p {
-        font-size: 1rem;
-    }
-    
-    .btn-home {
-        padding: 0.875rem 1.5rem;
-        font-size: 0.95rem;
-    }
-}
-
-/* Très petits écrans (moins de 360px) */
-@media (max-width: 360px) {
-    html {
-        font-size: 13px;
-    }
-    
-    .hero-text h1 {
-        font-size: 1.3rem;
-    }
-    
-    .section-title {
-        font-size: 1.3rem;
-    }
-    
-    .occasion-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .steps-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .quality-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .btn-primary, .btn-secondary, .btn-commander {
-        padding: 0.75rem 1rem;
-        font-size: 0.85rem;
-    }
-}
-
-/* Correction des débordements */
-img, video, iframe {
-    max-width: 100%;
-    height: auto;
-}
-
-/* Empêcher le texte de déborder */
-* {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
-}
-
-/* Forcer le conteneur à ne pas déborder */
-.container, .formulaire-container, .hero-content {
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-/* Ajustement pour les écrans très étroits */
-@media screen and (max-width: 320px) {
-    .hero-text h1 {
-        font-size: 1.2rem;
-    }
-    
-    .btn-primary, .btn-secondary {
-        padding: 0.625rem 1rem;
-        font-size: 0.8rem;
-    }
-}
     </style>
 </head>
 <body>
@@ -1584,20 +1094,20 @@ img, video, iframe {
                     <div class="step-card">
                         <div class="step-number">1</div>
                         <div class="step-icon">📝</div>
-                        <h3>Racontez votre histoire</h3>
-                        <p>Vous nous parlez de la personne, de vos souvenirs et de vos émotions.</p>
+                        <h3>Parlez-nous d'elle/lui</h3>
+                        <p>Vous nous décrivez la personne, sa personnalité et ce qui la rend unique.</p>
                     </div>
                     <div class="step-card">
                         <div class="step-number">2</div>
                         <div class="step-icon">✍️</div>
                         <h3>Nous écrivons les paroles</h3>
-                        <p>Nos auteurs écrivent des paroles uniques inspirées de votre histoire.</p>
+                        <p>Nos auteurs créent des paroles sur mesure qui lui ressemblent parfaitement.</p>
                     </div>
                     <div class="step-card">
                         <div class="step-number">3</div>
                         <div class="step-icon">🎤</div>
                         <h3>LM Voices interprète</h3>
-                        <p>Nos voix professionnelles donnent vie à votre chanson.</p>
+                        <p>Nos voix professionnelles donnent vie à cette chanson dédiée.</p>
                     </div>
                     <div class="step-card">
                         <div class="step-number">4</div>
@@ -1846,7 +1356,7 @@ img, video, iframe {
         <div class="formulaire-container">
             <div class="formulaire-header">
                 <h2>Créons votre chanson <span class="sparkle">✨</span></h2>
-                <p>Répondez à ce petit guide. Plus vous partagez de détails, plus la chanson sera émouvante et unique.</p>
+                <p>Répondez à ce petit guide. Plus vous partagez de détails sur <strong>cette personne</strong>, plus la chanson lui ressemblera parfaitement !</p>
             </div>
 
             <div class="progress-steps">
@@ -1859,6 +1369,7 @@ img, video, iframe {
             </div>
 
             <form id="orderForm" onsubmit="return false;">
+                <!-- Étape 1 : Les bases -->
                 <div class="form-step active" data-step="1" id="step1">
                     <h3 class="step-title">🎉 Les bases de votre projet</h3>
                     <div class="form-group">
@@ -1909,6 +1420,7 @@ img, video, iframe {
                     </div>
                 </div>
 
+                <!-- Étape 2 : L'univers musical -->
                 <div class="form-step" data-step="2" id="step2">
                     <h3 class="step-title">🎵 L'univers musical</h3>
                     <div class="form-group" id="styleSection">
@@ -1972,7 +1484,7 @@ img, video, iframe {
                         </div>
                     </div>
                     <div class="form-group" id="emotionSection">
-                        <label class="form-label" id="emotionLabel">😊 Quelle émotion doit-il/elle ressentir en l'écoutant ? *</label>
+                        <label class="form-label" id="emotionLabel">😊 Quelle émotion voulez-vous qu'il/elle ressente en l'écoutant ? *</label>
                         <div class="occasion-grid" id="emotionGrid">
                             <div class="occasion-card" data-field="emotion" data-value="Sourire"><div class="occasion-icon">😊</div><div class="occasion-label">Sourire</div></div>
                             <div class="occasion-card" data-field="emotion" data-value="Pleurer d'émotion"><div class="occasion-icon">😭</div><div class="occasion-label">Pleurer</div></div>
@@ -1988,17 +1500,18 @@ img, video, iframe {
                     </div>
                 </div>
 
+                <!-- Étape 3 : Parlez-nous de CETTE PERSONNE -->
                 <div class="form-step" data-step="3" id="step3">
-                    <h3 class="step-title" id="step3Title">📖 Le cœur de l'histoire</h3>
+                    <h3 class="step-title" id="step3Title">📖 Parlez-nous de cette personne</h3>
                     <div class="form-group">
-                        <label class="form-label" id="pourquoiLabel">⭐ Pourquoi cette personne est-elle spéciale ou importante pour vous ? *</label>
-                        <textarea class="form-textarea" id="pourquoiImportante" placeholder="Ex: Parce qu'elle m'a toujours soutenu, ou parce qu'elle ne baisse jamais les bras..." maxlength="300"></textarea>
+                        <label class="form-label" id="pourquoiLabel">⭐ Comment décririez-vous sa personnalité ? (Ce qui la rend unique)</label>
+                        <textarea class="form-textarea" id="pourquoiImportante" placeholder="Ex: C'est une personne très courageuse, toujours souriante, qui inspire tout le monde..." maxlength="300"></textarea>
                         <div class="char-counter">0/300</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" id="souvenirLabel"> Racontez-nous ce souvenir en quelques lignes *</label>
-                        <textarea class="form-textarea" id="souvenir" placeholder="Décrivez un moment précis..." maxlength="500"></textarea>
-                        <div class="example-text" id="souvenirExample"> Exemple : "Le jour de son examen, elle avait tellement peur qu'elle voulait abandonner. Nous l'avons encouragée jusqu'au dernier moment. Quand elle a reçu son résultat, nous avons tous pleuré de joie."</div>
+                        <label class="form-label" id="souvenirLabel">🏆 Racontez un moment important de SA vie ou une de SES réussites</label>
+                        <textarea class="form-textarea" id="souvenir" placeholder="Ex: Le jour où elle a obtenu son diplôme après des années d'efforts, ou quand elle a surmonté une épreuve difficile..." maxlength="500"></textarea>
+                        <div class="example-text" id="souvenirExample">💡 Exemple : "Elle a travaillé dur pendant des années pour ouvrir son entreprise, et aujourd'hui c'est une vraie réussite. Elle est notre fierté."</div>
                         <div class="char-counter">0/500</div>
                         <button type="button" class="btn-inspiration" onclick="showInspirationQuestions()">💡 Je ne sais pas quoi écrire, aidez-moi</button>
                         <div id="inspirationHelper" class="inspiration-helper">
@@ -2013,6 +1526,7 @@ img, video, iframe {
                     </div>
                 </div>
 
+                <!-- Étape 4 : Les détails qui font la différence -->
                 <div class="form-step" data-step="4" id="step4">
                     <h3 class="step-title">✨ Les détails qui font la différence</h3>
                     <div class="form-group">
@@ -2030,7 +1544,7 @@ img, video, iframe {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" id="surnomLabel">😂 Avez-vous un surnom pour cette personne ?</label>
+                        <label class="form-label" id="surnomLabel">😂 A-t-elle/il un surnom ?</label>
                         <input type="text" class="form-input" id="surnom" placeholder="Ex: Chocho, Bébé, Maman Jo, Boss...">
                     </div>
                     <div class="form-group">
@@ -2040,7 +1554,7 @@ img, video, iframe {
                     </div>
                     <div class="form-group">
                         <label class="form-label">✨ Une phrase ou un message spécifique à intégrer dans les paroles ?</label>
-                        <input type="text" class="form-input" id="phraseIntegrer" placeholder="Ex: 'Je serai toujours à tes côtés'">
+                        <input type="text" class="form-input" id="phraseIntegrer" placeholder="Ex: 'Tu es notre seconde maman'">
                     </div>
                     <div class="form-navigation">
                         <button type="button" class="btn-prev" onclick="prevStep()">← Précédent</button>
@@ -2048,20 +1562,21 @@ img, video, iframe {
                     </div>
                 </div>
 
+                <!-- Étape 5 : Le message et l'occasion -->
                 <div class="form-step" data-step="5" id="step5">
-                    <h3 class="step-title"> Le message final</h3>
+                    <h3 class="step-title">💌 Le message et l'occasion</h3>
                     <div class="form-group">
-                        <label class="form-label" id="messageFinalLabel">💌 Quel message voulez-vous qu'il/elle retienne après avoir écouté la chanson ? *</label>
-                        <textarea class="form-textarea" id="messageFinal" placeholder="Ex: Je veux qu'il sache que je suis fier de lui, ou qu'elle comprenne que je serai toujours là..." maxlength="300"></textarea>
+                        <label class="form-label" id="messageFinalLabel">Quel message voulez-vous lui transmettre à travers cette chanson ? *</label>
+                        <textarea class="form-textarea" id="messageFinal" placeholder="Ex: Je veux qu'elle sache qu'on est fier d'elle et qu'on lui souhaite beaucoup de bonheur..." maxlength="300"></textarea>
                         <div class="char-counter">0/300</div>
                     </div>
                     <div class="form-group">
-                        <label class="form-label" id="lieuLabel"> Un lieu important pour vous deux ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
-                        <input type="text" class="form-input" id="lieuImportant" placeholder="Ex: La plage de Nangui, le jardin de la maison...">
+                        <label class="form-label" id="lieuLabel">📍 Un lieu important pour elle/lui ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
+                        <input type="text" class="form-input" id="lieuImportant" placeholder="Ex: Sa maison, son bureau, l'église qu'elle fréquente...">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" id="dateLabel">📅 Une date importante ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
-                        <input type="text" class="form-input" id="dateImportante" placeholder="Ex: 14 février 2020, notre rencontre en 2018...">
+                        <label class="form-label" id="dateLabel">📅 Une date importante pour elle/lui ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
+                        <input type="text" class="form-input" id="dateImportante" placeholder="Ex: Son anniversaire le 8 août, la date de sa retraite...">
                     </div>
                     <div class="form-navigation">
                         <button type="button" class="btn-prev" onclick="prevStep()">← Précédent</button>
@@ -2069,6 +1584,7 @@ img, video, iframe {
                     </div>
                 </div>
 
+                                <!-- Étape 6 : Vos coordonnées -->
                 <div class="form-step" data-step="6" id="step6">
                     <h3 class="step-title">📱 Vos coordonnées</h3>
                     <div class="form-group">
@@ -2085,30 +1601,55 @@ img, video, iframe {
                     </div>
                     <h4 style="margin: 2rem 0 1rem; color: var(--violet-dark); font-size: 1.2rem;">📋 Récapitulatif de votre projet</h4>
                     <div id="summaryContent" class="summary-box"></div>
+                    
                     <div class="form-navigation">
                         <button type="button" class="btn-prev" onclick="prevStep()">← Modifier</button>
                         <button type="button" class="btn-submit" onclick="submitOrder()">Envoyer sur WhatsApp 💬</button>
+                    </div>
+
+                    <!-- NOUVEAU : Alerte si le navigateur bloque WhatsApp -->
+                    <div id="popupWarning" style="display: none; margin-top: 2rem; padding: 1.5rem; background: #fef2f2; border: 1px solid #ef4444; border-radius: 12px; text-align: center;">
+                        <h4 style="color: #ef4444; margin-bottom: 0.5rem; font-size: 1.1rem;">⚠️ Ouverture bloquée par votre navigateur</h4>
+                        <p style="color: #7f1d1d; font-size: 0.95rem; margin-bottom: 1rem;">
+                            Votre navigateur a empêché l'ouverture de WhatsApp. Vos données sont sauvegardées, rien n'est perdu !
+                        </p>
+                        <p style="color: #7f1d1d; font-size: 0.9rem; margin-bottom: 1rem;">
+                            <strong>Comment faire ?</strong><br>
+                            1. Autorisez les popups pour ce site dans les paramètres de votre navigateur.<br>
+                            2. Ou cliquez simplement sur le bouton ci-dessous pour réessayer.
+                        </p>
+                        <button class="btn-primary" onclick="retryWhatsApp()" style="background: #ef4444; color: white; width: 100%; justify-content: center; border: none; cursor: pointer;">
+                            🔄 Réessayer d'ouvrir WhatsApp
+                        </button>
                     </div>
                 </div>
             </form>
         </div>
     </section>
 
-    <section id="confirmation" class="confirmation-page">
+        <section id="confirmation" class="confirmation-page">
         <div class="confirmation-content">
             <div class="check-icon">✓</div>
             <h2>Merci ! <span class="heart">💛</span></h2>
             <p>Votre récapitulatif a été généré avec succès.</p>
-            <p style="color: var(--gold); font-weight: bold; margin: 1.5rem 0; font-size: 1.2rem;">
-                ⚠️ ACTION REQUISE :<br>
-                N'oubliez pas d'appuyer sur "Envoyer" dans l'application WhatsApp qui vient de s'ouvrir !
-            </p>
+            
+            <div style="background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); border-radius: 8px; padding: 1rem; margin: 1.5rem 0; text-align: left;">
+                <p style="color: var(--gold); font-weight: bold; margin-bottom: 0.5rem;">
+                    ⚠️ WhatsApp ne s'est pas ouvert ?
+                </p>
+                <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">
+                    Votre navigateur a peut-être bloqué la fenêtre. Ne vous inquiétez pas, <strong>vos données sont sauvegardées</strong> et rien n'est perdu.
+                </p>
+                <button class="btn-primary" onclick="retryWhatsApp()" style="width: 100%; justify-content: center;">
+                    🔄 Réessayer d'ouvrir WhatsApp
+                </button>
+            </div>
+
             <p>Nous vous répondrons rapidement pour valider les paroles et le paiement.</p>
             <button class="btn-home" onclick="showHome()">🏠 Retour à l'accueil →</button>
         </div>
     </section>
 
-    <script src="script.js"></script>
     <script>
         let currentAudio = null;
         let currentBtn = null;
@@ -2156,107 +1697,113 @@ img, video, iframe {
         }
 
         function handleRelationChange() {
-    const relation = document.getElementById('destRelation').value;
-    const relationAutreField = document.getElementById('relationAutreField');
-    const moiMessage = document.getElementById('moiMessage');
-    
-    const destPrenomLabel = document.getElementById('destPrenomLabel');
-    const destPrenomInput = document.getElementById('destPrenom');
-    const relationLabel = document.getElementById('relationLabel');
-    const emotionLabel = document.getElementById('emotionLabel'); // ✅ AJOUTÉ
-    
-    const step3Title = document.getElementById('step3Title');
-    const pourquoiLabel = document.getElementById('pourquoiLabel');
-    const pourquoiInput = document.getElementById('pourquoiImportante');
-    const souvenirLabel = document.getElementById('souvenirLabel');
-    const souvenirInput = document.getElementById('souvenir');
-    const souvenirExample = document.getElementById('souvenirExample');
-    
-    const qualitesLabel = document.getElementById('qualitesLabel');
-    const surnomLabel = document.getElementById('surnomLabel');
-    const surnomInput = document.getElementById('surnom');
-    const expressionLabel = document.getElementById('expressionLabel');
-    const expressionInput = document.getElementById('expressionFrequente');
-    
-    const messageFinalLabel = document.getElementById('messageFinalLabel');
-    const messageFinalInput = document.getElementById('messageFinal');
-    const lieuLabel = document.getElementById('lieuLabel');
-    const lieuInput = document.getElementById('lieuImportant');
+            const relation = document.getElementById('destRelation').value;
+            const relationAutreField = document.getElementById('relationAutreField');
+            const moiMessage = document.getElementById('moiMessage');
+            
+            const destPrenomLabel = document.getElementById('destPrenomLabel');
+            const destPrenomInput = document.getElementById('destPrenom');
+            const relationLabel = document.getElementById('relationLabel');
+            const emotionLabel = document.getElementById('emotionLabel');
+            
+            const step3Title = document.getElementById('step3Title');
+            const pourquoiLabel = document.getElementById('pourquoiLabel');
+            const pourquoiInput = document.getElementById('pourquoiImportante');
+            const souvenirLabel = document.getElementById('souvenirLabel');
+            const souvenirInput = document.getElementById('souvenir');
+            const souvenirExample = document.getElementById('souvenirExample');
+            
+            const qualitesLabel = document.getElementById('qualitesLabel');
+            const surnomLabel = document.getElementById('surnomLabel');
+            const surnomInput = document.getElementById('surnom');
+            const expressionLabel = document.getElementById('expressionLabel');
+            const expressionInput = document.getElementById('expressionFrequente');
+            
+            const messageFinalLabel = document.getElementById('messageFinalLabel');
+            const messageFinalInput = document.getElementById('messageFinal');
+            const lieuLabel = document.getElementById('lieuLabel');
+            const lieuInput = document.getElementById('lieuImportant');
+            const dateLabel = document.getElementById('dateLabel');
+            const dateInput = document.getElementById('dateImportante');
 
-    if (relation === 'Moi') {
-        relationLabel.innerHTML = '❤️ Cette chanson est pour : <span style="color: var(--gold);">MOI-MÊME</span> ✨';
-        moiMessage.style.display = 'block';
-        relationAutreField.style.display = 'none';
-        
-        destPrenomLabel.textContent = ' Votre prénom *';
-        destPrenomInput.placeholder = 'Votre prénom';
-        emotionLabel.textContent = '😊 Quelle émotion voulez-vous ressentir en l\'écoutant ? *'; // ✅ AJOUTÉ
-        
-        step3Title.textContent = '📖 Votre histoire';
-        pourquoiLabel.textContent = '⭐ Pourquoi est-il important pour vous de créer cette chanson ? *';
-        pourquoiInput.placeholder = 'Ex: Parce que je veux me rappeler qui je suis, ou parce que je ne baisse jamais les bras...';
-        
-        souvenirLabel.textContent = ' Racontez-nous ce souvenir en quelques lignes *';
-        souvenirInput.placeholder = 'Décrivez un moment précis de votre vie...';
-        souvenirExample.textContent = ' Exemple : "Le jour de mon examen, j\'avais tellement peur que je voulais abandonner. Mais j\'ai persévéré et quand j\'ai reçu mon résultat, j\'ai pleuré de joie."';
-        
-        qualitesLabel.textContent = '🏆 Quelles sont vos principales qualités ? (Cochez-en plusieurs)';
-        surnomLabel.textContent = '😂 Avez-vous un surnom ?';
-        surnomInput.placeholder = 'Ex: Chocho, Bébé, Boss...';
-        
-        expressionLabel.textContent = ' Y a-t-il un mot ou une expression que vous dites souvent ?';
-        expressionInput.placeholder = 'Ex: \'Je peux le faire\', \'On ne lâche rien\', \'Je suis fort(e)\'...';
-        
-        messageFinalLabel.textContent = '💌 Quel message voulez-vous vous rappeler après avoir écouté la chanson ? *';
-        messageFinalInput.placeholder = 'Ex: Je veux me rappeler que je suis fort(e), ou que je peux tout accomplir...';
-        
-        lieuLabel.innerHTML = ' Un lieu important pour vous ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
-        lieuInput.placeholder = 'Ex: La plage de Nangui, mon bureau, ma chambre...';
-        
-        if (typeof inspirationData !== 'undefined') {
-            inspirationData['Moi'] = [
-                "⭐ Qu'est-ce qui vous rend unique ou spécial(e) à vos propres yeux ?",
-                "📖 Racontez un moment de votre vie dont vous êtes particulièrement fier/fière.",
-                "💡 Quelle qualité ou force personnelle souhaitez-vous célébrer dans cette chanson ?"
-            ];
+            if (relation === 'Moi') {
+                relationLabel.innerHTML = '❤️ Cette chanson est pour : <span style="color: var(--gold);">MOI-MÊME</span> ✨';
+                moiMessage.style.display = 'block';
+                relationAutreField.style.display = 'none';
+                
+                destPrenomLabel.textContent = ' Votre prénom *';
+                destPrenomInput.placeholder = 'Votre prénom';
+                emotionLabel.textContent = '😊 Quelle émotion voulez-vous ressentir en l\'écoutant ? *';
+                
+                step3Title.textContent = '📖 Parlez-nous de VOUS';
+                pourquoiLabel.textContent = '⭐ Comment décririez-vous votre personnalité ? (Ce qui vous rend unique)';
+                pourquoiInput.placeholder = 'Ex: Je suis une personne très courageuse, toujours souriante, qui inspire mon entourage...';
+                
+                souvenirLabel.textContent = '🏆 Racontez un moment important de votre vie ou une de vos réussites';
+                souvenirInput.placeholder = 'Ex: Le jour où j\'ai obtenu mon diplôme après des années d\'efforts, ou quand j\'ai surmonté une épreuve difficile...';
+                souvenirExample.textContent = '💡 Exemple : "J\'ai travaillé dur pendant des années pour ouvrir mon entreprise, et aujourd\'hui c\'est une vraie réussite. Je suis fier/fière de moi."';
+                
+                qualitesLabel.textContent = '🏆 Quelles sont vos principales qualités ? (Cochez-en plusieurs)';
+                surnomLabel.textContent = '😂 Avez-vous un surnom ?';
+                surnomInput.placeholder = 'Ex: Chocho, Bébé, Boss...';
+                expressionLabel.textContent = ' Y a-t-il un mot ou une expression que vous dites souvent ?';
+                expressionInput.placeholder = 'Ex: \'Je peux le faire\', \'On ne lâche rien\', \'Je suis fort(e)\'...';
+                
+                messageFinalLabel.textContent = '💌 Quel message voulez-vous vous rappeler à travers cette chanson ? *';
+                messageFinalInput.placeholder = 'Ex: Je veux me rappeler que je suis fort(e) et que je peux accomplir tout ce que je veux...';
+                
+                lieuLabel.innerHTML = '📍 Un lieu important pour vous ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
+                lieuInput.placeholder = 'Ex: Mon bureau, ma chambre, l\'église que je fréquente...';
+                
+                dateLabel.innerHTML = '📅 Une date importante pour vous ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
+                dateInput.placeholder = 'Ex: Mon anniversaire, la date de l\'obtention de mon diplôme...';
+                
+                if (typeof inspirationData !== 'undefined') {
+                    inspirationData['Moi'] = [
+                        "⭐ Qu'est-ce qui vous rend unique ou spécial(e) à vos propres yeux ?",
+                        "📖 Racontez un moment de votre vie dont vous êtes particulièrement fier/fière (une réussite, un surmontement d'épreuve).",
+                        "💡 Quelle qualité ou force personnelle souhaitez-vous célébrer dans cette chanson ?"
+                    ];
+                }
+            } else {
+                relationLabel.innerHTML = '❤️ Votre relation avec cette personne *';
+                moiMessage.style.display = 'none';
+                
+                if (relation === 'Autre') {
+                    relationAutreField.style.display = 'block';
+                } else {
+                    relationAutreField.style.display = 'none';
+                    document.getElementById('relationAutre').value = '';
+                }
+                
+                destPrenomLabel.textContent = ' Prénom du destinataire *';
+                destPrenomInput.placeholder = 'Ex: Jeannette, Marie, Jojo...';
+                emotionLabel.textContent = '😊 Quelle émotion voulez-vous qu\'il/elle ressente en l\'écoutant ? *';
+                
+                step3Title.textContent = '📖 Parlez-nous de CETTE PERSONNE';
+                pourquoiLabel.textContent = '⭐ Comment décririez-vous sa personnalité ? (Ce qui la rend unique)';
+                pourquoiInput.placeholder = 'Ex: C\'est une personne très courageuse, toujours souriante, qui inspire tout le monde...';
+                
+                souvenirLabel.textContent = '🏆 Racontez un moment important de SA vie ou une de SES réussites';
+                souvenirInput.placeholder = 'Ex: Le jour où elle a obtenu son diplôme après des années d\'efforts, ou quand elle a surmonté une épreuve difficile...';
+                souvenirExample.textContent = '💡 Exemple : "Elle a travaillé dur pendant des années pour ouvrir son entreprise, et aujourd\'hui c\'est une vraie réussite. Elle est notre fierté."';
+                
+                qualitesLabel.textContent = '🏆 Quelles sont ses principales qualités ? (Cochez-en plusieurs)';
+                surnomLabel.textContent = '😂 A-t-elle/il un surnom ?';
+                surnomInput.placeholder = 'Ex: Chocho, Bébé, Maman Jo, Boss...';
+                expressionLabel.textContent = ' Y a-t-il un mot ou une expression qu\'il/elle dit souvent ?';
+                expressionInput.placeholder = 'Ex: \'Nzambe apambola yo\', \'On ne lâche rien\', \'Toza ensemble\'...';
+                
+                messageFinalLabel.textContent = '💌 Quel message voulez-vous lui transmettre à travers cette chanson ? *';
+                messageFinalInput.placeholder = 'Ex: Je veux qu\'elle sache qu\'on est fier d\'elle et qu\'on lui souhaite beaucoup de bonheur...';
+                
+                lieuLabel.innerHTML = '📍 Un lieu important pour elle/lui ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
+                lieuInput.placeholder = 'Ex: Sa maison, son bureau, l\'église qu\'elle fréquente...';
+                
+                dateLabel.innerHTML = '📅 Une date importante pour elle/lui ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
+                dateInput.placeholder = 'Ex: Son anniversaire le 8 août, la date de sa retraite...';
+            }
         }
-    } else {
-        relationLabel.innerHTML = '❤️ Votre relation avec cette personne *';
-        moiMessage.style.display = 'none';
-        
-        if (relation === 'Autre') {
-            relationAutreField.style.display = 'block';
-        } else {
-            relationAutreField.style.display = 'none';
-            document.getElementById('relationAutre').value = '';
-        }
-        
-        destPrenomLabel.textContent = ' Prénom du destinataire *';
-        destPrenomInput.placeholder = 'Ex: Jeannette, Marie, Jojo...';
-        emotionLabel.textContent = '😊 Quelle émotion doit-il/elle ressentir en l\'écoutant ? *'; // ✅ AJOUTÉ
-        
-        step3Title.textContent = '📖 Le cœur de l\'histoire';
-        pourquoiLabel.textContent = '⭐ Pourquoi cette personne est-elle spéciale ou importante pour vous ? *';
-        pourquoiInput.placeholder = 'Ex: Parce qu\'elle m\'a toujours soutenu, ou parce qu\'elle ne baisse jamais les bras...';
-        
-        souvenirLabel.textContent = ' Racontez-nous ce souvenir en quelques lignes *';
-        souvenirInput.placeholder = 'Décrivez un moment précis...';
-        souvenirExample.textContent = ' Exemple : "Le jour de son examen, elle avait tellement peur qu\'elle voulait abandonner. Nous l\'avons encouragée jusqu\'au dernier moment. Quand elle a reçu son résultat, nous avons tous pleuré de joie."';
-        
-        qualitesLabel.textContent = '🏆 Quelles sont ses principales qualités ? (Cochez-en plusieurs)';
-        surnomLabel.textContent = '😂 Avez-vous un surnom pour cette personne ?';
-        surnomInput.placeholder = 'Ex: Chocho, Bébé, Maman Jo, Boss...';
-        
-        expressionLabel.textContent = ' Y a-t-il un mot ou une expression qu\'il/elle dit souvent ?';
-        expressionInput.placeholder = 'Ex: \'Nzambe apambola yo\', \'On ne lâche rien\', \'Toza ensemble\'...';
-        
-        messageFinalLabel.textContent = '💌 Quel message voulez-vous qu\'il/elle retienne après avoir écouté la chanson ? *';
-        messageFinalInput.placeholder = 'Ex: Je veux qu\'il sache que je suis fier de lui, ou qu\'elle comprenne que je serai toujours là...';
-        
-        lieuLabel.innerHTML = ' Un lieu important pour vous deux ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
-        lieuInput.placeholder = 'Ex: La plage de Nangui, le jardin de la maison...';
-    }
-}
 
         document.querySelectorAll('[data-field="formule"]').forEach(card => {
             card.addEventListener('click', function() {
@@ -2363,6 +1910,487 @@ img, video, iframe {
             if (formData.formule.includes('5000')) return '5 000 FCFA';
             return '';
         }
+
+        // ==========================================
+        // NAVIGATION & VALIDATION (Identique à votre script.js)
+        // ==========================================
+        let currentStep = 1;
+        const totalSteps = 6;
+        let formData = {};
+
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                const activeLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
+                if (activeLink) activeLink.classList.add('active');
+            }
+        }
+
+        function showHome() {
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('formulaire').classList.remove('active');
+            document.getElementById('confirmation').classList.remove('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showFormulaire() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('formulaire').classList.add('active');
+            document.getElementById('confirmation').classList.remove('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('[data-field="occasion"]').forEach(card => {
+            card.addEventListener('click', function() {
+                const grid = this.parentElement;
+                grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                const value = this.getAttribute('data-value');
+                formData.occasion = value;
+                const autreField = document.getElementById('occasionAutreField');
+                if (value === 'Autre') {
+                    autreField.style.display = 'block';
+                } else {
+                    autreField.style.display = 'none';
+                    document.getElementById('occasionAutre').value = '';
+                }
+            });
+        });
+
+        document.querySelectorAll('[data-field="style"]').forEach(card => {
+            card.addEventListener('click', function() {
+                const grid = this.parentElement;
+                grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                const value = this.getAttribute('data-value');
+                formData.style = value;
+                const autreField = document.getElementById('styleAutreField');
+                if (value === 'Autre') {
+                    autreField.style.display = 'block';
+                } else {
+                    autreField.style.display = 'none';
+                    document.getElementById('styleAutre').value = '';
+                }
+            });
+        });
+
+        document.querySelectorAll('[data-field="emotion"]').forEach(card => {
+            card.addEventListener('click', function() {
+                const grid = this.parentElement;
+                grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                formData.emotion = this.getAttribute('data-value');
+            });
+        });
+
+        document.querySelectorAll('.form-textarea[maxlength]').forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                const max = this.getAttribute('maxlength');
+                const counter = this.parentElement.querySelector('.char-counter');
+                if (counter) {
+                    counter.textContent = `${this.value.length}/${max}`;
+                }
+            });
+        });
+
+        function nextStep() {
+            if (!validateStep()) return;
+            if (currentStep < totalSteps) {
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.remove('active');
+                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.add('completed');
+                currentStep++;
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.add('active');
+                if (currentStep === 6) generateSummary();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.remove('active');
+                currentStep--;
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.remove('completed');
+                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function validateStep() {
+            switch(currentStep) {
+                case 1:
+                    if (!formData.occasion) { alert('Veuillez sélectionner une occasion.'); return false; }
+                    if (formData.occasion === 'Autre') {
+                        const occasionAutre = document.getElementById('occasionAutre').value.trim();
+                        if (!occasionAutre) { alert('Veuillez préciser l\'occasion.'); return false; }
+                        formData.occasionDetail = occasionAutre;
+                    }
+                    const prenom = document.getElementById('destPrenom').value.trim();
+                    const relation = document.getElementById('destRelation').value;
+                    if (!prenom) { alert('Veuillez entrer le prénom.'); return false; }
+                    if (!relation) { alert('Veuillez sélectionner votre relation.'); return false; }
+                    if (relation === 'Autre') {
+                        const relationAutre = document.getElementById('relationAutre').value.trim();
+                        if (!relationAutre) { alert('Veuillez préciser votre relation.'); return false; }
+                        formData.relationDetail = relationAutre;
+                    }
+                    formData.destPrenom = prenom;
+                    formData.destRelation = relation;
+                    return true;
+                case 2:
+                    if (!formData.style) { alert('Veuillez sélectionner un style musical.'); return false; }
+                    if (formData.style === 'Autre') {
+                        const styleAutre = document.getElementById('styleAutre').value.trim();
+                        if (!styleAutre) { alert('Veuillez préciser le style musical.'); return false; }
+                        formData.styleDetail = styleAutre;
+                    }
+                    if (!formData.formule) { alert('Veuillez choisir une formule.'); return false; }
+                    if (!formData.voix) { alert('Veuillez sélectionner un type de voix.'); return false; }
+                    if (!formData.emotion) { alert('Veuillez sélectionner une émotion.'); return false; }
+                    return true;
+                case 3:
+                    const pourquoi = document.getElementById('pourquoiImportante').value.trim();
+                    const souvenir = document.getElementById('souvenir').value.trim();
+                    if (!pourquoi) { alert('Veuillez expliquer pourquoi c\'est important.'); return false; }
+                    if (!souvenir) { alert('Veuillez raconter un souvenir/moment important.'); return false; }
+                    formData.pourquoiImportante = pourquoi;
+                    formData.souvenir = souvenir;
+                    return true;
+                case 4:
+                    const qualites = [];
+                    document.querySelectorAll('.quality-checkbox:checked').forEach(cb => qualites.push(cb.value));
+                    formData.qualites = qualites;
+                    formData.surnom = document.getElementById('surnom').value;
+                    formData.expressionFrequente = document.getElementById('expressionFrequente').value;
+                    formData.phraseIntegrer = document.getElementById('phraseIntegrer').value;
+                    return true;
+                case 5:
+                    const messageFinal = document.getElementById('messageFinal').value.trim();
+                    if (!messageFinal) { alert('Veuillez entrer le message final.'); return false; }
+                    formData.messageFinal = messageFinal;
+                    formData.lieuImportant = document.getElementById('lieuImportant').value;
+                    formData.dateImportante = document.getElementById('dateImportante').value;
+                    return true;
+                case 6:
+                    const clientPrenom = document.getElementById('clientPrenom').value.trim();
+                    const clientWhatsapp = document.getElementById('clientWhatsapp').value.trim();
+                    if (!clientPrenom) { alert('Veuillez entrer votre prénom.'); return false; }
+                    if (!clientWhatsapp) { alert('Veuillez entrer votre numéro WhatsApp.'); return false; }
+                    formData.clientPrenom = clientPrenom;
+                    formData.clientWhatsapp = clientWhatsapp;
+                    formData.clientEmail = document.getElementById('clientEmail').value;
+                    return true;
+                default:
+                    return true;
+            }
+        }
+
+        function generateSummary() {
+            const formule = getFormuleDisplayName();
+            const prix = getFormulePrice();
+            const occasionFinale = formData.occasion === 'Autre' ? (formData.occasionDetail || 'Autre') : formData.occasion;
+            const styleFinal = formData.style === 'Autre' ? (formData.styleDetail || 'Autre') : formData.style;
+            const relationAffichee = formData.destRelation === 'Moi' ? 'Moi-même ✨' : (formData.relationDetail || formData.destRelation);
+            const destinataireAffiche = formData.destRelation === 'Moi' ? `Moi-même (${formData.destPrenom})` : `${formData.destPrenom} (${relationAffichee})`;
+            
+            const summaryHTML = `
+                <div class="summary-grid">
+                    <div class="summary-item"><p class="summary-label"> Occasion</p><p>${occasionFinale}</p></div>
+                    <div class="summary-item"><p class="summary-label">👤 Destinataire</p><p>${destinataireAffiche}</p></div>
+                    <div class="summary-item"><p class="summary-label">🎵 Style musical</p><p>${styleFinal}</p></div>
+                    <div class="summary-item"><p class="summary-label">🎤 Voix</p><p>${formData.voix}</p></div>
+                    <div class="summary-item"><p class="summary-label">😊 Émotion</p><p>${formData.emotion}</p></div>
+                    <div class="summary-item"><p class="summary-label">💎 Formule choisie</p><p>${formule} - ${prix}</p></div>
+                </div>
+                ${formData.pourquoiImportante ? `<div class="summary-section"><p class="summary-label">⭐ Pourquoi c'est important</p><p>${formData.pourquoiImportante}</p></div>` : ''}
+                ${formData.souvenir ? `<div class="summary-section"><p class="summary-label">📖 Moment important / Réussite</p><p>${formData.souvenir}</p></div>` : ''}
+                ${formData.qualites && formData.qualites.length > 0 ? `<div class="summary-section"><p class="summary-label">🏆 Qualités</p><p>${formData.qualites.join(', ')}</p></div>` : ''}
+                ${formData.surnom ? `<div class="summary-section"><p class="summary-label">😂 Surnom</p><p>${formData.surnom}</p></div>` : ''}
+                ${formData.expressionFrequente ? `<div class="summary-section"><p class="summary-label">🙏 Expression fréquente</p><p>${formData.expressionFrequente}</p></div>` : ''}
+                ${formData.phraseIntegrer ? `<div class="summary-section"><p class="summary-label">✨ Phrase à intégrer</p><p>${formData.phraseIntegrer}</p></div>` : ''}
+                <div class="summary-section"><p class="summary-label">💌 Message final</p><p>${formData.messageFinal}</p></div>
+                ${formData.lieuImportant ? `<div class="summary-section"><p class="summary-label"> Lieu important</p><p>${formData.lieuImportant}</p></div>` : ''}
+                ${formData.dateImportante ? `<div class="summary-section"><p class="summary-label">📅 Date importante</p><p>${formData.dateImportante}</p></div>` : ''}
+                <div class="summary-section">
+                    <p class="summary-label"> Vos coordonnées</p>
+                    <p><strong>Prénom :</strong> ${formData.clientPrenom}<br><strong>WhatsApp :</strong> ${formData.clientWhatsapp}<br>${formData.clientEmail ? `<strong>Email :</strong> ${formData.clientEmail}` : ''}</p>
+                </div>
+            `;
+            document.getElementById('summaryContent').innerHTML = summaryHTML;
+        }
+
+        // ==========================================
+// SOUMISSION DE LA COMMANDE
+// ==========================================
+async function submitOrder() {
+    // 1. Récupération et validation des données (identique à avant)
+    const clientPrenom = document.getElementById('clientPrenom').value.trim();
+    const clientWhatsapp = document.getElementById('clientWhatsapp').value.trim();
+    const clientEmail = document.getElementById('clientEmail').value.trim();
+    
+    if (!clientPrenom || !clientWhatsapp) {
+        alert('Veuillez remplir vos coordonnées (prénom et WhatsApp).');
+        return false;
+    }
+    
+    formData.clientPrenom = clientPrenom;
+    formData.clientWhatsapp = clientWhatsapp;
+    formData.clientEmail = clientEmail;
+    
+    // ... (tout le calcul des variables occasionFinale, styleFinal, etc. reste identique) ...
+    const occasionFinale = formData.occasion === 'Autre' ? (formData.occasionDetail || 'Autre') : formData.occasion;
+    const styleFinal = formData.style === 'Autre' ? (formData.styleDetail || 'Autre') : formData.style;
+    const relationAffichee = formData.destRelation === 'Moi' ? 'Moi-même' : (formData.relationDetail || formData.destRelation);
+    const formule = getFormuleDisplayName();
+    const prix = getFormulePrice();
+    const estPourMoi = formData.destRelation === 'Moi';
+    
+    // ... (construction du message WhatsApp identique à avant) ...
+    const titreMessage = estPourMoi ? '🎵 *Ma chanson personnelle - Lamio Melody* 🎵' : '🎵 *Nouvelle commande Lamio Melody* 🎵';
+    const destinataireText = estPourMoi ? `👤 *Pour :* Moi-même (${formData.destPrenom})` : `👤 *Destinataire :* ${formData.destPrenom} (${relationAffichee})`;
+    
+    const whatsappMessage = `${titreMessage}\n\n` +
+        `🎉 *Occasion :* ${occasionFinale}\n` +
+        `${destinataireText}\n` +
+        `🎵 *Style :* ${styleFinal}\n` +
+        `🎤 *Voix :* ${formData.voix}\n` +
+        `😊 *Émotion :* ${formData.emotion}\n\n` +
+        `⭐ *Pourquoi c'est important :*\n${formData.pourquoiImportante}\n\n` +
+        `📖 *Moment important / Réussite :*\n${formData.souvenir}\n\n` +
+        `${formData.qualites && formData.qualites.length > 0 ? `🏆 *Qualités :* ${formData.qualites.join(', ')}\n\n` : ''}` +
+        `${formData.surnom ? `😂 *Surnom :* ${formData.surnom}\n\n` : ''}` +
+        `${formData.expressionFrequente ? ` *Expression fréquente :* ${formData.expressionFrequente}\n\n` : ''}` +
+        `${formData.phraseIntegrer ? `✨ *Phrase à intégrer :* ${formData.phraseIntegrer}\n\n` : ''}` +
+        `💌 *Message final :*\n${formData.messageFinal}\n\n` +
+        `${formData.lieuImportant ? `📍 *Lieu important :* ${formData.lieuImportant}\n` : ''}` +
+        `${formData.dateImportante ? `📅 *Date importante :* ${formData.dateImportante}\n` : ''}\n` +
+        `👤 *Client :* ${formData.clientPrenom}\n` +
+        ` *WhatsApp :* ${formData.clientWhatsapp}\n` +
+        `${formData.clientEmail ? `📧 *Email :* ${formData.clientEmail}\n` : ''}\n\n` +
+        `💎 *Formule :* ${formule} (${prix})\n\n` +
+        `🙏 *Merci de confirmer ma commande*`;
+
+    // Sauvegarde Supabase (identique à avant)
+    try {
+        const SUPABASE_URL = 'https://cfneuwhgmopaguemjchf.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_a5hxJyzGt03kuCTUnkAxig_BksoIlH0';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        await supabaseClient.from('orders').insert([{
+            lm_voice: formData.voix, occasion: occasionFinale, dest_prenom: formData.destPrenom,
+            dest_relation: relationAffichee, style_musical: styleFinal, emotion: formData.emotion,
+            pourquoi_importante: formData.pourquoiImportante, souvenir: formData.souvenir,
+            qualites: formData.qualites ? formData.qualites.join(', ') : '', surnom: formData.surnom,
+            expression_frequente: formData.expressionFrequente, phrase_integrer: formData.phraseIntegrer,
+            message_final: formData.messageFinal, lieu_important: formData.lieuImportant,
+            date_importante: formData.dateImportante, client_prenom: formData.clientPrenom,
+            client_whatsapp: formData.clientWhatsapp, client_email: formData.clientEmail,
+            formule: formule, prix: prix, est_pour_moi: estPourMoi,
+            statut: 'en_attente_validation', created_at: new Date().toISOString()
+        }]);
+    } catch (e) { console.log('Erreur Supabase:', e); }
+
+    // 2. TENTATIVE D'OUVERTURE WHATSAPP AVEC DÉTECTION DE BLOCAGE
+    const whatsappUrl = `https://wa.me/242065186967?text=${encodeURIComponent(whatsappMessage)}`;
+    window.whatsappMessageBackup = whatsappMessage; // Pour le bouton "Réessayer"
+    
+    const popup = window.open(whatsappUrl, '_blank');
+
+    // Vérification si le popup a été bloqué
+    if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+        //  BLOQUÉ : On affiche l'alerte rouge, on ne cache pas le formulaire
+        document.getElementById('popupWarning').style.display = 'block';
+        document.getElementById('popupWarning').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+        // ✅ OUVERT : On cache l'alerte (si elle était visible) et on va à la confirmation
+        document.getElementById('popupWarning').style.display = 'none';
+        
+        // On va à la page de confirmation
+        document.getElementById('formulaire').classList.remove('active');
+        document.getElementById('confirmation').classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // On efface la sauvegarde locale
+        localStorage.removeItem('lamioMelody_rawValues');
+    }
+}
+// Fonction unique et corrigée pour le bouton "Réessayer"
+function retryWhatsApp() {
+    if (window.whatsappMessageBackup) {
+        // On reconstruit l'URL proprement à partir du message sauvegardé
+        const whatsappUrl = `https://wa.me/242065186967?text=${encodeURIComponent(window.whatsappMessageBackup)}`;
+        const popup = window.open(whatsappUrl, '_blank');
+        
+        if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+            alert("Le blocage persiste. Veuillez autoriser les popups pour ce site dans les paramètres de votre navigateur, puis réessayez.");
+        } else {
+            // Succès : on cache l'alerte et on va à la confirmation
+            document.getElementById('popupWarning').style.display = 'none';
+            document.getElementById('formulaire').classList.remove('active');
+            document.getElementById('confirmation').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // On efface la sauvegarde locale car l'envoi a réussi
+            localStorage.removeItem('lamioMelody_rawValues');
+        }
+    } else {
+        alert("Impossible de récupérer le message. Veuillez vérifier vos champs et réessayer.");
+    }
+}
+        const inspirationData = {
+            'Anniversaire': [
+                "⭐ Quelle est la qualité principale que vous admirez chez cette personne ?",
+                "📖 Racontez un moment de sa vie dont vous êtes particulièrement fier/fière (une réussite, un surmontement d'épreuve).",
+                "💡 Qu'est-ce qui la rend unique ou spéciale à vos yeux ?"
+            ],
+            'Amour': [
+                "⭐ Qu'est-ce que cette personne a de plus beau ou de plus unique ?",
+                "📖 Racontez un moment où elle a montré sa force, sa gentillesse ou son amour.",
+                "💡 Quel est son plus beau rêve ou projet actuel ?"
+            ],
+            'Mariage': [
+                "⭐ Quelles sont les qualités de cette personne qui font d'elle un/une partenaire exceptionnel(le) ?",
+                "📖 Racontez un moment où elle a brillé ou vous a impressionné(e).",
+                "💡 Quel est votre plus beau projet ou rêve d'avenir pour elle/vous deux ?"
+            ],
+            'Fête': [
+                "⭐ Pourquoi est-il/elle la personne qui met le plus de joie et d'ambiance autour de lui/d'elle ?",
+                "📖 Racontez un moment où elle a montré sa générosité ou sa bonne humeur.",
+                "💡 Quel est son plat, sa danse ou son expression préférée quand il/elle s'amuse ?"
+            ],
+            'Hommage': [
+                "⭐ En quoi cette personne a-t-elle marqué son entourage de manière indélébile ?",
+                "📖 Quel est le plus beau ou le plus fort souvenir de son parcours ?",
+                "💡 Quelle est la meilleure leçon ou le meilleur conseil qu'il/elle a donné ?"
+            ],
+            'Réussite': [
+                "⭐ Pourquoi êtes-vous si fier/fière de lui/d'elle aujourd'hui ?",
+                "📖 Racontez un moment où vous l'avez vu(e) se battre, travailler dur ou surmonter une difficulté.",
+                "💡 Quel est votre plus grand souhait pour la suite de son parcours ?"
+            ],
+            'Naissance': [
+                "⭐ En quoi l'arrivée de ce bébé illumine-t-elle la vie de ses parents/famille ?",
+                "📖 Racontez le moment précis de sa naissance ou les premiers instants.",
+                "💡 Quel petit détail, sourire ou habitude de bébé vous attendrit le plus ?"
+            ],
+            'Autre': [
+                "⭐ Qu'est-ce qui rend cette personne si unique pour vous ?",
+                "📖 Racontez un moment de sa vie qui montre bien qui elle est.",
+                "💡 Quel message ou quelle émotion voulez-vous absolument lui transmettre ?"
+            ]
+        };
+
+        function showInspirationQuestions() {
+            const helperDiv = document.getElementById('inspirationHelper');
+            const list = document.getElementById('inspirationQuestionsList');
+
+            if (helperDiv.style.display === 'block') {
+                helperDiv.style.display = 'none';
+                return;
+            }
+
+            let occasion = formData.occasion;
+            if (!occasion || occasion === 'Autre') {
+                occasion = 'Anniversaire';
+            }
+
+            const questions = inspirationData[occasion] || inspirationData['Anniversaire'];
+            list.innerHTML = questions.map(q => `<li>${q}</li>`).join('');
+
+            helperDiv.style.display = 'block';
+            helperDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            const body = document.body;
+            
+            let overlay = document.querySelector('.nav-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'nav-overlay';
+                overlay.onclick = toggleMenu;
+                body.appendChild(overlay);
+            }
+            
+            navMenu.classList.toggle('active');
+            menuBtn.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            if (navMenu.classList.contains('active')) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = '';
+            }
+        }
+
+        document.querySelectorAll('.nav-link, .btn-commander').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        // ==========================================
+// FILET DE SÉCURITÉ : SAUVEGARDE AUTOMATIQUE
+// ==========================================
+
+// 1. Sauvegarder les champs texte à chaque frappe
+function autoSaveForm() {
+    const inputs = document.querySelectorAll('input, textarea, select');
+    const rawValues = {};
+    inputs.forEach(input => {
+        if (input.id && input.type !== 'checkbox' && input.type !== 'radio') {
+            rawValues[input.id] = input.value;
+        }
+    });
+    localStorage.setItem('lamioMelody_rawValues', JSON.stringify(rawValues));
+}
+
+// Écouter les modifications sur tous les champs
+document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('input', autoSaveForm);
+    el.addEventListener('change', autoSaveForm);
+});
+
+// 2. Restaurer les données au chargement de la page
+window.addEventListener('DOMContentLoaded', () => {
+    const savedRaw = localStorage.getItem('lamioMelody_rawValues');
+    if (savedRaw) {
+        const values = JSON.parse(savedRaw);
+        for (const [id, value] of Object.entries(values)) {
+            const el = document.getElementById(id);
+            if (el && value !== "") {
+                el.value = value;
+                // Déclencher un événement 'input' pour mettre à jour les compteurs de caractères
+                el.dispatchEvent(new Event('input'));
+            }
+        }
+        
+        // Réafficher les champs "Autre" s'ils étaient remplis
+        if (values.occasionAutre && values.occasion === 'Autre') {
+            document.getElementById('occasionAutreField').style.display = 'block';
+        }
+        if (values.styleAutre && values.style === 'Autre') {
+            document.getElementById('styleAutreField').style.display = 'block';
+        }
+        if (values.relationAutre && values.destRelation === 'Autre') {
+            document.getElementById('relationAutreField').style.display = 'block';
+        }
+        
+        // Si on était sur le formulaire, on peut afficher un petit message discret
+        if (document.getElementById('formulaire').classList.contains('active')) {
+            console.log("Données du formulaire restaurées avec succès.");
+        }
+    }
+});
     </script>
 </body>
 </html>
