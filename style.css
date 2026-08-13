@@ -425,3 +425,67 @@ button { font-family: inherit; }
   .nav-btns .btn { width: 100%; }
   .step-title { font-size: 1.35rem; }
 }
+
+/* =====================================================
+   PATCH RESPONSIVE ABSOLU — petits écrans & téléphones modestes
+   À coller EN BAS de style.css (il écrase proprement le reste)
+   ===================================================== */
+
+/* 1. Confort tactile : anti double-tap-zoom + pas de flash bleu au tap */
+button, a, .card-choice, .chip-check, summary {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+/* 2. Jamais de zoom auto au focus (champ = 16 px minimum) */
+.input-glass { font-size: 16px; }
+
+/* 3. Hauteur réelle mobile (barre d'adresse incluse) */
+.hero, .studio, .confirm { min-height: 100vh; min-height: 100dvh; }
+
+/* 4. WhatsApp flottant hors de la barre de gestes */
+.wa-float {
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  right: calc(16px + env(safe-area-inset-right, 0px));
+}
+
+/* ---------- TABLETTES / MOBILES MOYENS ---------- */
+@media (max-width: 768px) {
+  .container { padding: 0 1.25rem; }
+  .navbar { padding: .7rem 1.25rem; }
+  .section { padding: 4.5rem 0; }
+  /* Blur allégé = fluide sur les petits GPU (Tecno, Infinix…) */
+  .glass { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .track-glass { flex-basis: 250px; }
+  .price-glass { padding: 2.2rem 1.4rem; }
+  .studio-glass { padding: 2rem 1.1rem; }
+}
+
+/* ---------- PETITS ÉCRANS (≤ 480 px) ---------- */
+@media (max-width: 480px) {
+  .formule-grid, .voix-grid { grid-template-columns: 1fr; }
+  .hero-text h1 { font-size: 2.1rem; }
+  .hero-base { font-size: 1.05rem; }
+  .hero-buttons .btn { width: 100%; }
+  .price-amount { font-size: 2.4rem; }
+  .studio-head h2 { font-size: 1.8rem; }
+  .title { font-size: 1.7rem; }
+}
+
+/* ---------- TRÈS PETITS ÉCRANS (≤ 360 px : le cœur du marché) ---------- */
+@media (max-width: 360px) {
+  html { font-size: 14px; } /* tout l'écosystème rem rétrécit proportionnellement */
+  .container { padding: 0 1rem; }
+  .navbar { padding: .6rem 1rem; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .chips { grid-template-columns: 1fr; }
+  .track-glass { flex-basis: 220px; }
+  .hero-frame img { height: 240px; }
+  .circle { width: 36px; height: 36px; }
+  .wa-float { width: 52px; height: 52px; font-size: 1.5rem; }
+}
+
+/* ---------- Économie batterie & accessibilité ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .orb, .wa-float { animation: none; }
+  html { scroll-behavior: auto; }
+}
