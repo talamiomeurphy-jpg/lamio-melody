@@ -1,2396 +1,649 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lamio Melody - Transformez votre histoire en une chanson unique</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <style>
-        :root {
-            --gold: #d4af37;
-            --gold-light: #f4e4b8;
-            --violet: #8b5cf6;
-            --violet-dark: #6d28d9;
-            --dark: #130823;
-            --dark-light: #1f1135;
-            --gray: #2d1b4e;
-            --text-light: #f5f3ff;
-            --text-muted: #a5a0b5;
-            --white: #ffffff;
-            --bg-light: #f9fafb;
-            --gray-200: #e5e7eb;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--dark);
-            color: var(--text-light);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
-
-        .navbar {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            background: rgba(19, 8, 35, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
-        }
-        .nav-container {
-            max-width: 1400px; margin: 0 auto;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo {
-            display: flex; align-items: center; gap: 1rem;
-            text-decoration: none;
-        }
-        .logo img {
-            max-height: 50px;
-            width: auto;
-            object-fit: contain;
-        }
-        .logo-text {
-            display: flex; flex-direction: column;
-        }
-        .logo-text .brand {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem; font-weight: 700;
-            color: var(--white); letter-spacing: 2px;
-        }
-        .logo-text .tagline {
-            font-size: 0.7rem; color: var(--text-muted);
-        }
-        .nav-menu {
-            display: flex; list-style: none; gap: 2rem; align-items: center;
-        }
-        .nav-link {
-            text-decoration: none; color: var(--text-light);
-            font-weight: 500; font-size: 0.9rem;
-            transition: color 0.3s; cursor: pointer;
-        }
-        .nav-link:hover, .nav-link.active { color: var(--gold); }
-        .btn-commander {
-            background: var(--gold); color: var(--dark);
-            padding: 0.75rem 1.5rem; border-radius: 50px;
-            text-decoration: none; font-weight: 600;
-            transition: all 0.3s; border: none; cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .btn-commander:hover {
-            background: var(--gold-light);
-            transform: translateY(-2px);
-        }
-
-        .container {
-            max-width: 1400px; margin: 0 auto; padding: 0 2rem;
-        }
-        .section-header {
-            margin-bottom: 4rem; text-align: center;
-        }
-        .section-label {
-            color: var(--violet); font-size: 0.85rem;
-            letter-spacing: 2px; text-transform: uppercase;
-            font-weight: 600; margin-bottom: 0.5rem;
-        }
-        .section-title {
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 900; color: var(--white);
-            margin-bottom: 1rem;
-        }
-        .section-title .highlight { color: var(--gold); }
-        .section-subtitle {
-            color: var(--text-muted); font-size: 1.1rem;
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex; align-items: center;
-            padding: 8rem 2rem 4rem;
-            position: relative;
-            background: linear-gradient(135deg, rgba(19,8,35,0.95) 0%, rgba(31,17,53,0.9) 100%);
-            overflow: hidden;
-        }
-        .hero::before {
-            content: ''; position: absolute; inset: 0;
-            background: url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=1920&q=80') center/cover;
-            opacity: 0.25; filter: blur(2px);
-        }
-        .hero-content {
-            max-width: 1400px; margin: 0 auto;
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 4rem; align-items: center;
-            position: relative; z-index: 1; width: 100%;
-        }
-        .hero-subtitle {
-            color: var(--gold); font-size: 0.9rem;
-            letter-spacing: 3px; text-transform: uppercase;
-            margin-bottom: 1rem; font-weight: 600;
-        }
-        .hero-text h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            font-weight: 900; line-height: 1.1;
-            margin-bottom: 1.5rem; color: var(--white);
-        }
-        .hero-text h1 .highlight {
-            color: var(--gold); font-style: italic;
-        }
-        .hero-text > p {
-            font-size: 1.1rem; color: var(--text-muted);
-            margin-bottom: 2rem; max-width: 500px;
-        }
-        .hero-buttons {
-            display: flex; gap: 1rem; margin-bottom: 3rem;
-            flex-wrap: wrap;
-        }
-        .btn-primary {
-            background: var(--gold); color: var(--dark);
-            padding: 1rem 2rem; border-radius: 50px;
-            text-decoration: none; font-weight: 600;
-            display: inline-flex; align-items: center; gap: 0.75rem;
-            transition: all 0.3s; border: none; cursor: pointer;
-            font-size: 1rem;
-        }
-        .btn-primary:hover {
-            background: var(--gold-light);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
-        }
-        .btn-secondary {
-            background: transparent; color: var(--white);
-            padding: 1rem 2rem; border-radius: 50px;
-            text-decoration: none; font-weight: 600;
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            border: 2px solid rgba(255,255,255,0.3);
-            transition: all 0.3s; cursor: pointer;
-        }
-        .btn-secondary:hover {
-            border-color: var(--gold); color: var(--gold);
-        }
-        .hero-features {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-        .feature-item {
-            display: flex; align-items: center; gap: 1rem;
-        }
-        .feature-icon {
-            width: 40px; height: 40px;
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid var(--gold);
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--gold); font-size: 1.2rem;
-        }
-        .feature-text h4 {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem; font-weight: 600;
-            color: var(--white); margin-bottom: 0.25rem;
-        }
-        .feature-text p {
-            font-size: 0.8rem; color: var(--text-muted); margin: 0;
-        }
-        .hero-visual {
-            position: relative;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .video-btn {
-            position: absolute; bottom: 2rem; right: 2rem;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 1rem 1.5rem; border-radius: 50px;
-            display: flex; align-items: center; gap: 0.75rem;
-            cursor: pointer; transition: all 0.3s;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .video-btn:hover {
-            background: rgba(212, 175, 55, 0.2);
-            border-color: var(--gold);
-        }
-        .play-icon {
-            width: 40px; height: 40px;
-            background: var(--gold); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--dark);
-        }
-
-        .how-it-works {
-            padding: 6rem 2rem; background: var(--white); color: var(--dark);
-        }
-        .steps-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            gap: 2rem; position: relative;
-        }
-        .step-card {
-            text-align: center; padding: 2rem;
-            background: var(--bg-light);
-            border-radius: 16px; position: relative;
-        }
-        .step-number {
-            position: absolute; top: -15px; left: 2rem;
-            width: 30px; height: 30px;
-            background: var(--violet); color: var(--white);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 0.9rem;
-        }
-        .step-icon {
-            width: 80px; height: 80px; margin: 0 auto 1.5rem;
-            background: var(--white); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .step-card h3 {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.1rem; font-weight: 700;
-            margin-bottom: 0.75rem;
-        }
-        .step-card p {
-            font-size: 0.9rem; color: var(--text-muted);
-        }
-
-        .examples {
-            padding: 6rem 2rem; background: var(--dark);
-        }
-        .examples .section-title { color: var(--white); }
-        .examples .section-title .highlight { color: var(--gold); }
-        .examples-slider {
-            display: flex; gap: 1.5rem;
-            overflow-x: auto; padding: 2rem 0;
-            scroll-snap-type: x mandatory;
-        }
-        .example-card {
-            flex: 0 0 280px; scroll-snap-align: start;
-            background: var(--dark-light);
-            border-radius: 16px; overflow: hidden;
-            transition: transform 0.3s;
-        }
-        .example-card:hover { transform: translateY(-5px); }
-        .example-image {
-            position: relative; height: 200px; overflow: hidden;
-        }
-        .example-image img {
-            width: 100%; height: 100%; object-fit: cover;
-        }
-        .play-overlay {
-            position: absolute; inset: 0;
-            background: rgba(19, 8, 35, 0.6);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .play-btn {
-            width: 60px; height: 60px;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--white); font-size: 1.5rem;
-            cursor: pointer; transition: all 0.3s;
-            border: 2px solid var(--white);
-        }
-        .play-btn:hover {
-            background: var(--gold);
-            border-color: var(--gold); color: var(--dark);
-        }
-        .example-info { padding: 1.5rem; }
-        .example-info h4 {
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem; font-weight: 600;
-            color: var(--white); margin-bottom: 0.5rem;
-        }
-        .example-meta {
-            display: flex; justify-content: space-between;
-            font-size: 0.85rem; color: var(--text-muted);
-        }
-        .example-meta .style { color: var(--gold); }
-
-        .pricing {
-            padding: 6rem 2rem; background: var(--white); color: var(--dark);
-        }
-        .pricing-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 2rem; max-width: 1200px; margin: 0 auto 4rem;
-        }
-        .pricing-card {
-            background: var(--bg-light);
-            border-radius: 20px; padding: 2.5rem;
-            text-align: center; position: relative;
-            transition: transform 0.3s;
-        }
-        .pricing-card:hover { transform: translateY(-10px); }
-        .pricing-card.featured {
-            background: var(--dark); color: var(--white);
-            transform: scale(1.05);
-        }
-        .pricing-card.featured:hover {
-            transform: scale(1.05) translateY(-10px);
-        }
-        .popular-badge {
-            position: absolute; top: -15px; left: 50%;
-            transform: translateX(-50%);
-            background: var(--gold); color: var(--dark);
-            padding: 0.5rem 1.5rem; border-radius: 50px;
-            font-size: 0.75rem; font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .pricing-icon {
-            width: 60px; height: 60px; margin: 0 auto 1rem;
-            background: rgba(212, 175, 55, 0.1);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem;
-        }
-        .pricing-card.featured .pricing-icon {
-            background: rgba(139, 92, 246, 0.2);
-        }
-        .pricing-name {
-            font-size: 0.9rem; letter-spacing: 2px;
-            text-transform: uppercase; font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        .pricing-price {
-            font-size: 3rem; font-weight: 900;
-            margin-bottom: 2rem;
-        }
-        .pricing-price span {
-            font-size: 1rem; font-weight: 400;
-        }
-        .pricing-features {
-            list-style: none; text-align: left;
-            margin-bottom: 2rem;
-        }
-        .pricing-features li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-            font-size: 0.95rem;
-            display: flex; align-items: center; gap: 0.75rem;
-        }
-        .pricing-card.featured .pricing-features li {
-            border-bottom-color: rgba(255,255,255,0.1);
-        }
-        .check { color: var(--gold); font-weight: bold; }
-        .btn-choose {
-            width: 100%; padding: 1rem;
-            border: 2px solid var(--dark);
-            background: transparent; color: var(--dark);
-            border-radius: 50px; font-weight: 600;
-            cursor: pointer; transition: all 0.3s;
-            font-size: 1rem;
-        }
-        .btn-choose:hover {
-            background: var(--dark); color: var(--white);
-        }
-        .pricing-card.featured .btn-choose {
-            background: var(--gold);
-            border-color: var(--gold); color: var(--dark);
-        }
-        .pricing-card.featured .btn-choose:hover {
-            background: var(--gold-light);
-        }
-
-        .cta-final {
-            padding: 6rem 2rem;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--violet-dark) 100%);
-            text-align: center; position: relative; overflow: hidden;
-        }
-        .cta-final::before {
-            content: ''; position: absolute; inset: 0;
-            background: url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=1920&q=80') center/cover;
-            opacity: 0.15;
-        }
-        .cta-content {
-            position: relative; z-index: 1;
-            max-width: 800px; margin: 0 auto;
-        }
-        .cta-content h2 {
-            font-size: clamp(2rem, 4vw, 3rem);
-            color: var(--white); margin-bottom: 1rem;
-        }
-        .cta-content h2 .highlight { color: var(--gold); }
-        .cta-content p {
-            color: var(--text-muted);
-            margin-bottom: 2rem; font-size: 1.1rem;
-        }
-
-        footer {
-            background: var(--dark);
-            padding: 4rem 2rem 2rem;
-            border-top: 1px solid rgba(212, 175, 55, 0.15);
-        }
-        .footer-content {
-            max-width: 1400px; margin: 0 auto;
-            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 3rem; margin-bottom: 3rem;
-        }
-        .footer-brand .logo { margin-bottom: 1rem; }
-        .footer-brand p {
-            color: var(--text-muted);
-            font-size: 0.9rem; margin-bottom: 1.5rem;
-        }
-        .social-links { display: flex; gap: 1rem; }
-        .social-link {
-            width: 40px; height: 40px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--white); text-decoration: none;
-            transition: all 0.3s;
-        }
-        .social-link:hover {
-            background: var(--gold); color: var(--dark);
-        }
-        .footer-section h4 {
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem; font-weight: 700;
-            color: var(--white); margin-bottom: 1.5rem;
-        }
-        .footer-section ul { list-style: none; }
-        .footer-section li { margin-bottom: 0.75rem; }
-        .footer-section a {
-            color: var(--text-muted);
-            text-decoration: none; font-size: 0.9rem;
-            transition: color 0.3s; cursor: pointer;
-        }
-        .footer-section a:hover { color: var(--gold); }
-        .footer-bottom {
-            text-align: center; padding-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: var(--text-muted); font-size: 0.85rem;
-        }
-
-        .formulaire-section {
-            display: none;
-            min-height: 100vh;
-            background: var(--bg-light);
-            padding: 6rem 2rem 4rem;
-        }
-        .formulaire-section.active { display: block; }
-        .formulaire-container {
-            max-width: 900px; margin: 0 auto;
-            background: var(--white); border-radius: 20px;
-            padding: 3rem; box-shadow: 0 10px 40px rgba(19, 8, 35, 0.15);
-        }
-        .formulaire-header {
-            text-align: center; margin-bottom: 3rem;
-        }
-        .formulaire-header h2 {
-            font-size: 2.5rem; color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-        .formulaire-header h2 .sparkle { color: var(--gold); }
-        .formulaire-header p {
-            color: var(--text-muted); font-size: 1rem;
-        }
-        .progress-steps {
-            display: flex; justify-content: center;
-            gap: 0.5rem; margin-bottom: 3rem;
-        }
-        .step-circle {
-            width: 35px; height: 35px;
-            border-radius: 50%; background: var(--gray-200);
-            color: var(--text-muted);
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 600; font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-        .step-circle.active {
-            background: var(--violet); color: var(--white);
-        }
-        .step-circle.completed {
-            background: var(--gold); color: var(--dark);
-        }
-        .form-step { display: none; animation: fadeIn 0.4s ease; }
-        .form-step.active { display: block; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .step-title {
-            font-size: 1.75rem; color: var(--dark);
-            margin-bottom: 2rem; text-align: center;
-        }
-        .occasion-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem; margin-bottom: 2rem;
-        }
-        .voix-grid { grid-template-columns: repeat(3, 1fr); }
-        .occasion-card {
-            background: var(--white); border: 2px solid var(--gray-200);
-            border-radius: 12px; padding: 1.5rem 1rem;
-            text-align: center; cursor: pointer;
-            transition: all 0.3s;
-        }
-        .occasion-card:hover {
-            border-color: var(--violet);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.1);
-        }
-        .occasion-card.selected {
-            border-color: var(--violet);
-            background: rgba(139, 92, 246, 0.05);
-        }
-        .occasion-icon {
-            font-size: 2rem; margin-bottom: 0.5rem;
-        }
-        .occasion-label {
-            font-weight: 600; color: var(--dark);
-            font-size: 0.9rem;
-        }
-        .price-tag {
-            font-size: 0.8rem; color: var(--gold);
-            font-weight: 600; margin-top: 0.5rem;
-            line-height: 1.4;
-        }
-        .form-group { margin-bottom: 2rem; }
-        .form-label {
-            display: block; font-weight: 600;
-            color: var(--dark); margin-bottom: 0.75rem;
-            font-size: 1rem;
-        }
-        .form-input, .form-select, .form-textarea {
-            width: 100%; padding: 1rem;
-            border: 2px solid var(--gray-200);
-            border-radius: 12px; font-size: 1rem;
-            font-family: inherit; transition: border-color 0.3s;
-            background: var(--white);
-        }
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none; border-color: var(--violet);
-        }
-        .form-textarea {
-            resize: vertical; min-height: 120px;
-        }
-        .char-counter {
-            text-align: right; font-size: 0.85rem;
-            color: var(--text-muted); margin-top: 0.5rem;
-        }
-        .example-text {
-            font-size: 0.85rem; color: var(--violet);
-            font-style: italic; margin-top: 0.5rem;
-            padding: 0.75rem; background: rgba(139, 92, 246, 0.05);
-            border-radius: 6px; border-left: 3px solid var(--violet);
-        }
-        .quality-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 0.75rem; margin-top: 0.5rem;
-        }
-        .quality-checkbox { display: none; }
-        .quality-label {
-            display: flex; align-items: center; justify-content: center;
-            padding: 0.75rem; border: 2px solid var(--gray-200);
-            border-radius: 8px; cursor: pointer;
-            transition: all 0.2s; font-size: 0.85rem;
-            font-weight: 500; color: var(--dark); background: var(--white);
-        }
-        .quality-checkbox:checked + .quality-label {
-            border-color: var(--violet);
-            background: rgba(139, 92, 246, 0.05);
-            color: var(--violet); font-weight: 600;
-        }
-        .quality-label:hover { border-color: var(--violet); }
-        .form-navigation {
-            display: flex; justify-content: space-between;
-            gap: 1rem; margin-top: 3rem;
-        }
-        .btn-prev {
-            background: var(--white); color: var(--dark);
-            border: 2px solid var(--gray-200);
-            padding: 1rem 2rem; border-radius: 50px;
-            font-weight: 600; cursor: pointer;
-            transition: all 0.3s;
-            display: flex; align-items: center; gap: 0.5rem;
-        }
-        .btn-prev:hover { border-color: var(--dark); }
-        .btn-next, .btn-submit {
-            background: var(--violet); color: var(--white);
-            border: none; padding: 1rem 2rem;
-            border-radius: 50px; font-weight: 600;
-            cursor: pointer; transition: all 0.3s;
-            display: flex; align-items: center; gap: 0.5rem;
-        }
-        .btn-next:hover, .btn-submit:hover {
-            background: var(--violet-dark);
-            transform: translateY(-2px);
-        }
-        .btn-submit {
-            background: var(--gold); color: var(--dark);
-        }
-        .btn-submit:hover {
-            background: var(--gold-light);
-        }
-        .summary-intro {
-            text-align: center; color: var(--text-muted);
-            margin-bottom: 2rem;
-        }
-        .summary-box {
-            background: var(--bg-light); padding: 2rem;
-            border-radius: 12px; margin-bottom: 2rem;
-        }
-        .summary-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem; margin-bottom: 2rem;
-        }
-        .summary-item {
-            padding: 1rem; background: var(--white);
-            border-radius: 8px; border-left: 4px solid var(--violet);
-        }
-        .summary-label {
-            font-weight: 600; color: var(--violet);
-            font-size: 0.9rem; margin-bottom: 0.5rem;
-            display: flex; align-items: center; gap: 0.5rem;
-        }
-        .summary-item p {
-            color: var(--dark); font-size: 1rem;
-            line-height: 1.5;
-        }
-        .summary-section {
-            padding: 1.5rem; background: var(--white);
-            border-radius: 8px; margin-bottom: 1.5rem;
-            border-left: 4px solid var(--gold);
-        }
-        .summary-section .summary-label {
-            color: var(--gold); margin-bottom: 0.75rem;
-        }
-        .summary-section p {
-            color: var(--dark); line-height: 1.6;
-        }
-
-        .btn-inspiration {
-            background: none;
-            border: none;
-            color: var(--violet);
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-left: auto;
-            margin-top: 0.5rem;
-            transition: color 0.2s;
-        }
-        .btn-inspiration:hover {
-            color: var(--violet-dark);
-            text-decoration: underline;
-        }
-        .inspiration-helper {
-            display: none;
-            margin-top: 1.5rem;
-            padding: 1.5rem;
-            background: rgba(139, 92, 246, 0.05);
-            border-radius: 12px;
-            border: 1px solid var(--violet);
-            animation: fadeIn 0.4s ease;
-        }
-        .inspiration-helper h4 {
-            color: var(--violet);
-            margin-bottom: 1rem;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-        }
-        .inspiration-helper ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .inspiration-helper li {
-            margin-bottom: 0.75rem;
-            padding-left: 1.5rem;
-            position: relative;
-            color: var(--dark);
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-        .inspiration-helper li::before {
-            content: '💡';
-            position: absolute;
-            left: 0;
-        }
-        .inspiration-helper .helper-tip {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 1rem;
-            font-style: italic;
-        }
-
-        .confirmation-page {
-            display: none;
-            min-height: 100vh;
-            background: var(--dark);
-            padding: 6rem 2rem 4rem;
-            text-align: center;
-        }
-        .confirmation-page.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .confirmation-content { max-width: 600px; }
-        .check-icon {
-            width: 120px; height: 120px;
-            background: var(--violet); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 2rem; font-size: 4rem;
-            color: var(--white); animation: scaleIn 0.5s ease;
-        }
-        @keyframes scaleIn {
-            from { transform: scale(0); }
-            to { transform: scale(1); }
-        }
-        .confirmation-content h2 {
-            font-size: 3rem; color: var(--white);
-            margin-bottom: 1rem;
-        }
-        .confirmation-content h2 .heart { color: var(--gold); }
-        .confirmation-content p {
-            color: var(--text-muted);
-            font-size: 1.1rem; margin-bottom: 1rem;
-        }
-        .btn-home {
-            background: var(--gold); color: var(--dark);
-            padding: 1rem 2rem; border-radius: 50px;
-            text-decoration: none; font-weight: 600;
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            margin-top: 2rem; transition: all 0.3s;
-        }
-        .btn-home:hover {
-            background: var(--gold-light);
-            transform: translateY(-2px);
-        }
-
-        .form-section-locked {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-        .formula-info {
-            background: linear-gradient(135deg, var(--violet) 0%, var(--gold) 100%);
-            color: var(--white);
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-        .formula-info h4 {
-            font-size: 1.3rem;
-            margin-bottom: 0.75rem;
-        }
-        .formula-info p {
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-        }
-        .voice-selection-prompt {
-            background: var(--bg-light);
-            border: 2px solid var(--violet);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        .voice-selection-prompt p {
-            color: var(--dark);
-            font-weight: 600;
-            margin: 0;
-        }
-        .voice-card.disabled {
-            opacity: 0.3;
-            pointer-events: none;
-            filter: grayscale(100%);
-        }
-        .locked-badge {
-            display: inline-block;
-            background: var(--gold);
-            color: var(--dark);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-left: 0.5rem;
-        }
-
-        /* ==========================================
-           RESPONSIVE COMPLET - TABLETTES ET MOBILES
-           ========================================== */
-        @media (max-width: 1024px) {
-            .container { padding: 0 1.5rem; }
-            .hero-content { gap: 2rem; }
-            .hero-text h1 { font-size: clamp(2rem, 4vw, 3rem); }
-            .pricing-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-            .footer-content { grid-template-columns: repeat(2, 1fr); }
-        }
-
-        @media (max-width: 768px) {
-            .navbar { padding: 0.75rem 1rem; }
-            .logo img { max-height: 40px; }
-            .hero { padding: 6rem 1rem 3rem; }
-            .hero-content { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
-            .hero-visual { display: none; }
-            .hero-text h1 { font-size: 1.8rem; line-height: 1.2; }
-            .hero-text > p { font-size: 1rem; max-width: 100%; }
-            .hero-buttons { flex-direction: column; gap: 0.75rem; }
-            .btn-primary, .btn-secondary { width: 100%; justify-content: center; padding: 0.875rem 1.5rem; font-size: 0.95rem; }
-            .hero-features { grid-template-columns: 1fr; gap: 1rem; text-align: left; }
-            .how-it-works, .examples, .pricing, .cta-final { padding: 4rem 1rem; }
-            .section-header { margin-bottom: 2.5rem; }
-            .section-title { font-size: 1.75rem; }
-            .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-            .step-card { padding: 1.5rem; }
-            .step-icon { width: 60px; height: 60px; font-size: 1.5rem; }
-            .example-card { flex: 0 0 240px; }
-            .pricing-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-            .pricing-card { padding: 2rem 1.5rem; }
-            .pricing-card.featured { transform: scale(1); }
-            .pricing-price { font-size: 2.5rem; }
-            .footer-content { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
-            .social-links { justify-content: center; }
-            .formulaire-container { padding: 2rem 1rem; }
-            .formulaire-header h2 { font-size: 2rem; }
-            .step-title { font-size: 1.5rem; margin-bottom: 1.5rem; }
-            .occasion-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-            .occasion-card { padding: 1rem 0.5rem; }
-            .occasion-icon { font-size: 1.5rem; }
-            .quality-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
-            .quality-label { font-size: 0.8rem; padding: 0.5rem; }
-            .form-input, .form-textarea, .form-select { padding: 0.75rem; font-size: 14px; }
-            .form-label { font-size: 0.95rem; }
-            .btn-prev, .btn-next, .btn-submit { padding: 0.875rem 1.5rem; font-size: 0.95rem; }
-            .summary-grid { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 480px) {
-            html { font-size: 14px; }
-            body { overflow-x: hidden; max-width: 100vw; }
-            .navbar { padding: 0.5rem 0.75rem; }
-            .logo img { max-height: 35px; }
-            .nav-menu { width: 85%; padding: 80px 1rem 1rem; }
-            .hero { padding: 5rem 0.75rem 2rem; }
-            .hero-text h1 { font-size: 1.5rem; }
-            .hero-subtitle { font-size: 0.75rem; letter-spacing: 2px; }
-            .hero-text > p { font-size: 0.9rem; }
-            .feature-text h4 { font-size: 0.85rem; }
-            .feature-text p { font-size: 0.75rem; }
-            .how-it-works, .examples, .pricing, .cta-final { padding: 3rem 0.75rem; }
-            .section-title { font-size: 1.5rem; }
-            .section-label { font-size: 0.75rem; }
-            .section-subtitle { font-size: 0.95rem; }
-            .steps-grid { grid-template-columns: 1fr; gap: 0.75rem; }
-            .step-card { padding: 1.25rem; }
-            .step-number { width: 25px; height: 25px; font-size: 0.8rem; left: 1rem; top: -12px; }
-            .step-icon { width: 50px; height: 50px; font-size: 1.25rem; margin-bottom: 1rem; }
-            .step-card h3 { font-size: 1rem; }
-            .step-card p { font-size: 0.85rem; }
-            .example-card { flex: 0 0 220px; }
-            .example-image { height: 160px; }
-            .play-btn { width: 50px; height: 50px; font-size: 1.25rem; }
-            .example-info h4 { font-size: 0.9rem; }
-            .example-meta { font-size: 0.75rem; }
-            .pricing-card { padding: 1.5rem 1rem; }
-            .pricing-icon { width: 50px; height: 50px; font-size: 1.25rem; }
-            .pricing-name { font-size: 0.8rem; }
-            .pricing-price { font-size: 2rem; }
-            .pricing-features li { font-size: 0.85rem; padding: 0.5rem 0; }
-            .popular-badge { font-size: 0.65rem; padding: 0.4rem 1rem; }
-            .btn-choose { padding: 0.875rem; font-size: 0.9rem; }
-            .cta-content h2 { font-size: 1.5rem; }
-            .cta-content p { font-size: 1rem; }
-            .formulaire-container { padding: 1.5rem 0.75rem; border-radius: 12px; }
-            .formulaire-header h2 { font-size: 1.75rem; }
-            .formulaire-header p { font-size: 0.9rem; }
-            .progress-steps { gap: 0.35rem; margin-bottom: 2rem; }
-            .step-circle { width: 30px; height: 30px; font-size: 0.8rem; }
-            .step-title { font-size: 1.3rem; margin-bottom: 1.25rem; }
-            .form-group { margin-bottom: 1.5rem; }
-            .form-label { font-size: 0.9rem; margin-bottom: 0.5rem; }
-            .occasion-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-            .occasion-card { padding: 0.75rem 0.5rem; border-radius: 8px; }
-            .occasion-icon { font-size: 1.25rem; margin-bottom: 0.35rem; }
-            .occasion-label { font-size: 0.8rem; }
-            .price-tag { font-size: 0.7rem; }
-            .voix-grid { grid-template-columns: 1fr; }
-            .quality-grid { grid-template-columns: 1fr; }
-            .quality-label { font-size: 0.85rem; padding: 0.625rem; }
-            .form-input, .form-textarea, .form-select { padding: 0.625rem; font-size: 14px; border-radius: 8px; }
-            .form-textarea { min-height: 100px; }
-            .char-counter { font-size: 0.75rem; }
-            .example-text { font-size: 0.75rem; padding: 0.625rem; }
-            .btn-inspiration { font-size: 0.8rem; }
-            .inspiration-helper { padding: 1rem; }
-            .inspiration-helper h4 { font-size: 0.9rem; }
-            .inspiration-helper li { font-size: 0.85rem; }
-            .btn-prev, .btn-next, .btn-submit { padding: 0.75rem 1.25rem; font-size: 0.9rem; width: 100%; justify-content: center; }
-            .form-navigation { gap: 0.75rem; flex-direction: column; }
-            .summary-box { padding: 1.25rem; }
-            .summary-grid { gap: 0.75rem; }
-            .summary-item { padding: 0.75rem; }
-            .summary-label { font-size: 0.8rem; }
-            .summary-item p, .summary-section p { font-size: 0.9rem; }
-            .summary-section { padding: 1rem; margin-bottom: 1rem; }
-            .check-icon { width: 100px; height: 100px; font-size: 3rem; }
-            .confirmation-content h2 { font-size: 2rem; }
-            .confirmation-content p { font-size: 1rem; }
-            .btn-home { padding: 0.875rem 1.5rem; font-size: 0.95rem; }
-        }
-
-        @media (max-width: 360px) {
-            html { font-size: 13px; }
-            .hero-text h1 { font-size: 1.3rem; }
-            .section-title { font-size: 1.3rem; }
-            .occasion-grid { grid-template-columns: 1fr; }
-            .steps-grid { grid-template-columns: 1fr; }
-            .quality-grid { grid-template-columns: 1fr; }
-            .btn-primary, .btn-secondary, .btn-commander { padding: 0.75rem 1rem; font-size: 0.85rem; }
-        }
-
-        img, video, iframe { max-width: 100%; height: auto; }
-        * { word-wrap: break-word; overflow-wrap: break-word; hyphens: auto; }
-        .container, .formulaire-container, .hero-content { max-width: 100%; overflow-x: hidden; }
-        
-        .mobile-menu-btn {
-            display: none;
-            flex-direction: column;
-            gap: 5px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            z-index: 1001;
-        }
-        .mobile-menu-btn span {
-            display: block;
-            width: 25px;
-            height: 3px;
-            background: var(--gold);
-            border-radius: 3px;
-            transition: all 0.3s;
-        }
-        .mobile-menu-btn.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
-        .mobile-menu-btn.active span:nth-child(2) { opacity: 0; }
-        .mobile-menu-btn.active span:nth-child(3) { transform: rotate(-45deg) translate(7px, -6px); }
-        .nav-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 999;
-        }
-        .nav-overlay.active { display: block; }
-        
-        @media (max-width: 768px) {
-            .mobile-menu-btn { display: flex; }
-            .nav-menu {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 75%;
-                max-width: 300px;
-                height: 100vh;
-                background: rgba(19, 8, 35, 0.98);
-                backdrop-filter: blur(10px);
-                flex-direction: column;
-                padding: 100px 2rem 2rem;
-                gap: 1.5rem;
-                transition: right 0.3s ease;
-                border-left: 1px solid rgba(212, 175, 55, 0.2);
-                z-index: 1000;
-                display: flex;
-            }
-            .nav-menu.active { right: 0; }
-            .nav-menu li { width: 100%; }
-            .nav-link, .btn-commander {
-                display: block;
-                width: 100%;
-                text-align: center;
-                padding: 1rem;
-                font-size: 1.1rem;
-            }
-            .hero-content { grid-template-columns: 1fr; text-align: center; }
-            .hero-visual { display: none; }
-            .hero-buttons { justify-content: center; flex-direction: column; }
-            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-            .hero-features { grid-template-columns: 1fr; text-align: left; }
-            .occasion-grid { grid-template-columns: repeat(2, 1fr); }
-            .steps-grid { grid-template-columns: repeat(2, 1fr); }
-            .pricing-grid { grid-template-columns: 1fr; }
-            .pricing-card.featured { transform: scale(1); }
-            .footer-content { grid-template-columns: 1fr; text-align: center; }
-            .social-links { justify-content: center; }
-        }
-        @media (max-width: 480px) {
-            .occasion-grid { grid-template-columns: 1fr; }
-            .nav-menu { width: 85%; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lamio Melody — Une chanson à son nom | Brazzaville</title>
+  <meta name="description" content="Lamio Melody transforme un nom, un surnom ou une boutique en chanson que tout le monde chante. Écrite pour un seul, chantée par tous. Dès 1 500 FCFA, Brazzaville.">
+  <meta name="theme-color" content="#0b0618">
+  <!-- Partage WhatsApp / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Lamio Melody — Une chanson à son nom">
+  <meta property="og:description" content="Écrite pour un seul. Chantée par tous. Chansons personnalisées dès 1 500 FCFA à Brazzaville.">
+  <meta property="og:image" content="images/logoLamioMelody.png">
+  <meta property="og:locale" content="fr_FR">
+  <link rel="icon" type="image/png" href="images/logoLamioMelody.png">
+  <!-- Police des titres uniquement ; le texte utilise la police du téléphone (léger en 3G) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="#" onclick="showHome()" class="logo">
-                <img src="images/logoLamioMelody.png" alt="Lamio Melody">
-            </a>
-            <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Menu">
-                <span></span><span></span><span></span>
-            </button>
-            <ul class="nav-menu" id="navMenu">
-                <li><a href="#accueil" onclick="scrollToSection('accueil')" class="nav-link active">Accueil</a></li>
-                <li><a href="#comment" onclick="scrollToSection('comment')" class="nav-link">Comment ça marche</a></li>
-                <li><a href="#exemples" onclick="scrollToSection('exemples')" class="nav-link">Exemples</a></li>
-                <li><a href="#tarifs" onclick="scrollToSection('tarifs')" class="nav-link">Tarifs</a></li>
-                <li><button class="btn-commander" onclick="showFormulaire()">Commander ma chanson</button></li>
-            </ul>
-        </div>
-    </nav>
+  <!-- Halos de lumière derrière le verre -->
+  <div class="orb orb--1" aria-hidden="true"></div>
+  <div class="orb orb--2" aria-hidden="true"></div>
+  <div class="orb orb--3" aria-hidden="true"></div>
 
-    <div id="homePage">
-        <section id="accueil" class="hero">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <div class="hero-text">
-                    <p class="hero-subtitle">✨ BIENVENUE CHEZ LAMIO MELODY</p>
-                    <h1>Transformez votre histoire en une <span class="highlight">chanson unique.</span></h1>
-                    <p>Offrez une chanson personnalisée écrite avec émotion, interprétée par LM Voices et produite avec passion.</p>
-                    <div class="hero-buttons">
-                        <button class="btn-primary" onclick="showFormulaire()"> Créer ma chanson</button>
-                        <a href="#exemples" onclick="scrollToSection('exemples')" class="btn-secondary">▶ Écouter des exemples</a>
-                    </div>
-                    <div class="hero-features">
-                        <div class="feature-item">
-                            <div class="feature-icon">✓</div>
-                            <div class="feature-text"><h4>100% Personnalisé</h4><p>Paroles uniques</p></div>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">⚡</div>
-                            <div class="feature-text"><h4>Livraison rapide</h4><p>Entre 24h et 72h</p></div>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">🔒</div>
-                            <div class="feature-text"><h4>Confidentialité</h4><p>Votre histoire est protégée</p></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="hero-visual">
-                    <div class="video-btn">
-                        <div class="play-icon">▶</div>
-                        <div><strong>Voir la vidéo</strong><p>Découvrez Lamio Melody</p></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="comment" class="how-it-works">
-            <div class="container">
-                <div class="section-header">
-                    <p class="section-label">SIMPLE, RAPIDE ET ÉMOUVANT</p>
-                    <h2 class="section-title">Comment ça <span class="highlight">fonctionne ?</span></h2>
-                </div>
-                <div class="steps-grid">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <div class="step-icon">📝</div>
-                        <h3>Parlez-nous d'elle/lui</h3>
-                        <p>Vous nous décrivez la personne, sa personnalité et ce qui la rend unique.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <div class="step-icon">✍️</div>
-                        <h3>Nous écrivons les paroles</h3>
-                        <p>Nos auteurs créent des paroles sur mesure qui lui ressemblent parfaitement.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <div class="step-icon">🎤</div>
-                        <h3>LM Voices interprète</h3>
-                        <p>Nos voix professionnelles donnent vie à cette chanson dédiée.</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">4</div>
-                        <div class="step-icon">🎁</div>
-                        <h3>Recevez votre musique</h3>
-                        <p>Vous recevez votre chanson prête à être écoutée et partagée.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="exemples" class="examples">
-            <div class="container">
-                <div class="section-header">
-                    <p class="section-label">DES ÉMOTIONS, EN MUSIQUE</p>
-                    <h2 class="section-title">Ils nous ont fait <span class="highlight">confiance</span></h2>
-                    <p class="section-subtitle">Découvrez quelques créations inspirées de vraies histoires.</p>
-                </div>
-                <div class="examples-slider">
-                    <div class="example-card">
-                        <div class="example-image">
-                            <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&q=80" alt="Studio musique" onerror="this.src='https://via.placeholder.com/600x400/8b5cf6/ffffff?text=Lamio+Melody'">
-                            <div class="play-overlay">
-                                <button class="play-btn" onclick="playAudio('musique/Lamio_Melody.mp3', this, 'duration-0')">▶</button>
-                            </div>
-                        </div>
-                        <div class="example-info">
-                            <h4>Lamio Melody</h4>
-                            <div class="example-meta">
-                                <span class="style">Lamio song</span>
-                                <span id="duration-0">--:--</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="example-card">
-                        <div class="example-image">
-                            <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Anniversaire" onerror="this.src='https://via.placeholder.com/600x400/f59e0b/ffffff?text=Anniversaire'">
-                            <div class="play-overlay">
-                                <button class="play-btn" onclick="playAudio('musique/Joyeux_Anniversaire_Teuf.mp3', this, 'duration-1')">▶</button>
-                            </div>
-                        </div>
-                        <div class="example-info">
-                            <h4>Joyeux anniversaire</h4>
-                            <div class="example-meta">
-                                <span class="style">Pop</span>
-                                <span id="duration-1">--:--</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="example-card">
-                        <div class="example-image">
-                            <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=80" alt="Musique Afro" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=Afro'">
-                            <div class="play-overlay">
-                                <button class="play-btn" onclick="playAudio('musique/Tu_connais_déjà.mp3', this, 'duration-2')">▶</button>
-                            </div>
-                        </div>
-                        <div class="example-info">
-                            <h4>Tu connais déja</h4>
-                            <div class="example-meta">
-                                <span class="style">afro</span>
-                                <span id="duration-2">--:--</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="example-card">
-                        <div class="example-image">
-                            <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&q=80" alt="Couple amoureux" onerror="this.src='https://via.placeholder.com/600x400/8b5cf6/ffffff?text=Amour'">
-                            <div class="play-overlay">
-                                <button class="play-btn" onclick="playAudio('musique/Vannessa_Mon_Évidence.mp3', this, 'duration-3')">▶</button>
-                            </div>
-                        </div>
-                        <div class="example-info">
-                            <h4>Vanessa mon évidence</h4>
-                            <div class="example-meta">
-                                <span class="style">love</span>
-                                <span id="duration-3">--:--</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="example-card">
-                        <div class="example-image">
-                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80" alt="Famille" onerror="this.src='https://via.placeholder.com/600x400/d4af37/ffffff?text=Famille'">
-                            <div class="play-overlay">
-                                <button class="play-btn" onclick="playAudio('musique/Merci_Mamounette_1.mp3', this, 'duration-4')">▶</button>
-                            </div>
-                        </div>
-                        <div class="example-info">
-                            <h4>Merci Mamounette</h4>
-                            <div class="example-meta">
-                                <span class="style">Gospel</span>
-                                <span id="duration-4">--:--</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="example-card">
-                        <div class="example-image">
-                            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&q=80" alt="Réussite" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=Reussite'">
-                            <div class="play-overlay">
-                                <button class="play-btn" onclick="playAudio('musique/Mon_Evidence_1.mp3', this, 'duration-5')">▶</button>
-                            </div>
-                        </div>
-                        <div class="example-info">
-                            <h4>Mon Évidence</h4>
-                            <div class="example-meta">
-                                <span class="style">RnB</span>
-                                <span id="duration-5">--:--</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="example-card">
-                        <div class="example-image">
-                            <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Célébration" onerror="this.src='https://via.placeholder.com/600x400/f59e0b/ffffff?text=Célébration'">
-                            <div class="play-overlay">
-                                <button class="play-btn" onclick="playAudio('musique/Aujourdhui_cest_ton_jour_1.mp3', this, 'duration-6')">▶</button>
-                            </div>
-                        </div>
-                        <div class="example-info">
-                            <h4>Aujourd'hui c'est ton jour</h4>
-                            <div class="example-meta">
-                                <span class="style">Pop</span>
-                                <span id="duration-6">--:--</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="example-card">
-                        <div class="example-image">
-                            <img src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?w=600&q=80" alt="Succès" onerror="this.src='https://via.placeholder.com/600x400/10b981/ffffff?text=Succès'">
-                            <div class="play-overlay">
-                                <button class="play-btn" onclick="playAudio('musique/Tu_las_fait_1.mp3', this, 'duration-7')">▶</button>
-                            </div>
-                        </div>
-                        <div class="example-info">
-                            <h4>Tu l'as fait</h4>
-                            <div class="example-meta">
-                                <span class="style">Afrobeat</span>
-                                <span id="duration-7">--:--</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="tarifs" class="pricing">
-            <div class="container">
-                <div class="section-header" style="text-align: center;">
-                    <p class="section-label">NOS OFFRES</p>
-                    <h2 class="section-title">Choisissez la <span class="highlight">formule</span> qui vous convient</h2>
-                    <p class="section-subtitle">Chaque formule inclut des paroles 100% personnalisées écrites avec émotion.</p>
-                </div>
-                <div class="pricing-grid">
-                    <div class="pricing-card">
-                        <div class="pricing-icon">🥉</div>
-                        <div class="pricing-name">ESSENTIELLE</div>
-                        <div class="pricing-price">1.500 <span>FCFA</span></div>
-                        <ul class="pricing-features">
-                            <li><span class="check">✓</span> Voix Masculine</li>
-                            <li><span class="check">✓</span> 1 chanson personnalisée</li>
-                            <li><span class="check">✓</span> Durée standard (30s à 1min)</li>
-                            <li><span class="check">✓</span> Livraison rapide</li>
-                            <li><span class="check">✓</span> Format MP3</li>
-                        </ul>
-                        <button class="btn-choose" onclick="selectTarif('Essentielle')">Choisir cette formule</button>
-                    </div>
-                    <div class="pricing-card featured">
-                        <div class="popular-badge">LA PLUS CHOISIE</div>
-                        <div class="pricing-icon">🥈</div>
-                        <div class="pricing-name">PREMIUM</div>
-                        <div class="pricing-price">3.000 <span>FCFA</span></div>
-                        <ul class="pricing-features">
-                            <li><span class="check">✓</span> Voix Masculine ou Féminine au choix</li>
-                            <li><span class="check">✓</span> Chanson plus longue (1min30 à 2min)</li>
-                            <li><span class="check">✓</span> Production plus travaillée</li>
-                            <li><span class="check">✓</span> Pochette personnalisée</li>
-                            <li><span class="check">✓</span> Format MP3</li>
-                        </ul>
-                        <button class="btn-choose" onclick="selectTarif('Premium')">Choisir cette formule →</button>
-                    </div>
-                    <div class="pricing-card">
-                        <div class="pricing-icon">🥇</div>
-                        <div class="pricing-name">PRESTIGE</div>
-                        <div class="pricing-price">5.000 <span>FCFA</span></div>
-                        <div style="background: linear-gradient(135deg, var(--gold) 0%, var(--violet) 100%); color: var(--dark); padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-weight: 700; text-align: center; font-size: 0.9rem;">
-                            🎁 PROMOTION : 2 versions au choix incluses !
-                        </div>
-                        <ul class="pricing-features">
-                            <li><span class="check">✓</span> <strong>Toutes voix disponibles (Masc./Fém./Duo)</strong></li>
-                            <li><span class="check">✓</span> Chanson complète (2min à 3min+)</li>
-                            <li><span class="check">✓</span> <strong>2 versions au choix (vous choisissez !)</strong></li>
-                            <li><span class="check">✓</span> Pochette personnalisée</li>
-                            <li><span class="check">✓</span> Message personnalisé intégré</li>
-                            <li><span class="check">✓</span> Livraison prioritaire</li>
-                            <li><span class="check">✓</span> Format MP3</li>
-                        </ul>
-                        <button class="btn-choose" onclick="selectTarif('Prestige')">Choisir cette formule →</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="cta-final">
-            <div class="cta-content">
-                <h2>Prêt à créer une <span class="highlight">émotion inoubliable ?</span></h2>
-                <p>Quelques mots suffisent pour commencer.</p>
-                <button class="btn-primary" onclick="showFormulaire()">🎵 Créer ma chanson maintenant →</button>
-            </div>
-        </section>
-
-        <footer>
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <div class="logo">
-                        <img src="images/logoLamioMelody.png" alt="Lamio Melody" style="max-height: 60px; width: auto;">
-                    </div>
-                    <p>Suivez-nous</p>
-                    <div class="social-links">
-                        <a href="#" class="social-link">f</a>
-                        <a href="#" class="social-link">in</a>
-                        <a href="#" class="social-link">♪</a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h4>Navigation</h4>
-                    <ul>
-                        <li><a onclick="scrollToSection('accueil')">Accueil</a></li>
-                        <li><a onclick="scrollToSection('exemples')">Exemples</a></li>
-                        <li><a onclick="scrollToSection('tarifs')">Tarifs</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact</h4>
-                    <ul>
-                        <li><a href="https://wa.me/242065186967">📞 +242 06 518 69 67</a></li>
-                        <li><a href="mailto:talamiomeurphy@gmail.com">✉️ contact@lamiomelody.com</a></li>
-                        <li><a href="#">📍 Brazzaville, Congo</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 Lamio Melody. Tous droits réservés.</p>
-            </div>
-        </footer>
+  <!-- ==================== NAVBAR GLASS ==================== -->
+  <nav class="navbar glass">
+    <div class="nav-container">
+      <a href="#" onclick="showHome(); return false;" class="logo">
+        <img src="images/logoLamioMelody.png" alt="Lamio Melody">
+        <span class="logo-text">
+          <span class="brand">LAMIO MELODY</span>
+          <span class="tagline">Écrite pour un seul. Chantée par tous.</span>
+        </span>
+      </a>
+      <button class="mobile-menu-btn" onclick="toggleMenu()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#accueil" onclick="scrollToSection('accueil')" class="nav-link active">Accueil</a></li>
+        <li><a href="#comment" onclick="scrollToSection('comment')" class="nav-link">Comment ça marche</a></li>
+        <li><a href="#ecouter" onclick="scrollToSection('ecouter')" class="nav-link">Écouter</a></li>
+        <li><a href="#tarifs" onclick="scrollToSection('tarifs')" class="nav-link">Tarifs</a></li>
+        <li><a href="#faq" onclick="scrollToSection('faq')" class="nav-link">FAQ</a></li>
+        <li><button class="btn btn-gold btn-sm" onclick="showFormulaire()">Commander ma chanson</button></li>
+      </ul>
     </div>
+  </nav>
 
-    <section id="formulaire" class="formulaire-section">
-        <div class="formulaire-container">
-            <div class="formulaire-header">
-                <h2>Créons votre chanson <span class="sparkle">✨</span></h2>
-                <p>Répondez à ce petit guide. Plus vous partagez de détails sur <strong>cette personne</strong>, plus la chanson lui ressemblera parfaitement !</p>
-            </div>
+  <!-- WhatsApp flottant : toujours là, réflexe congolais -->
+  <a class="wa-float" href="https://wa.me/242065186967?text=Bonjour%20Lamio%20Melody%20!%20Je%20veux%20une%20chanson%20personnalis%C3%A9e%20%F0%9F%8E%B5" target="_blank" rel="noopener" aria-label="Nous écrire sur WhatsApp">💬</a>
 
-            <div class="progress-steps">
-                <div class="step-circle active" data-step="1">1</div>
-                <div class="step-circle" data-step="2">2</div>
-                <div class="step-circle" data-step="3">3</div>
-                <div class="step-circle" data-step="4">4</div>
-                <div class="step-circle" data-step="5">5</div>
-                <div class="step-circle" data-step="6">6</div>
-            </div>
+  <div id="homePage">
 
-            <form id="orderForm" onsubmit="return false;">
-                <!-- Étape 1 : Les bases -->
-                <div class="form-step active" data-step="1" id="step1">
-                    <h3 class="step-title">🎉 Les bases de votre projet</h3>
-                    <div class="form-group">
-                        <label class="form-label">Pour quelle occasion est cette chanson ? *</label>
-                        <div class="occasion-grid" id="occasionGrid">
-                            <div class="occasion-card" data-field="occasion" data-value="Anniversaire"><div class="occasion-icon">🎂</div><div class="occasion-label">Anniversaire</div></div>
-                            <div class="occasion-card" data-field="occasion" data-value="Amour"><div class="occasion-icon">❤️</div><div class="occasion-label">Amour</div></div>
-                            <div class="occasion-card" data-field="occasion" data-value="Mariage"><div class="occasion-icon">💍</div><div class="occasion-label">Mariage</div></div>
-                            <div class="occasion-card" data-field="occasion" data-value="Naissance"><div class="occasion-icon">👶</div><div class="occasion-label">Naissance</div></div>
-                            <div class="occasion-card" data-field="occasion" data-value="Réussite"><div class="occasion-icon">🏆</div><div class="occasion-label">Réussite</div></div>
-                            <div class="occasion-card" data-field="occasion" data-value="Hommage"><div class="occasion-icon">🕊️</div><div class="occasion-label">Hommage</div></div>
-                            <div class="occasion-card" data-field="occasion" data-value="Fête"><div class="occasion-icon">🎉</div><div class="occasion-label">Fête</div></div>
-                            <div class="occasion-card" data-field="occasion" data-value="Autre"><div class="occasion-icon">✨</div><div class="occasion-label">Autre</div></div>
-                        </div>
-                        <div id="occasionAutreField" style="display: none; margin-top: 1rem;">
-                            <label class="form-label">Précisez l'occasion :</label>
-                            <input type="text" class="form-input" id="occasionAutre" placeholder="Ex: Départ à la retraite, Fête des mères...">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" id="destPrenomLabel"> Prénom du destinataire *</label>
-                        <input type="text" class="form-input" id="destPrenom" placeholder="Ex: Jeannette, Marie, Jojo...">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" id="relationLabel">❤️ Votre relation avec cette personne *</label>
-                        <select class="form-select" id="destRelation" onchange="handleRelationChange()">
-                            <option value="">-- Choisir --</option>
-                            <option value="Moi">Moi (pour moi-même)</option>
-                            <option value="Enfant">Enfant</option>
-                            <option value="Conjoint(e)">Conjoint(e)</option>
-                            <option value="Mère">Mère</option>
-                            <option value="Père">Père</option>
-                            <option value="Frère/Sœur">Frère/Sœur</option>
-                            <option value="Ami(e)">Ami(e)</option>
-                            <option value="Autre">Autre</option>
-                        </select>
-                    </div>
-                    <div id="relationAutreField" style="display: none; margin-top: 1rem;">
-                        <label class="form-label">Précisez votre relation :</label>
-                        <input type="text" class="form-input" id="relationAutre" placeholder="Ex: Cousin, Collègue, Mentor...">
-                    </div>
-                    <div id="moiMessage" style="display: none; margin-top: 1rem; padding: 1rem; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 3px solid var(--violet);">
-                        <p style="color: var(--violet); font-weight: 600; margin: 0;">✨ Super choix ! Créer une chanson pour soi-même est un beau cadeau. Les questions s'adapteront pour parler de VOUS.</p>
-                    </div>
-                    <div class="form-navigation">
-                        <div></div>
-                        <button type="button" class="btn-next" onclick="nextStep()">Suivant →</button>
-                    </div>
-                </div>
-
-                <!-- Étape 2 : L'univers musical -->
-                <div class="form-step" data-step="2" id="step2">
-                    <h3 class="step-title">🎵 L'univers musical</h3>
-                    <div class="form-group" id="styleSection">
-                        <label class="form-label">Style musical préféré *</label>
-                        <div class="occasion-grid" id="styleGrid">
-                            <div class="occasion-card" data-field="style" data-value="Afrobeat"><div class="occasion-icon">🌍</div><div class="occasion-label">Afrobeat</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Rumba"><div class="occasion-icon">🎷</div><div class="occasion-label">Rumba</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Soukous"><div class="occasion-icon">🎸</div><div class="occasion-label">Soukous</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Ndombolo"><div class="occasion-icon">🥁</div><div class="occasion-label">Ndombolo</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Gospel"><div class="occasion-icon">🙏</div><div class="occasion-label">Gospel</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Zouk Love"><div class="occasion-icon">💕</div><div class="occasion-label">Zouk Love</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Pop"><div class="occasion-icon">🎵</div><div class="occasion-label">Pop</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Rap/RnB"><div class="occasion-icon">🎤</div><div class="occasion-label">Rap / RnB</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Acoustique"><div class="occasion-icon">🎸</div><div class="occasion-label">Acoustique</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Jazz"><div class="occasion-icon">🎷</div><div class="occasion-label">Jazz</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Reggae"><div class="occasion-icon">🇯🇲</div><div class="occasion-label">Reggae</div></div>
-                            <div class="occasion-card" data-field="style" data-value="Autre"><div class="occasion-icon">✨</div><div class="occasion-label">Autre</div></div>
-                        </div>
-                        <div id="styleAutreField" style="display: none; margin-top: 1rem;">
-                            <label class="form-label">Précisez le style musical :</label>
-                            <input type="text" class="form-input" id="styleAutre" placeholder="Ex: Congolais traditionnel, Makossa...">
-                        </div>
-                    </div>
-                    <div class="form-group" id="formuleSection">
-                        <label class="form-label">🎤 Choisissez votre Formule *</label>
-                        <div class="occasion-grid voix-grid" id="formuleGrid">
-                            <div class="occasion-card" data-field="formule" data-value="Essentielle - Voix Masculine (1500 FCFA)">
-                                <div class="occasion-icon">🥉</div>
-                                <div class="occasion-label">Essentielle</div>
-                                <p class="price-tag">Voix Masculine<br>(30s - 1min) • 1 500 FCFA</p>
-                            </div>
-                            <div class="occasion-card" data-field="formule" data-value="Premium - Voix au choix (3000 FCFA)">
-                                <div class="occasion-icon">🥈</div>
-                                <div class="occasion-label">Premium</div>
-                                <p class="price-tag">Voix Masc. ou Fém.<br>(1min30 - 2min) • 3 000 FCFA</p>
-                            </div>
-                            <div class="occasion-card" data-field="formule" data-value="Prestige - Toutes voix + Duo (5000 FCFA)">
-                                <div class="occasion-icon">🥇</div>
-                                <div class="occasion-label">Prestige</div>
-                                <p class="price-tag">Masc., Fém. ou Duo<br>(2min - 3min+) • 5 000 FCFA</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group" id="voiceSection" style="display: none;">
-                        <div class="voice-selection-prompt" id="voicePrompt">
-                            <p id="voicePromptText">👉 Choisissez maintenant la voix que vous préférez :</p>
-                        </div>
-                        <div class="occasion-grid voix-grid" id="voiceGrid">
-                            <div class="occasion-card voice-card" data-field="voix" data-value="Masculine">
-                                <div class="occasion-icon">👨</div>
-                                <div class="occasion-label">Voix Masculine</div>
-                            </div>
-                            <div class="occasion-card voice-card" data-field="voix" data-value="Féminine">
-                                <div class="occasion-icon">👩</div>
-                                <div class="occasion-label">Voix Féminine</div>
-                            </div>
-                            <div class="occasion-card voice-card" data-field="voix" data-value="Duo">
-                                <div class="occasion-icon">👥</div>
-                                <div class="occasion-label">Duo (H+F)</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group" id="emotionSection">
-                        <label class="form-label" id="emotionLabel">😊 Quelle émotion voulez-vous qu'il/elle ressente en l'écoutant ? *</label>
-                        <div class="occasion-grid" id="emotionGrid">
-                            <div class="occasion-card" data-field="emotion" data-value="Sourire"><div class="occasion-icon">😊</div><div class="occasion-label">Sourire</div></div>
-                            <div class="occasion-card" data-field="emotion" data-value="Pleurer d'émotion"><div class="occasion-icon">😭</div><div class="occasion-label">Pleurer</div></div>
-                            <div class="occasion-card" data-field="emotion" data-value="Se sentir aimé"><div class="occasion-icon">❤️</div><div class="occasion-label">Se sentir aimé</div></div>
-                            <div class="occasion-card" data-field="emotion" data-value="Être motivé"><div class="occasion-icon">💪</div><div class="occasion-label">Être motivé</div></div>
-                            <div class="occasion-card" data-field="emotion" data-value="Remercier Dieu"><div class="occasion-icon">🙏</div><div class="occasion-label">Remercier Dieu</div></div>
-                            <div class="occasion-card" data-field="emotion" data-value="Faire la fête"><div class="occasion-icon">🎉</div><div class="occasion-label">Faire la fête</div></div>
-                        </div>
-                    </div>
-                    <div class="form-navigation">
-                        <button type="button" class="btn-prev" onclick="prevStep()">← Précédent</button>
-                        <button type="button" class="btn-next" onclick="nextStep()">Suivant →</button>
-                    </div>
-                </div>
-
-                <!-- Étape 3 : Parlez-nous de CETTE PERSONNE -->
-                <div class="form-step" data-step="3" id="step3">
-                    <h3 class="step-title" id="step3Title">📖 Parlez-nous de cette personne</h3>
-                    <div class="form-group">
-                        <label class="form-label" id="pourquoiLabel">⭐ Comment décririez-vous sa personnalité ? (Ce qui la rend unique)</label>
-                        <textarea class="form-textarea" id="pourquoiImportante" placeholder="Ex: C'est une personne très courageuse, toujours souriante, qui inspire tout le monde..." maxlength="300"></textarea>
-                        <div class="char-counter">0/300</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" id="souvenirLabel">🏆 Racontez un moment important de SA vie ou une de SES réussites</label>
-                        <textarea class="form-textarea" id="souvenir" placeholder="Ex: Le jour où elle a obtenu son diplôme après des années d'efforts, ou quand elle a surmonté une épreuve difficile..." maxlength="500"></textarea>
-                        <div class="example-text" id="souvenirExample">💡 Exemple : "Elle a travaillé dur pendant des années pour ouvrir son entreprise, et aujourd'hui c'est une vraie réussite. Elle est notre fierté."</div>
-                        <div class="char-counter">0/500</div>
-                        <button type="button" class="btn-inspiration" onclick="showInspirationQuestions()">💡 Je ne sais pas quoi écrire, aidez-moi</button>
-                        <div id="inspirationHelper" class="inspiration-helper">
-                            <h4>👉 Répondez à ces petites questions pour vous inspirer :</h4>
-                            <ul id="inspirationQuestionsList"></ul>
-                            <p class="helper-tip">💡 Astuce : Répondre à 1 ou 2 de ces questions dans le champ ci-dessus suffit pour nous donner de la matière !</p>
-                        </div>
-                    </div>
-                    <div class="form-navigation">
-                        <button type="button" class="btn-prev" onclick="prevStep()">← Précédent</button>
-                        <button type="button" class="btn-next" onclick="nextStep()">Suivant →</button>
-                    </div>
-                </div>
-
-                <!-- Étape 4 : Les détails qui font la différence -->
-                <div class="form-step" data-step="4" id="step4">
-                    <h3 class="step-title">✨ Les détails qui font la différence</h3>
-                    <div class="form-group">
-                        <label class="form-label" id="qualitesLabel">🏆 Quelles sont ses principales qualités ? (Cochez-en plusieurs)</label>
-                        <div class="quality-grid" id="qualityGrid">
-                            <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Gentil(le)"><span class="quality-label">Gentil(le)</span></label>
-                            <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Courageux(se)"><span class="quality-label">Courageux(se)</span></label>
-                            <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Travailleur(se)"><span class="quality-label">Travailleur(se)</span></label>
-                            <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Drôle"><span class="quality-label">Drôle</span></label>
-                            <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Attentionné(e)"><span class="quality-label">Attentionné(e)</span></label>
-                            <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Intelligent(e)"><span class="quality-label">Intelligent(e)</span></label>
-                            <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Protecteur(trice)"><span class="quality-label">Protecteur(trice)</span></label>
-                            <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Généreux(se)"><span class="quality-label">Généreux(se)</span></label>
-                            <label><input type="checkbox" class="quality-checkbox" name="qualites" value="Autre"><span class="quality-label">Autre</span></label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" id="surnomLabel">😂 A-t-elle/il un surnom ?</label>
-                        <input type="text" class="form-input" id="surnom" placeholder="Ex: Chocho, Bébé, Maman Jo, Boss...">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" id="expressionLabel"> Y a-t-il un mot ou une expression qu'il/elle dit souvent ?</label>
-                        <input type="text" class="form-input" id="expressionFrequente" placeholder="Ex: 'Nzambe apambola yo', 'On ne lâche rien', 'Toza ensemble'...">
-                        <div class="example-text">💡 Intégrer ses propres mots rend la chanson incroyablement personnelle.</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">✨ Une phrase ou un message spécifique à intégrer dans les paroles ?</label>
-                        <input type="text" class="form-input" id="phraseIntegrer" placeholder="Ex: 'Tu es notre seconde maman'">
-                    </div>
-                    <div class="form-navigation">
-                        <button type="button" class="btn-prev" onclick="prevStep()">← Précédent</button>
-                        <button type="button" class="btn-next" onclick="nextStep()">Suivant →</button>
-                    </div>
-                </div>
-
-                <!-- Étape 5 : Le message et l'occasion -->
-                <div class="form-step" data-step="5" id="step5">
-                    <h3 class="step-title">💌 Le message et l'occasion</h3>
-                    <div class="form-group">
-                        <label class="form-label" id="messageFinalLabel">Quel message voulez-vous lui transmettre à travers cette chanson ? *</label>
-                        <textarea class="form-textarea" id="messageFinal" placeholder="Ex: Je veux qu'elle sache qu'on est fier d'elle et qu'on lui souhaite beaucoup de bonheur..." maxlength="300"></textarea>
-                        <div class="char-counter">0/300</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" id="lieuLabel">📍 Un lieu important pour elle/lui ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
-                        <input type="text" class="form-input" id="lieuImportant" placeholder="Ex: Sa maison, son bureau, l'église qu'elle fréquente...">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" id="dateLabel">📅 Une date importante pour elle/lui ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
-                        <input type="text" class="form-input" id="dateImportante" placeholder="Ex: Son anniversaire le 8 août, la date de sa retraite...">
-                    </div>
-                    <div class="form-navigation">
-                        <button type="button" class="btn-prev" onclick="prevStep()">← Précédent</button>
-                        <button type="button" class="btn-next" onclick="nextStep()">Voir le résumé →</button>
-                    </div>
-                </div>
-
-                                <!-- Étape 6 : Vos coordonnées -->
-                <div class="form-step" data-step="6" id="step6">
-                    <h3 class="step-title">📱 Vos coordonnées</h3>
-                    <div class="form-group">
-                        <label class="form-label">Votre prénom *</label>
-                        <input type="text" class="form-input" id="clientPrenom" placeholder="Votre prénom">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Votre numéro WhatsApp *</label>
-                        <input type="tel" class="form-input" id="clientWhatsapp" placeholder="+242 06...">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Votre email (pour recevoir une copie) <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span></label>
-                        <input type="email" class="form-input" id="clientEmail" placeholder="votre@email.com">
-                    </div>
-                    <h4 style="margin: 2rem 0 1rem; color: var(--violet-dark); font-size: 1.2rem;">📋 Récapitulatif de votre projet</h4>
-                    <div id="summaryContent" class="summary-box"></div>
-                    
-                    <div class="form-navigation">
-                        <button type="button" class="btn-prev" onclick="prevStep()">← Modifier</button>
-                        <button type="button" class="btn-submit" onclick="submitOrder()">Envoyer sur WhatsApp 💬</button>
-                    </div>
-
-                    <!-- NOUVEAU : Alerte si le navigateur bloque WhatsApp -->
-                    <div id="popupWarning" style="display: none; margin-top: 2rem; padding: 1.5rem; background: #fef2f2; border: 1px solid #ef4444; border-radius: 12px; text-align: center;">
-                        <h4 style="color: #ef4444; margin-bottom: 0.5rem; font-size: 1.1rem;">⚠️ Ouverture bloquée par votre navigateur</h4>
-                        <p style="color: #7f1d1d; font-size: 0.95rem; margin-bottom: 1rem;">
-                            Votre navigateur a empêché l'ouverture de WhatsApp. Vos données sont sauvegardées, rien n'est perdu !
-                        </p>
-                        <p style="color: #7f1d1d; font-size: 0.9rem; margin-bottom: 1rem;">
-                            <strong>Comment faire ?</strong><br>
-                            1. Autorisez les popups pour ce site dans les paramètres de votre navigateur.<br>
-                            2. Ou cliquez simplement sur le bouton ci-dessous pour réessayer.
-                        </p>
-                        <button class="btn-primary" onclick="retryWhatsApp()" style="background: #ef4444; color: white; width: 100%; justify-content: center; border: none; cursor: pointer;">
-                            🔄 Réessayer d'ouvrir WhatsApp
-                        </button>
-                    </div>
-                </div>
-            </form>
+    <!-- ==================== HERO GLASS ==================== -->
+    <section id="accueil" class="hero">
+      <div class="hero-content">
+        <div class="hero-text">
+          <p class="hero-badge glass">✨ Fait à Brazzaville 🇨🇬</p>
+          <h1>Une chanson <span class="gold">à son nom.</span></h1>
+          <p class="hero-base">Écrite pour un seul. Chantée par tous.</p>
+          <p class="hero-lead">Toi tu donnes le nom, nous on écrit et on chante. Ta chanson passe en soirée, au mariage, au quartier — et tout le monde la reprend.</p>
+          <div class="hero-buttons">
+            <button class="btn btn-gold" onclick="showFormulaire()">🎵 Créer ma chanson</button>
+            <a href="#ecouter" onclick="scrollToSection('ecouter')" class="btn btn-glass">▶ Écouter d'abord</a>
+          </div>
+          <div class="hero-chips">
+            <span class="chip glass">🌟 Le nom en star</span>
+            <span class="chip glass">⚡ Prêt en 24 – 72 h</span>
+            <span class="chip glass">🔒 Ta vie privée reste privée</span>
+          </div>
         </div>
+        <div class="hero-visual">
+          <div class="hero-frame glass">
+            <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=900&q=80" alt="Artiste au micro en studio">
+            <span class="frame-badge">Dès 1 500 FCFA</span>
+          </div>
+        </div>
+      </div>
     </section>
 
-        <section id="confirmation" class="confirmation-page">
-        <div class="confirmation-content">
-            <div class="check-icon">✓</div>
-            <h2>Merci ! <span class="heart">💛</span></h2>
-            <p>Votre récapitulatif a été généré avec succès.</p>
-            
-            <div style="background: rgba(212, 175, 55, 0.1); border: 1px solid var(--gold); border-radius: 8px; padding: 1rem; margin: 1.5rem 0; text-align: left;">
-                <p style="color: var(--gold); font-weight: bold; margin-bottom: 0.5rem;">
-                    ⚠️ WhatsApp ne s'est pas ouvert ?
-                </p>
-                <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 1rem;">
-                    Votre navigateur a peut-être bloqué la fenêtre. Ne vous inquiétez pas, <strong>vos données sont sauvegardées</strong> et rien n'est perdu.
-                </p>
-                <button class="btn-primary" onclick="retryWhatsApp()" style="width: 100%; justify-content: center;">
-                    🔄 Réessayer d'ouvrir WhatsApp
-                </button>
-            </div>
-
-            <p>Nous vous répondrons rapidement pour valider les paroles et le paiement.</p>
-            <button class="btn-home" onclick="showHome()">🏠 Retour à l'accueil →</button>
+    <!-- ==================== COMMENT ÇA MARCHE (3 étapes) ==================== -->
+    <section id="comment" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker">Simple et rapide</p>
+          <h2 class="title">Comment ça <span class="gold">marche</span></h2>
         </div>
+        <div class="steps-glass">
+          <div class="step-glass glass">
+            <span class="step-num">1</span>
+            <div class="step-ico">💎</div>
+            <h3>Choisis ta formule</h3>
+            <p>Le prix est fixe. Pas de surprise.</p>
+          </div>
+          <div class="step-glass glass">
+            <span class="step-num">2</span>
+            <div class="step-ico">🗣️</div>
+            <h3>Donne le nom et le son</h3>
+            <p>Le nom, le style, quelques mots. On te guide, pas de page blanche.</p>
+          </div>
+          <div class="step-glass glass">
+            <span class="step-num">3</span>
+            <div class="step-ico">🎁</div>
+            <h3>Reçois et partage</h3>
+            <p>MP3 + pochette. Tu partages, tout le monde chante.</p>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <script>
-        let currentAudio = null;
-        let currentBtn = null;
-        let currentDurationId = null;
+    <!-- ==================== SALLE D'ÉCOUTE (images adaptées à chaque chanson) ==================== -->
+    <section id="ecouter" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker">La salle d'écoute</p>
+          <h2 class="title">Écoute. Inspire-toi. <span class="gold">Remixe.</span></h2>
+          <p class="sub">De vraies chansons Lamio Melody. « Je veux la même idée » remplit le Studio pour toi — tu changes juste le nom.</p>
+        </div>
+        <div class="tracks">
 
-        function playAudio(src, btn, durationId) {
-            if (currentAudio && currentBtn === btn) {
-                if (currentAudio.paused) {
-                    currentAudio.play();
-                    btn.textContent = '⏸';
-                } else {
-                    currentAudio.pause();
-                    btn.textContent = '▶';
-                }
-                return;
-            }
-            if (currentAudio) {
-                currentAudio.pause();
-                if (currentBtn) currentBtn.textContent = '▶';
-            }
-            currentAudio = new Audio(src);
-            currentBtn = btn;
-            currentDurationId = durationId;
-            currentAudio.addEventListener('loadedmetadata', function() {
-                const duration = formatTime(currentAudio.duration);
-                const durationEl = document.getElementById(durationId);
-                if (durationEl) durationEl.textContent = duration;
-            });
-            currentAudio.addEventListener('ended', function() {
-                btn.textContent = '▶';
-            });
-            currentAudio.addEventListener('error', function() {
-                console.error('Erreur de chargement audio:', src);
-                btn.textContent = '❌';
-                alert('Le fichier audio n\'a pas pu être chargé. Vérifiez que le fichier existe dans le dossier musique/');
-            });
-            currentAudio.play();
-            btn.textContent = '⏸';
-        }
+          <div class="track-glass glass">
+            <div class="track-img">
+              <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=600&q=80" alt="Chanteur au micro" loading="lazy">
+              <div class="track-play"><button class="play-btn" onclick="playAudio('musique/Lamio_Melody.mp3', this, 'd0')">▶</button></div>
+            </div>
+            <div class="track-info">
+              <h4>Lamio Melody (Hymne officiel)</h4>
+              <div class="track-meta"><span class="style">Afrobeat • Fierté</span><span id="d0">--:--</span></div>
+              <button class="btn-remix glass" data-mode="celebrer" data-occasion="Fête" data-style="Afrobeat" data-ambiance="Épique / Fierté" data-mots="fierté, Brazzaville, voix en or">💡 Je veux la même idée</button>
+            </div>
+          </div>
 
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
+          <div class="track-glass glass">
+            <div class="track-img">
+              <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=600&q=80" alt="Confettis de fête" loading="lazy">
+              <div class="track-play"><button class="play-btn" onclick="playAudio('musique/Aujourdhui_cest_ton_jour_1.mp3', this, 'd1')">▶</button></div>
+            </div>
+            <div class="track-info">
+              <h4>Aujourd'hui c'est ton jour</h4>
+              <div class="track-meta"><span class="style">Pop • Anniversaire</span><span id="d1">--:--</span></div>
+              <button class="btn-remix glass" data-mode="celebrer" data-occasion="Anniversaire" data-style="Pop" data-ambiance="Faire la fête" data-mots="courage, joie, c'est ton jour">💡 Je veux la même idée</button>
+            </div>
+          </div>
 
-        function handleRelationChange() {
-            const relation = document.getElementById('destRelation').value;
-            const relationAutreField = document.getElementById('relationAutreField');
-            const moiMessage = document.getElementById('moiMessage');
-            
-            const destPrenomLabel = document.getElementById('destPrenomLabel');
-            const destPrenomInput = document.getElementById('destPrenom');
-            const relationLabel = document.getElementById('relationLabel');
-            const emotionLabel = document.getElementById('emotionLabel');
-            
-            const step3Title = document.getElementById('step3Title');
-            const pourquoiLabel = document.getElementById('pourquoiLabel');
-            const pourquoiInput = document.getElementById('pourquoiImportante');
-            const souvenirLabel = document.getElementById('souvenirLabel');
-            const souvenirInput = document.getElementById('souvenir');
-            const souvenirExample = document.getElementById('souvenirExample');
-            
-            const qualitesLabel = document.getElementById('qualitesLabel');
-            const surnomLabel = document.getElementById('surnomLabel');
-            const surnomInput = document.getElementById('surnom');
-            const expressionLabel = document.getElementById('expressionLabel');
-            const expressionInput = document.getElementById('expressionFrequente');
-            
-            const messageFinalLabel = document.getElementById('messageFinalLabel');
-            const messageFinalInput = document.getElementById('messageFinal');
-            const lieuLabel = document.getElementById('lieuLabel');
-            const lieuInput = document.getElementById('lieuImportant');
-            const dateLabel = document.getElementById('dateLabel');
-            const dateInput = document.getElementById('dateImportante');
+          <div class="track-glass glass">
+            <div class="track-img">
+              <img src="https://images.unsplash.com/photo-1513151233558-d860c5398176?w=600&q=80" alt="Confettis colorés" loading="lazy">
+              <div class="track-play"><button class="play-btn" onclick="playAudio('musique/Joyeux_Anniversaire_Teuf.mp3', this, 'd2')">▶</button></div>
+            </div>
+            <div class="track-info">
+              <h4>Joyeux Anniversaire Teuf</h4>
+              <div class="track-meta"><span class="style">Afrobeat • Fête</span><span id="d2">--:--</span></div>
+              <button class="btn-remix glass" data-mode="ambiancer" data-occasion="Anniversaire" data-style="Afrobeat" data-ambiance="Faire la fête" data-mots="danse, rires, jusqu'au bout de la nuit">💡 Je veux la même idée</button>
+            </div>
+          </div>
 
-            if (relation === 'Moi') {
-                relationLabel.innerHTML = '❤️ Cette chanson est pour : <span style="color: var(--gold);">MOI-MÊME</span> ✨';
-                moiMessage.style.display = 'block';
-                relationAutreField.style.display = 'none';
-                
-                destPrenomLabel.textContent = ' Votre prénom *';
-                destPrenomInput.placeholder = 'Votre prénom';
-                emotionLabel.textContent = '😊 Quelle émotion voulez-vous ressentir en l\'écoutant ? *';
-                
-                step3Title.textContent = '📖 Parlez-nous de VOUS';
-                pourquoiLabel.textContent = '⭐ Comment décririez-vous votre personnalité ? (Ce qui vous rend unique)';
-                pourquoiInput.placeholder = 'Ex: Je suis une personne très courageuse, toujours souriante, qui inspire mon entourage...';
-                
-                souvenirLabel.textContent = '🏆 Racontez un moment important de votre vie ou une de vos réussites';
-                souvenirInput.placeholder = 'Ex: Le jour où j\'ai obtenu mon diplôme après des années d\'efforts, ou quand j\'ai surmonté une épreuve difficile...';
-                souvenirExample.textContent = '💡 Exemple : "J\'ai travaillé dur pendant des années pour ouvrir mon entreprise, et aujourd\'hui c\'est une vraie réussite. Je suis fier/fière de moi."';
-                
-                qualitesLabel.textContent = '🏆 Quelles sont vos principales qualités ? (Cochez-en plusieurs)';
-                surnomLabel.textContent = '😂 Avez-vous un surnom ?';
-                surnomInput.placeholder = 'Ex: Chocho, Bébé, Boss...';
-                expressionLabel.textContent = ' Y a-t-il un mot ou une expression que vous dites souvent ?';
-                expressionInput.placeholder = 'Ex: \'Je peux le faire\', \'On ne lâche rien\', \'Je suis fort(e)\'...';
-                
-                messageFinalLabel.textContent = '💌 Quel message voulez-vous vous rappeler à travers cette chanson ? *';
-                messageFinalInput.placeholder = 'Ex: Je veux me rappeler que je suis fort(e) et que je peux accomplir tout ce que je veux...';
-                
-                lieuLabel.innerHTML = '📍 Un lieu important pour vous ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
-                lieuInput.placeholder = 'Ex: Mon bureau, ma chambre, l\'église que je fréquente...';
-                
-                dateLabel.innerHTML = '📅 Une date importante pour vous ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
-                dateInput.placeholder = 'Ex: Mon anniversaire, la date de l\'obtention de mon diplôme...';
-                
-                if (typeof inspirationData !== 'undefined') {
-                    inspirationData['Moi'] = [
-                        "⭐ Qu'est-ce qui vous rend unique ou spécial(e) à vos propres yeux ?",
-                        "📖 Racontez un moment de votre vie dont vous êtes particulièrement fier/fière (une réussite, un surmontement d'épreuve).",
-                        "💡 Quelle qualité ou force personnelle souhaitez-vous célébrer dans cette chanson ?"
-                    ];
-                }
-            } else {
-                relationLabel.innerHTML = '❤️ Votre relation avec cette personne *';
-                moiMessage.style.display = 'none';
-                
-                if (relation === 'Autre') {
-                    relationAutreField.style.display = 'block';
-                } else {
-                    relationAutreField.style.display = 'none';
-                    document.getElementById('relationAutre').value = '';
-                }
-                
-                destPrenomLabel.textContent = ' Prénom du destinataire *';
-                destPrenomInput.placeholder = 'Ex: Jeannette, Marie, Jojo...';
-                emotionLabel.textContent = '😊 Quelle émotion voulez-vous qu\'il/elle ressente en l\'écoutant ? *';
-                
-                step3Title.textContent = '📖 Parlez-nous de CETTE PERSONNE';
-                pourquoiLabel.textContent = '⭐ Comment décririez-vous sa personnalité ? (Ce qui la rend unique)';
-                pourquoiInput.placeholder = 'Ex: C\'est une personne très courageuse, toujours souriante, qui inspire tout le monde...';
-                
-                souvenirLabel.textContent = '🏆 Racontez un moment important de SA vie ou une de SES réussites';
-                souvenirInput.placeholder = 'Ex: Le jour où elle a obtenu son diplôme après des années d\'efforts, ou quand elle a surmonté une épreuve difficile...';
-                souvenirExample.textContent = '💡 Exemple : "Elle a travaillé dur pendant des années pour ouvrir son entreprise, et aujourd\'hui c\'est une vraie réussite. Elle est notre fierté."';
-                
-                qualitesLabel.textContent = '🏆 Quelles sont ses principales qualités ? (Cochez-en plusieurs)';
-                surnomLabel.textContent = '😂 A-t-elle/il un surnom ?';
-                surnomInput.placeholder = 'Ex: Chocho, Bébé, Maman Jo, Boss...';
-                expressionLabel.textContent = ' Y a-t-il un mot ou une expression qu\'il/elle dit souvent ?';
-                expressionInput.placeholder = 'Ex: \'Nzambe apambola yo\', \'On ne lâche rien\', \'Toza ensemble\'...';
-                
-                messageFinalLabel.textContent = '💌 Quel message voulez-vous lui transmettre à travers cette chanson ? *';
-                messageFinalInput.placeholder = 'Ex: Je veux qu\'elle sache qu\'on est fier d\'elle et qu\'on lui souhaite beaucoup de bonheur...';
-                
-                lieuLabel.innerHTML = '📍 Un lieu important pour elle/lui ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
-                lieuInput.placeholder = 'Ex: Sa maison, son bureau, l\'église qu\'elle fréquente...';
-                
-                dateLabel.innerHTML = '📅 Une date importante pour elle/lui ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
-                dateInput.placeholder = 'Ex: Son anniversaire le 8 août, la date de sa retraite...';
-            }
-        }
+          <div class="track-glass glass">
+            <div class="track-img">
+              <img src="https://images.unsplash.com/photo-1504609773096-104ff2c73ba4?w=600&q=80" alt="Ambiance de danse" loading="lazy">
+              <div class="track-play"><button class="play-btn" onclick="playAudio('musique/Tu_connais_déjà.mp3', this, 'd3')">▶</button></div>
+            </div>
+            <div class="track-info">
+              <h4>Tu connais déjà</h4>
+              <div class="track-meta"><span class="style">Afro • Ambiance</span><span id="d3">--:--</span></div>
+              <button class="btn-remix glass" data-mode="ambiancer" data-occasion="Fête" data-style="Afrobeat" data-ambiance="Humour" data-mots="tu connais déjà, légende du quartier">💡 Je veux la même idée</button>
+            </div>
+          </div>
 
-        document.querySelectorAll('[data-field="formule"]').forEach(card => {
-            card.addEventListener('click', function() {
-                const grid = this.parentElement;
-                grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
-                this.classList.add('selected');
-                if (typeof formData !== 'undefined') {
-                    formData.formule = this.getAttribute('data-value');
-                }
-                updateVoiceSelection(this.getAttribute('data-value'));
-            });
-        });
+          <div class="track-glass glass">
+            <div class="track-img">
+              <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&q=80" alt="Couple amoureux" loading="lazy">
+              <div class="track-play"><button class="play-btn" onclick="playAudio('musique/Vannessa_Mon_Évidence.mp3', this, 'd4')">▶</button></div>
+            </div>
+            <div class="track-info">
+              <h4>Vannessa — Mon Évidence</h4>
+              <div class="track-meta"><span class="style">Zouk • Amour</span><span id="d4">--:--</span></div>
+              <button class="btn-remix glass" data-mode="celebrer" data-occasion="Amour" data-style="Zouk Love" data-ambiance="Romantique" data-mots="mon évidence, tendresse, pour toujours">💡 Je veux la même idée</button>
+            </div>
+          </div>
 
-        function updateVoiceSelection(formuleValue) {
-            const voiceSection = document.getElementById('voiceSection');
-            const voicePromptText = document.getElementById('voicePromptText');
-            const voiceCards = document.querySelectorAll('.voice-card');
-            
-            voiceSection.style.display = 'block';
-            voiceCards.forEach(card => {
-                card.classList.remove('selected', 'disabled');
-            });
-            if (typeof formData !== 'undefined') {
-                formData.voix = '';
-            }
+          <div class="track-glass glass">
+            <div class="track-img">
+              <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=600&q=80" alt="Portrait de femme souriante" loading="lazy">
+              <div class="track-play"><button class="play-btn" onclick="playAudio('musique/Merci_Mamounette_1.mp3', this, 'd5')">▶</button></div>
+            </div>
+            <div class="track-info">
+              <h4>Merci Mamounette</h4>
+              <div class="track-meta"><span class="style">Gospel • Hommage</span><span id="d5">--:--</span></div>
+              <button class="btn-remix glass" data-mode="celebrer" data-occasion="Hommage" data-style="Gospel" data-ambiance="Émotion douce" data-mots="merci, cœur en or, reine de la maison">💡 Je veux la même idée</button>
+            </div>
+          </div>
 
-            if (formuleValue.includes('Essentielle')) {
-                voicePromptText.textContent = '🎵 Vous avez choisi la formule Essentielle. La voix masculine est sélectionnée automatiquement.';
-                voiceCards.forEach(card => {
-                    if (card.getAttribute('data-value') === 'Masculine') {
-                        card.classList.add('selected');
-                        if (typeof formData !== 'undefined') formData.voix = 'Masculine';
-                    } else {
-                        card.classList.add('disabled');
-                    }
-                });
-            } else if (formuleValue.includes('Premium')) {
-                voicePromptText.textContent = '🎵 Vous avez choisi la formule Premium. Choisissez maintenant la voix que vous préférez pour votre chanson :';
-                voiceCards.forEach(card => {
-                    if (card.getAttribute('data-value') === 'Duo') {
-                        card.classList.add('disabled');
-                    }
-                });
-            } else if (formuleValue.includes('Prestige')) {
-                voicePromptText.textContent = '🎵 Vous avez choisi la formule Prestige. Choisissez maintenant le type de voix que vous préférez :';
-            }
-        }
+          <div class="track-glass glass">
+            <div class="track-img">
+              <img src="https://images.unsplash.com/photo-1529636798458-92182e662485?w=600&q=80" alt="Couple qui danse" loading="lazy">
+              <div class="track-play"><button class="play-btn" onclick="playAudio('musique/Mon_Évidence_1.mp3', this, 'd6')">▶</button></div>
+            </div>
+            <div class="track-info">
+              <h4>Mon Évidence</h4>
+              <div class="track-meta"><span class="style">RnB • Amour</span><span id="d6">--:--</span></div>
+              <button class="btn-remix glass" data-mode="celebrer" data-occasion="Amour" data-style="Rap/RnB" data-ambiance="Romantique" data-mots="évidence, amour, lumière">💡 Je veux la même idée</button>
+            </div>
+          </div>
 
-        document.querySelectorAll('.voice-card').forEach(card => {
-            card.addEventListener('click', function() {
-                if (this.classList.contains('disabled')) return;
-                const grid = this.parentElement;
-                grid.querySelectorAll('.voice-card').forEach(c => c.classList.remove('selected'));
-                this.classList.add('selected');
-                if (typeof formData !== 'undefined') {
-                    formData.voix = this.getAttribute('data-value');
-                }
-            });
-        });
+          <div class="track-glass glass">
+            <div class="track-img">
+              <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&q=80" alt="Célébration de réussite" loading="lazy">
+              <div class="track-play"><button class="play-btn" onclick="playAudio('musique/Tu_las_fait_1.mp3', this, 'd7')">▶</button></div>
+            </div>
+            <div class="track-info">
+              <h4>Tu l'as fait</h4>
+              <div class="track-meta"><span class="style">Afrobeat • Réussite</span><span id="d7">--:--</span></div>
+              <button class="btn-remix glass" data-mode="celebrer" data-occasion="Réussite" data-style="Afrobeat" data-ambiance="Épique / Fierté" data-mots="tu l'as fait, champion, fierté">💡 Je veux la même idée</button>
+            </div>
+          </div>
 
-        function selectTarif(formule) {
-            if (typeof showFormulaire === 'function') showFormulaire();
-            setTimeout(() => {
-                let formuleValue = '';
-                if (formule === 'Essentielle') formuleValue = 'Essentielle - Voix Masculine (1500 FCFA)';
-                else if (formule === 'Premium') formuleValue = 'Premium - Voix au choix (3000 FCFA)';
-                else if (formule === 'Prestige') formuleValue = 'Prestige - Toutes voix + Duo (5000 FCFA)';
-                
-                if (formuleValue && typeof formData !== 'undefined') {
-                    formData.formule = formuleValue;
-                    const cards = document.querySelectorAll('#formuleGrid .occasion-card');
-                    cards.forEach(card => {
-                        card.classList.remove('selected');
-                        if (card.getAttribute('data-value') === formuleValue) {
-                            card.classList.add('selected');
-                        }
-                    });
-                    const formuleSection = document.getElementById('formuleSection');
-                    formuleSection.classList.add('form-section-locked');
-                    const label = formuleSection.querySelector('.form-label');
-                    if (!label.querySelector('.locked-badge')) {
-                        const badge = document.createElement('span');
-                        badge.className = 'locked-badge';
-                        badge.textContent = '🔒 Choix verrouillé';
-                        label.appendChild(badge);
-                    }
-                    updateVoiceSelection(formuleValue);
-                }
-            }, 300);
-        }
+        </div>
+      </div>
+    </section>
 
-        function getFormuleDisplayName() {
-            if (typeof formData === 'undefined' || !formData.formule) return 'Non spécifiée';
-            if (formData.formule.includes('Essentielle')) return 'Essentielle';
-            if (formData.formule.includes('Premium')) return 'Premium';
-            if (formData.formule.includes('Prestige')) return 'Prestige';
-            return formData.formule;
-        }
+    <!-- ==================== TARIFS GLASS (cartes repensées) ==================== -->
+    <section id="tarifs" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker">Nos formules</p>
+          <h2 class="title">Choisis ta <span class="gold">formule</span></h2>
+        </div>
+        <div class="pricing">
 
-        function getFormulePrice() {
-            if (typeof formData === 'undefined' || !formData.formule) return '';
-            if (formData.formule.includes('1500')) return '1 500 FCFA';
-            if (formData.formule.includes('3000')) return '3 000 FCFA';
-            if (formData.formule.includes('5000')) return '5 000 FCFA';
-            return '';
-        }
+          <div class="price-glass glass">
+            <div class="price-top">
+              <span class="price-ico">🥉</span>
+              <h3>Essentielle</h3>
+              <p class="price-for">Pour découvrir</p>
+            </div>
+            <p class="price-amount">1 500 <span>FCFA</span></p>
+            <ul class="price-list">
+              <li><span class="check">✓</span> Voix masculine</li>
+              <li><span class="check">✓</span> 1 chanson personnalisée</li>
+              <li><span class="check">✓</span> 30 s à 1 min</li>
+              <li><span class="check">✓</span> Livraison rapide</li>
+              <li><span class="check">✓</span> Format MP3</li>
+            </ul>
+            <button class="btn btn-glass btn-block" onclick="selectTarif('Essentielle')">Choisir</button>
+          </div>
 
-        // ==========================================
-        // NAVIGATION & VALIDATION (Identique à votre script.js)
-        // ==========================================
-        let currentStep = 1;
-        const totalSteps = 6;
-        let formData = {};
+          <div class="price-glass price-glass--featured glass">
+            <span class="badge-pop">🥈 LA PLUS CHOISIE</span>
+            <div class="price-top">
+              <span class="price-ico">🥈</span>
+              <h3>Premium</h3>
+              <p class="price-for">Le bon équilibre</p>
+            </div>
+            <p class="price-amount">3 000 <span>FCFA</span></p>
+            <ul class="price-list">
+              <li><span class="check">✓</span> Voix masculine ou féminine</li>
+              <li><span class="check">✓</span> 1 min 30 à 2 min</li>
+              <li><span class="check">✓</span> Production travaillée</li>
+              <li><span class="check">✓</span> Pochette personnalisée</li>
+              <li><span class="check">✓</span> Format MP3</li>
+            </ul>
+            <button class="btn btn-gold btn-block" onclick="selectTarif('Premium')">Choisir →</button>
+          </div>
 
-        function scrollToSection(sectionId) {
-            const element = document.getElementById(sectionId);
-            if (element) {
-                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-                const activeLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
-                if (activeLink) activeLink.classList.add('active');
-            }
-        }
+          <div class="price-glass glass">
+            <span class="badge-pop badge-pop--gold">🥇 PRESTIGE</span>
+            <div class="price-top">
+              <span class="price-ico">🥇</span>
+              <h3>Prestige</h3>
+              <p class="price-for">L'expérience complète</p>
+            </div>
+            <p class="price-amount">5 000 <span>FCFA</span></p>
+            <p class="price-promo">🎁 2 versions au choix incluses !</p>
+            <ul class="price-list">
+              <li><span class="check">✓</span> Toutes voix (Masc. / Fém. / Duo)</li>
+              <li><span class="check">✓</span> 2 min à 3 min et +</li>
+              <li><span class="check">✓</span> 2 versions au choix</li>
+              <li><span class="check">✓</span> Pochette personnalisée</li>
+              <li><span class="check">✓</span> Message intégré</li>
+              <li><span class="check">✓</span> Livraison prioritaire</li>
+            </ul>
+            <button class="btn btn-glass btn-block" onclick="selectTarif('Prestige')">Choisir</button>
+          </div>
 
-        function showHome() {
-            document.getElementById('homePage').style.display = 'block';
-            document.getElementById('formulaire').classList.remove('active');
-            document.getElementById('confirmation').classList.remove('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        </div>
+        <div class="pay-banner glass">
+          💳 <strong>Tu paies seulement après confirmation sur WhatsApp</strong> : Airtel Money • MTN MoMo • main propre. Jamais de carte bancaire en ligne.
+        </div>
+      </div>
+    </section>
 
-        function showFormulaire() {
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('formulaire').classList.add('active');
-            document.getElementById('confirmation').classList.remove('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    <!-- ==================== FAQ (français simple) ==================== -->
+    <section id="faq" class="section">
+      <div class="container">
+        <div class="section-head">
+          <p class="kicker">FAQ</p>
+          <h2 class="title">Les vraies <span class="gold">questions</span></h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq-glass glass">
+            <summary>Est-ce que ma vie privée va sortir ?</summary>
+            <p>Non. On chante le nom, on ne raconte pas ta vie. Et ce que tu écris dans « ce qu'il ne faut pas dire » reste secret, jamais chanté.</p>
+          </details>
+          <details class="faq-glass glass">
+            <summary>Je n'ai pas d'idée, c'est grave ?</summary>
+            <p>Non. Clique sur « Je n'ai pas d'idée » dans le Studio, ou écoute une chanson et clique « Je veux la même idée » : on remplit tout pour toi.</p>
+          </details>
+          <details class="faq-glass glass">
+            <summary>Comment je paie ?</summary>
+            <p>Après confirmation sur WhatsApp : Airtel Money, MTN MoMo ou en main propre à Brazzaville. Jamais de carte en ligne.</p>
+          </details>
+          <details class="faq-glass glass">
+            <summary>Je reçois quoi, et quand ?</summary>
+            <p>Ta chanson en MP3 (+ pochette selon la formule), en 24 à 72 h. Prestige passe en priorité, avec 2 versions au choix.</p>
+          </details>
+        </div>
+      </div>
+    </section>
 
-        document.querySelectorAll('[data-field="occasion"]').forEach(card => {
-            card.addEventListener('click', function() {
-                const grid = this.parentElement;
-                grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
-                this.classList.add('selected');
-                const value = this.getAttribute('data-value');
-                formData.occasion = value;
-                const autreField = document.getElementById('occasionAutreField');
-                if (value === 'Autre') {
-                    autreField.style.display = 'block';
-                } else {
-                    autreField.style.display = 'none';
-                    document.getElementById('occasionAutre').value = '';
-                }
-            });
-        });
+    <!-- ==================== CTA FINAL ==================== -->
+    <section class="cta-final">
+      <div class="cta-content">
+        <h2>Prêt à entendre <span class="gold">son nom</span> chanté ?</h2>
+        <p>Un nom, un style, quelques mots : ça suffit pour commencer.</p>
+        <button class="btn btn-gold btn-lg" onclick="showFormulaire()">🎵 Créer ma chanson maintenant →</button>
+      </div>
+    </section>
 
-        document.querySelectorAll('[data-field="style"]').forEach(card => {
-            card.addEventListener('click', function() {
-                const grid = this.parentElement;
-                grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
-                this.classList.add('selected');
-                const value = this.getAttribute('data-value');
-                formData.style = value;
-                const autreField = document.getElementById('styleAutreField');
-                if (value === 'Autre') {
-                    autreField.style.display = 'block';
-                } else {
-                    autreField.style.display = 'none';
-                    document.getElementById('styleAutre').value = '';
-                }
-            });
-        });
+    <!-- ==================== FOOTER (liens réels uniquement) ==================== -->
+    <footer class="footer-glass">
+      <div class="container footer-grid">
+        <div class="footer-brand">
+          <div class="logo"><img src="images/logoLamioMelody.png" alt="Lamio Melody"></div>
+          <p>Écrite pour un seul. Chantée par tous.<br>Studio de chansons personnalisées, Brazzaville 🇨🇬</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a onclick="scrollToSection('comment')">Comment ça marche</a></li>
+            <li><a onclick="scrollToSection('ecouter')">Écouter</a></li>
+            <li><a onclick="scrollToSection('tarifs')">Tarifs</a></li>
+            <li><a onclick="scrollToSection('faq')">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Formules</h4>
+          <ul>
+            <li><a onclick="selectTarif('Essentielle')">Essentielle — 1 500 FCFA</a></li>
+            <li><a onclick="selectTarif('Premium')">Premium — 3 000 FCFA</a></li>
+            <li><a onclick="selectTarif('Prestige')">Prestige — 5 000 FCFA</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="https://wa.me/242065186967" target="_blank" rel="noopener">📞 +242 06 518 69 67</a></li>
+            <li><a href="mailto:talamiomeurphy@gmail.com">✉️ talamiomeurphy@gmail.com</a></li>
+            <li><span>📍 Brazzaville, Congo</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Lamio Melody — Équipe Meurphy. Tous droits réservés.</p>
+      </div>
+    </footer>
+  </div>
 
-        document.querySelectorAll('[data-field="emotion"]').forEach(card => {
-            card.addEventListener('click', function() {
-                const grid = this.parentElement;
-                grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
-                this.classList.add('selected');
-                formData.emotion = this.getAttribute('data-value');
-            });
-        });
+  <!-- ==================== STUDIO GLASS (4 étapes, français simple) ==================== -->
+  <section id="formulaire" class="studio">
+    <div class="studio-glass glass">
+      <div class="studio-head">
+        <h2>Le Studio <span class="gold">Lamio Melody</span></h2>
+        <p>4 petites étapes. On te guide, pas de page blanche.</p>
+      </div>
+      <div class="progress">
+        <div class="circle active" data-step="1">1</div>
+        <div class="circle" data-step="2">2</div>
+        <div class="circle" data-step="3">3</div>
+        <div class="circle" data-step="4">4</div>
+      </div>
 
-        document.querySelectorAll('.form-textarea[maxlength]').forEach(textarea => {
-            textarea.addEventListener('input', function() {
-                const max = this.getAttribute('maxlength');
-                const counter = this.parentElement.querySelector('.char-counter');
-                if (counter) {
-                    counter.textContent = `${this.value.length}/${max}`;
-                }
-            });
-        });
+      <form id="orderForm" onsubmit="return false;">
 
-        function nextStep() {
-            if (!validateStep()) return;
-            if (currentStep < totalSteps) {
-                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
-                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.remove('active');
-                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.add('completed');
-                currentStep++;
-                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
-                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.add('active');
-                if (currentStep === 6) generateSummary();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
+        <!-- ÉTAPE 1 : POUR QUI ? -->
+        <div class="f-step active" data-step="1">
+          <h3 class="step-title">🎯 Dis-nous c'est pour qui</h3>
 
-        function prevStep() {
-            if (currentStep > 1) {
-                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
-                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.remove('active');
-                currentStep--;
-                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
-                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.remove('completed');
-                document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
+          <div class="field">
+            <label class="label">Ta chanson doit faire quoi ? *</label>
+            <div class="cards-grid">
+              <div class="card-choice glass" data-field="mode" data-value="celebrer">
+                <span class="card-ico">🌟</span>
+                <span class="card-label">Célébrer un nom</span>
+                <span class="card-sub">Dédicace, fierté, honneur</span>
+              </div>
+              <div class="card-choice glass" data-field="mode" data-value="raconter">
+                <span class="card-ico">📖</span>
+                <span class="card-label">Raconter une histoire</span>
+                <span class="card-sub">Un parcours, un souvenir</span>
+              </div>
+              <div class="card-choice glass" data-field="mode" data-value="ambiancer">
+                <span class="card-ico">🎉</span>
+                <span class="card-label">Ambiancer</span>
+                <span class="card-sub">Fête, humour, chambrage</span>
+              </div>
+              <div class="card-choice glass" data-field="mode" data-value="promouvoir">
+                <span class="card-ico">🏪</span>
+                <span class="card-label">Pub pour ma boutique</span>
+                <span class="card-sub">Hymne, jingle, marque</span>
+              </div>
+            </div>
+          </div>
 
-        function validateStep() {
-            switch(currentStep) {
-                case 1:
-                    if (!formData.occasion) { alert('Veuillez sélectionner une occasion.'); return false; }
-                    if (formData.occasion === 'Autre') {
-                        const occasionAutre = document.getElementById('occasionAutre').value.trim();
-                        if (!occasionAutre) { alert('Veuillez préciser l\'occasion.'); return false; }
-                        formData.occasionDetail = occasionAutre;
-                    }
-                    const prenom = document.getElementById('destPrenom').value.trim();
-                    const relation = document.getElementById('destRelation').value;
-                    if (!prenom) { alert('Veuillez entrer le prénom.'); return false; }
-                    if (!relation) { alert('Veuillez sélectionner votre relation.'); return false; }
-                    if (relation === 'Autre') {
-                        const relationAutre = document.getElementById('relationAutre').value.trim();
-                        if (!relationAutre) { alert('Veuillez préciser votre relation.'); return false; }
-                        formData.relationDetail = relationAutre;
-                    }
-                    formData.destPrenom = prenom;
-                    formData.destRelation = relation;
-                    return true;
-                case 2:
-                    if (!formData.style) { alert('Veuillez sélectionner un style musical.'); return false; }
-                    if (formData.style === 'Autre') {
-                        const styleAutre = document.getElementById('styleAutre').value.trim();
-                        if (!styleAutre) { alert('Veuillez préciser le style musical.'); return false; }
-                        formData.styleDetail = styleAutre;
-                    }
-                    if (!formData.formule) { alert('Veuillez choisir une formule.'); return false; }
-                    if (!formData.voix) { alert('Veuillez sélectionner un type de voix.'); return false; }
-                    if (!formData.emotion) { alert('Veuillez sélectionner une émotion.'); return false; }
-                    return true;
-                case 3:
-                    const pourquoi = document.getElementById('pourquoiImportante').value.trim();
-                    const souvenir = document.getElementById('souvenir').value.trim();
-                    if (!pourquoi) { alert('Veuillez expliquer pourquoi c\'est important.'); return false; }
-                    if (!souvenir) { alert('Veuillez raconter un souvenir/moment important.'); return false; }
-                    formData.pourquoiImportante = pourquoi;
-                    formData.souvenir = souvenir;
-                    return true;
-                case 4:
-                    const qualites = [];
-                    document.querySelectorAll('.quality-checkbox:checked').forEach(cb => qualites.push(cb.value));
-                    formData.qualites = qualites;
-                    formData.surnom = document.getElementById('surnom').value;
-                    formData.expressionFrequente = document.getElementById('expressionFrequente').value;
-                    formData.phraseIntegrer = document.getElementById('phraseIntegrer').value;
-                    return true;
-                case 5:
-                    const messageFinal = document.getElementById('messageFinal').value.trim();
-                    if (!messageFinal) { alert('Veuillez entrer le message final.'); return false; }
-                    formData.messageFinal = messageFinal;
-                    formData.lieuImportant = document.getElementById('lieuImportant').value;
-                    formData.dateImportante = document.getElementById('dateImportante').value;
-                    return true;
-                case 6:
-                    const clientPrenom = document.getElementById('clientPrenom').value.trim();
-                    const clientWhatsapp = document.getElementById('clientWhatsapp').value.trim();
-                    if (!clientPrenom) { alert('Veuillez entrer votre prénom.'); return false; }
-                    if (!clientWhatsapp) { alert('Veuillez entrer votre numéro WhatsApp.'); return false; }
-                    formData.clientPrenom = clientPrenom;
-                    formData.clientWhatsapp = clientWhatsapp;
-                    formData.clientEmail = document.getElementById('clientEmail').value;
-                    return true;
-                default:
-                    return true;
-            }
-        }
+          <div class="field">
+            <label class="label" id="starNameLabel">Le nom à chanter *</label>
+            <input type="text" class="input-glass" id="starName" placeholder="Ex : Maman Justine, Coach Boris, Boutique SAKURA…">
+          </div>
 
-        function generateSummary() {
-            const formule = getFormuleDisplayName();
-            const prix = getFormulePrice();
-            const occasionFinale = formData.occasion === 'Autre' ? (formData.occasionDetail || 'Autre') : formData.occasion;
-            const styleFinal = formData.style === 'Autre' ? (formData.styleDetail || 'Autre') : formData.style;
-            const relationAffichee = formData.destRelation === 'Moi' ? 'Moi-même ✨' : (formData.relationDetail || formData.destRelation);
-            const destinataireAffiche = formData.destRelation === 'Moi' ? `Moi-même (${formData.destPrenom})` : `${formData.destPrenom} (${relationAffichee})`;
-            
-            const summaryHTML = `
-                <div class="summary-grid">
-                    <div class="summary-item"><p class="summary-label"> Occasion</p><p>${occasionFinale}</p></div>
-                    <div class="summary-item"><p class="summary-label">👤 Destinataire</p><p>${destinataireAffiche}</p></div>
-                    <div class="summary-item"><p class="summary-label">🎵 Style musical</p><p>${styleFinal}</p></div>
-                    <div class="summary-item"><p class="summary-label">🎤 Voix</p><p>${formData.voix}</p></div>
-                    <div class="summary-item"><p class="summary-label">😊 Émotion</p><p>${formData.emotion}</p></div>
-                    <div class="summary-item"><p class="summary-label">💎 Formule choisie</p><p>${formule} - ${prix}</p></div>
-                </div>
-                ${formData.pourquoiImportante ? `<div class="summary-section"><p class="summary-label">⭐ Pourquoi c'est important</p><p>${formData.pourquoiImportante}</p></div>` : ''}
-                ${formData.souvenir ? `<div class="summary-section"><p class="summary-label">📖 Moment important / Réussite</p><p>${formData.souvenir}</p></div>` : ''}
-                ${formData.qualites && formData.qualites.length > 0 ? `<div class="summary-section"><p class="summary-label">🏆 Qualités</p><p>${formData.qualites.join(', ')}</p></div>` : ''}
-                ${formData.surnom ? `<div class="summary-section"><p class="summary-label">😂 Surnom</p><p>${formData.surnom}</p></div>` : ''}
-                ${formData.expressionFrequente ? `<div class="summary-section"><p class="summary-label">🙏 Expression fréquente</p><p>${formData.expressionFrequente}</p></div>` : ''}
-                ${formData.phraseIntegrer ? `<div class="summary-section"><p class="summary-label">✨ Phrase à intégrer</p><p>${formData.phraseIntegrer}</p></div>` : ''}
-                <div class="summary-section"><p class="summary-label">💌 Message final</p><p>${formData.messageFinal}</p></div>
-                ${formData.lieuImportant ? `<div class="summary-section"><p class="summary-label"> Lieu important</p><p>${formData.lieuImportant}</p></div>` : ''}
-                ${formData.dateImportante ? `<div class="summary-section"><p class="summary-label">📅 Date importante</p><p>${formData.dateImportante}</p></div>` : ''}
-                <div class="summary-section">
-                    <p class="summary-label"> Vos coordonnées</p>
-                    <p><strong>Prénom :</strong> ${formData.clientPrenom}<br><strong>WhatsApp :</strong> ${formData.clientWhatsapp}<br>${formData.clientEmail ? `<strong>Email :</strong> ${formData.clientEmail}` : ''}</p>
-                </div>
-            `;
-            document.getElementById('summaryContent').innerHTML = summaryHTML;
-        }
+          <div class="field">
+            <label class="label">C'est pour quelle occasion ? *</label>
+            <div class="cards-grid">
+              <div class="card-choice glass" data-field="occasion" data-value="Anniversaire"><span class="card-ico">🎂</span><span class="card-label">Anniversaire</span></div>
+              <div class="card-choice glass" data-field="occasion" data-value="Amour"><span class="card-ico">❤️</span><span class="card-label">Amour</span></div>
+              <div class="card-choice glass" data-field="occasion" data-value="Mariage"><span class="card-ico">💍</span><span class="card-label">Mariage</span></div>
+              <div class="card-choice glass" data-field="occasion" data-value="Naissance"><span class="card-ico">👶</span><span class="card-label">Naissance</span></div>
+              <div class="card-choice glass" data-field="occasion" data-value="Réussite"><span class="card-ico">🏆</span><span class="card-label">Réussite</span></div>
+              <div class="card-choice glass" data-field="occasion" data-value="Hommage"><span class="card-ico">🕊️</span><span class="card-label">Hommage</span></div>
+              <div class="card-choice glass" data-field="occasion" data-value="Fête"><span class="card-ico">🎉</span><span class="card-label">Fête</span></div>
+              <div class="card-choice glass" data-field="occasion" data-value="Business"><span class="card-ico">🏪</span><span class="card-label">Business</span></div>
+              <div class="card-choice glass" data-field="occasion" data-value="Autre"><span class="card-ico">✨</span><span class="card-label">Autre</span></div>
+            </div>
+            <div id="occasionAutreField" class="hidden-field">
+              <label class="label">C'est pour quoi alors ?</label>
+              <input type="text" class="input-glass" id="occasionAutre" placeholder="Ex : Départ à la retraite, Fête des mères…">
+            </div>
+          </div>
 
-        // ==========================================
-// SOUMISSION DE LA COMMANDE
-// ==========================================
-async function submitOrder() {
-    // 1. Récupération et validation des données (identique à avant)
-    const clientPrenom = document.getElementById('clientPrenom').value.trim();
-    const clientWhatsapp = document.getElementById('clientWhatsapp').value.trim();
-    const clientEmail = document.getElementById('clientEmail').value.trim();
-    
-    if (!clientPrenom || !clientWhatsapp) {
-        alert('Veuillez remplir vos coordonnées (prénom et WhatsApp).');
-        return false;
-    }
-    
-    formData.clientPrenom = clientPrenom;
-    formData.clientWhatsapp = clientWhatsapp;
-    formData.clientEmail = clientEmail;
-    
-    // ... (tout le calcul des variables occasionFinale, styleFinal, etc. reste identique) ...
-    const occasionFinale = formData.occasion === 'Autre' ? (formData.occasionDetail || 'Autre') : formData.occasion;
-    const styleFinal = formData.style === 'Autre' ? (formData.styleDetail || 'Autre') : formData.style;
-    const relationAffichee = formData.destRelation === 'Moi' ? 'Moi-même' : (formData.relationDetail || formData.destRelation);
-    const formule = getFormuleDisplayName();
-    const prix = getFormulePrice();
-    const estPourMoi = formData.destRelation === 'Moi';
-    
-    // ... (construction du message WhatsApp identique à avant) ...
-    const titreMessage = estPourMoi ? '🎵 *Ma chanson personnelle - Lamio Melody* 🎵' : '🎵 *Nouvelle commande Lamio Melody* 🎵';
-    const destinataireText = estPourMoi ? `👤 *Pour :* Moi-même (${formData.destPrenom})` : `👤 *Destinataire :* ${formData.destPrenom} (${relationAffichee})`;
-    
-    const whatsappMessage = `${titreMessage}\n\n` +
-        `🎉 *Occasion :* ${occasionFinale}\n` +
-        `${destinataireText}\n` +
-        `🎵 *Style :* ${styleFinal}\n` +
-        `🎤 *Voix :* ${formData.voix}\n` +
-        `😊 *Émotion :* ${formData.emotion}\n\n` +
-        `⭐ *Pourquoi c'est important :*\n${formData.pourquoiImportante}\n\n` +
-        `📖 *Moment important / Réussite :*\n${formData.souvenir}\n\n` +
-        `${formData.qualites && formData.qualites.length > 0 ? `🏆 *Qualités :* ${formData.qualites.join(', ')}\n\n` : ''}` +
-        `${formData.surnom ? `😂 *Surnom :* ${formData.surnom}\n\n` : ''}` +
-        `${formData.expressionFrequente ? ` *Expression fréquente :* ${formData.expressionFrequente}\n\n` : ''}` +
-        `${formData.phraseIntegrer ? `✨ *Phrase à intégrer :* ${formData.phraseIntegrer}\n\n` : ''}` +
-        `💌 *Message final :*\n${formData.messageFinal}\n\n` +
-        `${formData.lieuImportant ? `📍 *Lieu important :* ${formData.lieuImportant}\n` : ''}` +
-        `${formData.dateImportante ? `📅 *Date importante :* ${formData.dateImportante}\n` : ''}\n` +
-        `👤 *Client :* ${formData.clientPrenom}\n` +
-        ` *WhatsApp :* ${formData.clientWhatsapp}\n` +
-        `${formData.clientEmail ? `📧 *Email :* ${formData.clientEmail}\n` : ''}\n\n` +
-        `💎 *Formule :* ${formule} (${prix})\n\n` +
-        `🙏 *Merci de confirmer ma commande*`;
+          <div class="nav-btns">
+            <div></div>
+            <button type="button" class="btn btn-gold" onclick="nextStep()">Suivant →</button>
+          </div>
+        </div>
 
-    // Sauvegarde Supabase (identique à avant)
-    try {
-        const SUPABASE_URL = 'https://cfneuwhgmopaguemjchf.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_a5hxJyzGt03kuCTUnkAxig_BksoIlH0';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        await supabaseClient.from('orders').insert([{
-            lm_voice: formData.voix, occasion: occasionFinale, dest_prenom: formData.destPrenom,
-            dest_relation: relationAffichee, style_musical: styleFinal, emotion: formData.emotion,
-            pourquoi_importante: formData.pourquoiImportante, souvenir: formData.souvenir,
-            qualites: formData.qualites ? formData.qualites.join(', ') : '', surnom: formData.surnom,
-            expression_frequente: formData.expressionFrequente, phrase_integrer: formData.phraseIntegrer,
-            message_final: formData.messageFinal, lieu_important: formData.lieuImportant,
-            date_importante: formData.dateImportante, client_prenom: formData.clientPrenom,
-            client_whatsapp: formData.clientWhatsapp, client_email: formData.clientEmail,
-            formule: formule, prix: prix, est_pour_moi: estPourMoi,
-            statut: 'en_attente_validation', created_at: new Date().toISOString()
-        }]);
-    } catch (e) { console.log('Erreur Supabase:', e); }
+        <!-- ÉTAPE 2 : LE SON -->
+        <div class="f-step" data-step="2">
+          <h3 class="step-title">🎵 Choisis le son</h3>
 
-    // 2. TENTATIVE D'OUVERTURE WHATSAPP AVEC DÉTECTION DE BLOCAGE
-    const whatsappUrl = `https://wa.me/242065186967?text=${encodeURIComponent(whatsappMessage)}`;
-    window.whatsappMessageBackup = whatsappMessage; // Pour le bouton "Réessayer"
-    
-    const popup = window.open(whatsappUrl, '_blank');
+          <div class="field">
+            <label class="label">Quel style de musique ? *</label>
+            <div class="cards-grid">
+              <div class="card-choice glass" data-field="style" data-value="Afrobeat"><span class="card-ico">🌍</span><span class="card-label">Afrobeat</span></div>
+              <div class="card-choice glass" data-field="style" data-value="Rumba"><span class="card-ico">🎷</span><span class="card-label">Rumba</span></div>
+              <div class="card-choice glass" data-field="style" data-value="Soukous"><span class="card-ico">🎸</span><span class="card-label">Soukous</span></div>
+              <div class="card-choice glass" data-field="style" data-value="Ndombolo"><span class="card-ico">🥁</span><span class="card-label">Ndombolo</span></div>
+              <div class="card-choice glass" data-field="style" data-value="Gospel"><span class="card-ico">🙏</span><span class="card-label">Gospel</span></div>
+              <div class="card-choice glass" data-field="style" data-value="Zouk Love"><span class="card-ico">💕</span><span class="card-label">Zouk Love</span></div>
+              <div class="card-choice glass" data-field="style" data-value="Pop"><span class="card-ico">🎵</span><span class="card-label">Pop</span></div>
+              <div class="card-choice glass" data-field="style" data-value="Rap/RnB"><span class="card-ico">🎤</span><span class="card-label">Rap / RnB</span></div>
+              <div class="card-choice glass" data-field="style" data-value="Acoustique"><span class="card-ico">🎸</span><span class="card-label">Acoustique</span></div>
+              <div class="card-choice glass" data-field="style" data-value="Autre"><span class="card-ico">✨</span><span class="card-label">Autre</span></div>
+            </div>
+            <div id="styleAutreField" class="hidden-field">
+              <label class="label">Quel style alors ?</label>
+              <input type="text" class="input-glass" id="styleAutre" placeholder="Ex : Congolais traditionnel, Makossa…">
+            </div>
+          </div>
 
-    // Vérification si le popup a été bloqué
-    if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-        //  BLOQUÉ : On affiche l'alerte rouge, on ne cache pas le formulaire
-        document.getElementById('popupWarning').style.display = 'block';
-        document.getElementById('popupWarning').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else {
-        // ✅ OUVERT : On cache l'alerte (si elle était visible) et on va à la confirmation
-        document.getElementById('popupWarning').style.display = 'none';
-        
-        // On va à la page de confirmation
-        document.getElementById('formulaire').classList.remove('active');
-        document.getElementById('confirmation').classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // On efface la sauvegarde locale
-        localStorage.removeItem('lamioMelody_rawValues');
-    }
-}
-// Fonction unique et corrigée pour le bouton "Réessayer"
-function retryWhatsApp() {
-    if (window.whatsappMessageBackup) {
-        // On reconstruit l'URL proprement à partir du message sauvegardé
-        const whatsappUrl = `https://wa.me/242065186967?text=${encodeURIComponent(window.whatsappMessageBackup)}`;
-        const popup = window.open(whatsappUrl, '_blank');
-        
-        if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-            alert("Le blocage persiste. Veuillez autoriser les popups pour ce site dans les paramètres de votre navigateur, puis réessayez.");
-        } else {
-            // Succès : on cache l'alerte et on va à la confirmation
-            document.getElementById('popupWarning').style.display = 'none';
-            document.getElementById('formulaire').classList.remove('active');
-            document.getElementById('confirmation').classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            
-            // On efface la sauvegarde locale car l'envoi a réussi
-            localStorage.removeItem('lamioMelody_rawValues');
-        }
-    } else {
-        alert("Impossible de récupérer le message. Veuillez vérifier vos champs et réessayer.");
-    }
-}
-        const inspirationData = {
-            'Anniversaire': [
-                "⭐ Quelle est la qualité principale que vous admirez chez cette personne ?",
-                "📖 Racontez un moment de sa vie dont vous êtes particulièrement fier/fière (une réussite, un surmontement d'épreuve).",
-                "💡 Qu'est-ce qui la rend unique ou spéciale à vos yeux ?"
-            ],
-            'Amour': [
-                "⭐ Qu'est-ce que cette personne a de plus beau ou de plus unique ?",
-                "📖 Racontez un moment où elle a montré sa force, sa gentillesse ou son amour.",
-                "💡 Quel est son plus beau rêve ou projet actuel ?"
-            ],
-            'Mariage': [
-                "⭐ Quelles sont les qualités de cette personne qui font d'elle un/une partenaire exceptionnel(le) ?",
-                "📖 Racontez un moment où elle a brillé ou vous a impressionné(e).",
-                "💡 Quel est votre plus beau projet ou rêve d'avenir pour elle/vous deux ?"
-            ],
-            'Fête': [
-                "⭐ Pourquoi est-il/elle la personne qui met le plus de joie et d'ambiance autour de lui/d'elle ?",
-                "📖 Racontez un moment où elle a montré sa générosité ou sa bonne humeur.",
-                "💡 Quel est son plat, sa danse ou son expression préférée quand il/elle s'amuse ?"
-            ],
-            'Hommage': [
-                "⭐ En quoi cette personne a-t-elle marqué son entourage de manière indélébile ?",
-                "📖 Quel est le plus beau ou le plus fort souvenir de son parcours ?",
-                "💡 Quelle est la meilleure leçon ou le meilleur conseil qu'il/elle a donné ?"
-            ],
-            'Réussite': [
-                "⭐ Pourquoi êtes-vous si fier/fière de lui/d'elle aujourd'hui ?",
-                "📖 Racontez un moment où vous l'avez vu(e) se battre, travailler dur ou surmonter une difficulté.",
-                "💡 Quel est votre plus grand souhait pour la suite de son parcours ?"
-            ],
-            'Naissance': [
-                "⭐ En quoi l'arrivée de ce bébé illumine-t-elle la vie de ses parents/famille ?",
-                "📖 Racontez le moment précis de sa naissance ou les premiers instants.",
-                "💡 Quel petit détail, sourire ou habitude de bébé vous attendrit le plus ?"
-            ],
-            'Autre': [
-                "⭐ Qu'est-ce qui rend cette personne si unique pour vous ?",
-                "📖 Racontez un moment de sa vie qui montre bien qui elle est.",
-                "💡 Quel message ou quelle émotion voulez-vous absolument lui transmettre ?"
-            ]
-        };
+          <div class="field">
+            <label class="label">Quelle ambiance ? *</label>
+            <div class="cards-grid">
+              <div class="card-choice glass" data-field="ambiance" data-value="Faire la fête"><span class="card-ico">🎉</span><span class="card-label">Faire la fête</span></div>
+              <div class="card-choice glass" data-field="ambiance" data-value="Romantique"><span class="card-ico">❤️</span><span class="card-label">Romantique</span></div>
+              <div class="card-choice glass" data-field="ambiance" data-value="Épique / Fierté"><span class="card-ico">👑</span><span class="card-label">Épique / Fierté</span></div>
+              <div class="card-choice glass" data-field="ambiance" data-value="Humour"><span class="card-ico">😂</span><span class="card-label">Humour</span></div>
+              <div class="card-choice glass" data-field="ambiance" data-value="Émotion douce"><span class="card-ico">🥰</span><span class="card-label">Émotion douce</span></div>
+              <div class="card-choice glass" data-field="ambiance" data-value="Reconnaissance"><span class="card-ico">🙏</span><span class="card-label">Reconnaissance</span></div>
+            </div>
+          </div>
 
-        function showInspirationQuestions() {
-            const helperDiv = document.getElementById('inspirationHelper');
-            const list = document.getElementById('inspirationQuestionsList');
+          <div class="field">
+            <label class="label">La chanson sera chantée en ? *</label>
+            <div class="cards-grid langue-grid">
+              <div class="card-choice glass" data-field="langue" data-value="Français"><span class="card-ico">🇫🇷</span><span class="card-label">Français</span></div>
+              <div class="card-choice glass" data-field="langue" data-value="Lingala"><span class="card-ico">🗣️</span><span class="card-label">Lingala</span></div>
+              <div class="card-choice glass" data-field="langue" data-value="Mixte (Français + Lingala)"><span class="card-ico">🔀</span><span class="card-label">Mixte</span></div>
+            </div>
+          </div>
 
-            if (helperDiv.style.display === 'block') {
-                helperDiv.style.display = 'none';
-                return;
-            }
+          <div class="field" id="formuleSection">
+            <label class="label">💎 Ta formule *</label>
+            <div class="cards-grid formule-grid" id="formuleGrid">
+              <div class="card-choice glass" data-field="formule" data-value="Essentielle - Voix Masculine (1500 FCFA)">
+                <span class="card-ico">🥉</span>
+                <span class="card-label">Essentielle</span>
+                <span class="card-sub">Voix Masc. • 30 s – 1 min • 1 500 FCFA</span>
+              </div>
+              <div class="card-choice glass" data-field="formule" data-value="Premium - Voix au choix (3000 FCFA)">
+                <span class="card-ico">🥈</span>
+                <span class="card-label">Premium</span>
+                <span class="card-sub">Voix au choix • 1 min 30 – 2 min • 3 000 FCFA</span>
+              </div>
+              <div class="card-choice glass" data-field="formule" data-value="Prestige - Toutes voix + Duo (5000 FCFA)">
+                <span class="card-ico">🥇</span>
+                <span class="card-label">Prestige</span>
+                <span class="card-sub">Toutes voix • 2 min – 3 min+ • 5 000 FCFA</span>
+              </div>
+            </div>
+          </div>
 
-            let occasion = formData.occasion;
-            if (!occasion || occasion === 'Autre') {
-                occasion = 'Anniversaire';
-            }
+          <div class="field" id="voiceSection" style="display:none;">
+            <div class="voice-prompt glass"><p id="voicePromptText">👉 Choisis la voix :</p></div>
+            <div class="cards-grid voix-grid">
+              <div class="card-choice voice-card glass" data-value="Masculine"><span class="card-ico">👨</span><span class="card-label">Masculine</span></div>
+              <div class="card-choice voice-card glass" data-value="Féminine"><span class="card-ico">👩</span><span class="card-label">Féminine</span></div>
+              <div class="card-choice voice-card glass" data-value="Duo"><span class="card-ico">👥</span><span class="card-label">Duo (H+F)</span></div>
+            </div>
+          </div>
 
-            const questions = inspirationData[occasion] || inspirationData['Anniversaire'];
-            list.innerHTML = questions.map(q => `<li>${q}</li>`).join('');
+          <div class="nav-btns">
+            <button type="button" class="btn btn-glass" onclick="prevStep()">← Précédent</button>
+            <button type="button" class="btn btn-gold" onclick="nextStep()">Suivant →</button>
+          </div>
+        </div>
 
-            helperDiv.style.display = 'block';
-            helperDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
+        <!-- ÉTAPE 3 : LA MATIÈRE POUR LES PAROLES -->
+        <div class="f-step" data-step="3">
+          <h3 class="step-title">✍️ Donne la matière pour les paroles</h3>
 
-        function toggleMenu() {
-            const navMenu = document.getElementById('navMenu');
-            const menuBtn = document.querySelector('.mobile-menu-btn');
-            const body = document.body;
-            
-            let overlay = document.querySelector('.nav-overlay');
-            if (!overlay) {
-                overlay = document.createElement('div');
-                overlay.className = 'nav-overlay';
-                overlay.onclick = toggleMenu;
-                body.appendChild(overlay);
-            }
-            
-            navMenu.classList.toggle('active');
-            menuBtn.classList.toggle('active');
-            overlay.classList.toggle('active');
-            
-            if (navMenu.classList.contains('active')) {
-                body.style.overflow = 'hidden';
-            } else {
-                body.style.overflow = '';
-            }
-        }
+          <div class="field">
+            <label class="label">🏆 Ses qualités (coche ce qui va)</label>
+            <div class="chips">
+              <label><input type="checkbox" class="quality-checkbox" value="Gentil(e)"><span class="chip-check glass">Gentil(e)</span></label>
+              <label><input type="checkbox" class="quality-checkbox" value="Courageux(se)"><span class="chip-check glass">Courageux(se)</span></label>
+              <label><input type="checkbox" class="quality-checkbox" value="Travailleur(se)"><span class="chip-check glass">Travailleur(se)</span></label>
+              <label><input type="checkbox" class="quality-checkbox" value="Drôle"><span class="chip-check glass">Drôle</span></label>
+              <label><input type="checkbox" class="quality-checkbox" value="Généreux(se)"><span class="chip-check glass">Généreux(se)</span></label>
+              <label><input type="checkbox" class="quality-checkbox" value="Sourire légendaire"><span class="chip-check glass">Sourire légendaire</span></label>
+              <label><input type="checkbox" class="quality-checkbox" value="Champion du quartier"><span class="chip-check glass">Champion du quartier</span></label>
+              <label><input type="checkbox" class="quality-checkbox" value="Cœur en or"><span class="chip-check glass">Cœur en or</span></label>
+              <label><input type="checkbox" class="quality-checkbox" value="Boss respecté(e)"><span class="chip-check glass">Boss respecté(e)</span></label>
+              <label><input type="checkbox" class="quality-checkbox" value="Fierté de la famille"><span class="chip-check glass">Fierté de la famille</span></label>
+            </div>
+          </div>
 
-        document.querySelectorAll('.nav-link, .btn-commander').forEach(item => {
-            item.addEventListener('click', () => {
-                if (window.innerWidth <= 768) {
-                    toggleMenu();
-                }
-            });
-        });
+          <div class="field">
+            <label class="label">😂 Un surnom ? <span class="opt">(pas obligé)</span></label>
+            <input type="text" class="input-glass" id="surnom" placeholder="Ex : Chocho, Bébé, Maman Jo, Boss…">
+          </div>
 
-        // ==========================================
-// FILET DE SÉCURITÉ : SAUVEGARDE AUTOMATIQUE
-// ==========================================
+          <div class="field">
+            <label class="label">📍 Son quartier ou sa passion ? <span class="opt">(pas obligé)</span></label>
+            <input type="text" class="input-glass" id="quartier" placeholder="Ex : Poto-Poto, le foot, sa boutique, sa chorale…">
+          </div>
 
-// 1. Sauvegarder les champs texte à chaque frappe
-function autoSaveForm() {
-    const inputs = document.querySelectorAll('input, textarea, select');
-    const rawValues = {};
-    inputs.forEach(input => {
-        if (input.id && input.type !== 'checkbox' && input.type !== 'radio') {
-            rawValues[input.id] = input.value;
-        }
-    });
-    localStorage.setItem('lamioMelody_rawValues', JSON.stringify(rawValues));
-}
+          <div class="field">
+            <label class="label">🗣️ Raconte en vrac, on s'occupe du reste <span class="opt">(pas obligé mais très utile)</span></label>
+            <textarea class="input-glass textarea-glass" id="histoire" maxlength="500" placeholder="Ex : Elle est partie de rien, aujourd'hui tout le quartier la respecte. On veut que ça se sente dans la chanson…"></textarea>
+            <div class="char-counter">0/500</div>
+          </div>
 
-// Écouter les modifications sur tous les champs
-document.querySelectorAll('input, textarea, select').forEach(el => {
-    el.addEventListener('input', autoSaveForm);
-    el.addEventListener('change', autoSaveForm);
-});
+          <div class="field">
+            <label class="label">💬 Une expression qu'il/elle dit souvent ? <span class="opt">(pas obligé)</span></label>
+            <input type="text" class="input-glass" id="expression" placeholder="Ex : 'Nzambe apambola yo', 'On ne lâche rien'…">
+          </div>
 
-// 2. Restaurer les données au chargement de la page
-window.addEventListener('DOMContentLoaded', () => {
-    const savedRaw = localStorage.getItem('lamioMelody_rawValues');
-    if (savedRaw) {
-        const values = JSON.parse(savedRaw);
-        for (const [id, value] of Object.entries(values)) {
-            const el = document.getElementById(id);
-            if (el && value !== "") {
-                el.value = value;
-                // Déclencher un événement 'input' pour mettre à jour les compteurs de caractères
-                el.dispatchEvent(new Event('input'));
-            }
-        }
-        
-        // Réafficher les champs "Autre" s'ils étaient remplis
-        if (values.occasionAutre && values.occasion === 'Autre') {
-            document.getElementById('occasionAutreField').style.display = 'block';
-        }
-        if (values.styleAutre && values.style === 'Autre') {
-            document.getElementById('styleAutreField').style.display = 'block';
-        }
-        if (values.relationAutre && values.destRelation === 'Autre') {
-            document.getElementById('relationAutreField').style.display = 'block';
-        }
-        
-        // Si on était sur le formulaire, on peut afficher un petit message discret
-        if (document.getElementById('formulaire').classList.contains('active')) {
-            console.log("Données du formulaire restaurées avec succès.");
-        }
-    }
-});
-    </script>
+          <div class="field">
+            <label class="label">💌 Un message à mettre dans la chanson ? <span class="opt">(pas obligé)</span></label>
+            <input type="text" class="input-glass" id="message" placeholder="Ex : On est fiers de toi ! / Longue vie à ta boutique…">
+          </div>
+
+          <div class="field">
+            <label class="label">🚫 Ce qu'il ne faut PAS dire dans la chanson</label>
+            <input type="text" class="input-glass" id="interdit" placeholder="Ex : pas de surnoms drôles devant les collègues, pas de noms d'ex…">
+            <p class="hint-glass">💡 Ce champ reste secret : il sert seulement à celui qui écrit les paroles.</p>
+          </div>
+
+          <button type="button" class="btn-inspire" onclick="showInspirationQuestions()">💡 Je n'ai pas d'idée, aidez-moi</button>
+          <div id="inspirationHelper" class="inspire-glass glass">
+            <h4>👉 Réponds à 1 ou 2 questions dans les champs, ça suffit :</h4>
+            <ul id="inspirationQuestionsList"></ul>
+          </div>
+
+          <!-- Aperçu vivant : la chanson prend forme -->
+          <div class="live-prev glass">
+            <p class="live-label">🎼 Ta chanson prend forme</p>
+            <h4 id="previewTitle">Titre provisoire : —</h4>
+            <p id="previewLyrics" class="live-lyrics">Donne le nom et le mode pour voir un avant-goût des paroles…</p>
+            <p id="previewMeta" class="live-meta"></p>
+          </div>
+
+          <div class="nav-btns">
+            <button type="button" class="btn btn-glass" onclick="prevStep()">← Précédent</button>
+            <button type="button" class="btn btn-gold" onclick="nextStep()">Voir le résumé →</button>
+          </div>
+        </div>
+
+        <!-- ÉTAPE 4 : CONTACT + RÉSUMÉ -->
+        <div class="f-step" data-step="4">
+          <h3 class="step-title">📲 On t'envoie la chanson où ?</h3>
+
+          <div class="field">
+            <label class="label">Ton prénom *</label>
+            <input type="text" class="input-glass" id="clientPrenom" placeholder="Ton prénom">
+          </div>
+          <div class="field">
+            <label class="label">Ton numéro WhatsApp *</label>
+            <input type="tel" class="input-glass" id="clientWhatsapp" placeholder="+242 06…">
+          </div>
+
+          <h4 class="summary-title">📋 Le résumé de ta commande</h4>
+          <div id="summaryContent" class="summary-glass glass"></div>
+
+          <div class="nav-btns">
+            <button type="button" class="btn btn-glass" onclick="prevStep()">← Modifier</button>
+            <button type="button" class="btn btn-wa" onclick="submitOrder()">Envoyer sur WhatsApp 💬</button>
+          </div>
+
+          <div id="popupWarning" class="popup-warning glass">
+            <h4>⚠️ WhatsApp ne s'est pas ouvert</h4>
+            <p>C'est ton navigateur qui bloque. Rien n'est perdu : autorise les popups, puis clique ci-dessous.</p>
+            <button class="btn btn-gold" onclick="retryWhatsApp()">🔄 Réessayer d'ouvrir WhatsApp</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ==================== CONFIRMATION ==================== -->
+  <section id="confirmation" class="confirm">
+    <div class="confirm-glass glass">
+      <div class="check-icon">✓</div>
+      <h2>Merci ! <span class="gold">💛</span></h2>
+      <p>Ta commande est partie sur WhatsApp. On te répond vite pour valider les paroles et le paiement (Airtel Money / MTN MoMo / main propre).</p>
+      <div class="retry-box glass">
+        <p><strong>⚠️ WhatsApp ne s'est pas ouvert ?</strong><br>Rien n'est perdu, clique ici :</p>
+        <button class="btn btn-gold" onclick="retryWhatsApp()">🔄 Réessayer d'ouvrir WhatsApp</button>
+      </div>
+      <button class="btn btn-glass" onclick="showHome()">🏠 Retour à l'accueil →</button>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
 </body>
 </html>

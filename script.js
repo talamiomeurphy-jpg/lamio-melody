@@ -1,794 +1,349 @@
-// ==========================================
-// VARIABLES GLOBALES
-// ==========================================
+/* =====================================================
+   LAMIO MELODY — V5 GLASS • script.js
+   Règles : zéro alert() • zéro reload • Supabase jamais bloquant
+   ===================================================== */
 let currentStep = 1;
-const totalSteps = 6;
+const totalSteps = 4;
 let formData = {};
 
-// ==========================================
-// NAVIGATION
-// ==========================================
-function scrollToSection(sectionId) {
-    const element = document.getElementById(sectionId);
-    if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-        const activeLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
-        if (activeLink) activeLink.classList.add('active');
-    }
+/* ---------- TOASTS (remplacent tous les alert) ---------- */
+function toast(msg, type = 'info') {
+  const el = document.createElement('div');
+  el.className = `toast toast--${type}`;
+  el.setAttribute('role', 'status');
+  el.innerHTML = msg;
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('is-visible'));
+  setTimeout(() => { el.classList.remove('is-visible'); setTimeout(() => el.remove(), 400); }, 3800);
 }
 
+/* ---------- NAVIGATION ENTRE VUES ---------- */
 function showHome() {
-    document.getElementById('homePage').style.display = 'block';
-    document.getElementById('formulaire').classList.remove('active');
-    document.getElementById('confirmation').classList.remove('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('homePage').style.display = 'block';
+  document.getElementById('formulaire').classList.remove('active');
+  document.getElementById('confirmation').classList.remove('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
 function showFormulaire() {
-    document.getElementById('homePage').style.display = 'none';
-    document.getElementById('formulaire').classList.add('active');
-    document.getElementById('confirmation').classList.remove('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('homePage').style.display = 'none';
+  document.getElementById('formulaire').classList.add('active');
+  document.getElementById('confirmation').classList.remove('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' });
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    const a = document.querySelector(`.nav-link[href="#${id}"]`);
+    if (a) a.classList.add('active');
+  }
+}
+function toggleMenu() {
+  const m = document.getElementById('navMenu'), b = document.querySelector('.mobile-menu-btn');
+  let o = document.querySelector('.nav-overlay');
+  if (!o) { o = document.createElement('div'); o.className = 'nav-overlay'; o.onclick = toggleMenu; document.body.appendChild(o); }
+  m.classList.toggle('active'); b.classList.toggle('active'); o.classList.toggle('active');
+  document.body.style.overflow = m.classList.contains('active') ? 'hidden' : '';
+}
+document.querySelectorAll('.nav-link').forEach(i => i.addEventListener('click', () => { if (window.innerWidth <= 768) toggleMenu(); }));
+
+/* ---------- CARTES DE CHOIX (générique) ---------- */
+function bindCards(field, cb) {
+  document.querySelectorAll(`[data-field="${field}"]`).forEach(card => card.addEventListener('click', function () {
+    this.parentElement.querySelectorAll('.card-choice').forEach(c => c.classList.remove('selected'));
+    this.classList.add('selected');
+    const v = this.getAttribute('data-value');
+    formData[field] = v;
+    if (cb) cb(v);
+  }));
 }
 
-// ==========================================
-// GESTION DES CHOIX "AUTRE" ET "MOI"
-// ==========================================
-
-// Occasion - Afficher/masquer le champ "Autre"
-document.querySelectorAll('[data-field="occasion"]').forEach(card => {
-    card.addEventListener('click', function() {
-        const grid = this.parentElement;
-        grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
-        this.classList.add('selected');
-        
-        const value = this.getAttribute('data-value');
-        formData.occasion = value;
-        
-        const autreField = document.getElementById('occasionAutreField');
-        if (value === 'Autre') {
-            autreField.style.display = 'block';
-        } else {
-            autreField.style.display = 'none';
-            document.getElementById('occasionAutre').value = '';
-        }
-    });
+/* MODE : libellés adaptés + aperçu */
+bindCards('mode', v => {
+  const label = document.getElementById('starNameLabel'), input = document.getElementById('starName');
+  const L = {
+    celebrer: ['Le nom à chanter *', 'Ex : Maman Justine, Coach Boris, Tatie Mado…'],
+    raconter: ['Le nom de la personne (ou le tien) *', 'Ex : Jeannette, ou ton propre nom…'],
+    ambiancer: ['Le nom de la star de la fête *', 'Ex : Kevin, la team Poto-Poto…'],
+    promouvoir: ['Le nom de la boutique / marque *', 'Ex : Boutique SAKURA, Maquis Chez Tantine…']
+  };
+  label.textContent = L[v][0]; input.placeholder = L[v][1];
+  updatePreview();
 });
-
-// Style musical - Afficher/masquer le champ "Autre"
-document.querySelectorAll('[data-field="style"]').forEach(card => {
-    card.addEventListener('click', function() {
-        const grid = this.parentElement;
-        grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
-        this.classList.add('selected');
-        
-        const value = this.getAttribute('data-value');
-        formData.style = value;
-        
-        const autreField = document.getElementById('styleAutreField');
-        if (value === 'Autre') {
-            autreField.style.display = 'block';
-        } else {
-            autreField.style.display = 'none';
-            document.getElementById('styleAutre').value = '';
-        }
-    });
+bindCards('occasion', v => {
+  const f = document.getElementById('occasionAutreField');
+  f.style.display = (v === 'Autre') ? 'block' : 'none';
+  if (v !== 'Autre') document.getElementById('occasionAutre').value = '';
 });
+bindCards('style', v => {
+  const f = document.getElementById('styleAutreField');
+  f.style.display = (v === 'Autre') ? 'block' : 'none';
+  if (v !== 'Autre') document.getElementById('styleAutre').value = '';
+  updatePreview();
+});
+bindCards('ambiance', () => updatePreview());
+bindCards('langue', () => updatePreview());
+bindCards('formule', v => { updateVoiceSelection(v); updatePreview(); });
 
-// Relation - Gestion complète de "Moi" et "Autre"
-function handleRelationChange() {
-    const relation = document.getElementById('destRelation').value;
-    const relationAutreField = document.getElementById('relationAutreField');
-    const moiMessage = document.getElementById('moiMessage');
-    
-    const destPrenomLabel = document.getElementById('destPrenomLabel');
-    const destPrenomInput = document.getElementById('destPrenom');
-    const relationLabel = document.getElementById('relationLabel');
-    
-    const step3Title = document.getElementById('step3Title');
-    const pourquoiLabel = document.getElementById('pourquoiLabel');
-    const pourquoiInput = document.getElementById('pourquoiImportante');
-    const souvenirLabel = document.getElementById('souvenirLabel');
-    const souvenirInput = document.getElementById('souvenir');
-    const souvenirExample = document.getElementById('souvenirExample');
-    
-    const qualitesLabel = document.getElementById('qualitesLabel');
-    const surnomLabel = document.getElementById('surnomLabel');
-    const surnomInput = document.getElementById('surnom');
-    const expressionLabel = document.getElementById('expressionLabel');
-    const expressionInput = document.getElementById('expressionFrequente');
-    
-    const messageFinalLabel = document.getElementById('messageFinalLabel');
-    const messageFinalInput = document.getElementById('messageFinal');
-    const lieuLabel = document.getElementById('lieuLabel');
-    const lieuInput = document.getElementById('lieuImportant');
-
-    if (relation === 'Moi') {
-        // === ÉTAPE 1 ===
-        relationLabel.innerHTML = '❤️ Cette chanson est pour : <span style="color: var(--gold);">MOI-MÊME</span> ✨';
-        moiMessage.style.display = 'block';
-        relationAutreField.style.display = 'none';
-        
-        destPrenomLabel.textContent = ' Votre prénom *';
-        destPrenomInput.placeholder = 'Votre prénom';
-        
-        // === ÉTAPE 3 ===
-        step3Title.textContent = '📖 Votre histoire';
-        pourquoiLabel.textContent = '⭐ Pourquoi est-il important pour vous de créer cette chanson ? *';
-        pourquoiInput.placeholder = 'Ex: Parce que je veux me rappeler qui je suis, ou parce que je ne baisse jamais les bras...';
-        
-        souvenirLabel.textContent = ' Racontez-nous ce souvenir en quelques lignes *';
-        souvenirInput.placeholder = 'Décrivez un moment précis de votre vie...';
-        souvenirExample.textContent = ' Exemple : "Le jour de mon examen, j\'avais tellement peur que je voulais abandonner. Mais j\'ai persévéré et quand j\'ai reçu mon résultat, j\'ai pleuré de joie."';
-        
-        // === ÉTAPE 4 ===
-        qualitesLabel.textContent = '🏆 Quelles sont vos principales qualités ? (Cochez-en plusieurs)';
-        surnomLabel.textContent = ' Avez-vous un surnom ?';
-        surnomInput.placeholder = 'Ex: Chocho, Bébé, Boss...';
-        expressionLabel.textContent = ' Y a-t-il un mot ou une expression que vous dites souvent ?';
-        expressionInput.placeholder = 'Ex: \'Je peux le faire\', \'On ne lâche rien\', \'Je suis fort(e)\'...';
-        
-        // === ÉTAPE 5 ===
-        messageFinalLabel.textContent = '💌 Quel message voulez-vous vous rappeler après avoir écouté la chanson ? *';
-        messageFinalInput.placeholder = 'Ex: Je veux me rappeler que je suis fort(e), ou que je peux tout accomplir...';
-        lieuLabel.innerHTML = ' Un lieu important pour vous ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
-        lieuInput.placeholder = 'Ex: La plage de Nangui, mon bureau, ma chambre...';
-        
-        // Mettre à jour inspirationData pour le cas "Moi"
-        if (typeof inspirationData !== 'undefined') {
-            inspirationData['Moi'] = [
-                "⭐ Qu'est-ce qui vous rend unique ou spécial(e) à vos propres yeux ?",
-                "📖 Racontez un moment de votre vie dont vous êtes particulièrement fier/fière.",
-                "💡 Quelle qualité ou force personnelle souhaitez-vous célébrer dans cette chanson ?"
-            ];
-        }
-        
-    } else {
-        // === ÉTAPE 1 ===
-        relationLabel.innerHTML = '❤️ Votre relation avec cette personne *';
-        moiMessage.style.display = 'none';
-        
-        if (relation === 'Autre') {
-            relationAutreField.style.display = 'block';
-        } else {
-            relationAutreField.style.display = 'none';
-            document.getElementById('relationAutre').value = '';
-        }
-        
-        destPrenomLabel.textContent = ' Prénom du destinataire *';
-        destPrenomInput.placeholder = 'Ex: Jeannette, Marie, Jojo...';
-        
-        // === ÉTAPE 3 ===
-        step3Title.textContent = '📖 Le cœur de l\'histoire';
-        pourquoiLabel.textContent = '⭐ Pourquoi cette personne est-elle spéciale ou importante pour vous ? *';
-        pourquoiInput.placeholder = 'Ex: Parce qu\'elle m\'a toujours soutenu, ou parce qu\'elle ne baisse jamais les bras...';
-        
-        souvenirLabel.textContent = ' Racontez-nous ce souvenir en quelques lignes *';
-        souvenirInput.placeholder = 'Décrivez un moment précis...';
-        souvenirExample.textContent = ' Exemple : "Le jour de son examen, elle avait tellement peur qu\'elle voulait abandonner. Nous l\'avons encouragée jusqu\'au dernier moment. Quand elle a reçu son résultat, nous avons tous pleuré de joie."';
-        
-        // === ÉTAPE 4 ===
-        qualitesLabel.textContent = '🏆 Quelles sont ses principales qualités ? (Cochez-en plusieurs)';
-        surnomLabel.textContent = '😂 Avez-vous un surnom pour cette personne ?';
-        surnomInput.placeholder = 'Ex: Chocho, Bébé, Maman Jo, Boss...';
-        expressionLabel.textContent = ' Y a-t-il un mot ou une expression qu\'il/elle dit souvent ?';
-        expressionInput.placeholder = 'Ex: \'Nzambe apambola yo\', \'On ne lâche rien\', \'Toza ensemble\'...';
-        
-        // === ÉTAPE 5 ===
-        messageFinalLabel.textContent = '💌 Quel message voulez-vous qu\'il/elle retienne après avoir écouté la chanson ? *';
-        messageFinalInput.placeholder = 'Ex: Je veux qu\'il sache que je suis fier de lui, ou qu\'elle comprenne que je serai toujours là...';
-        lieuLabel.innerHTML = ' Un lieu important pour vous deux ? <span style="font-weight:400; color:var(--text-muted);">(facultatif)</span>';
-        lieuInput.placeholder = 'Ex: La plage de Nangui, le jardin de la maison...';
-    }
+/* ---------- VOIX DYNAMIQUES ---------- */
+document.querySelectorAll('.voice-card').forEach(card => card.addEventListener('click', function () {
+  if (this.classList.contains('disabled')) return;
+  this.parentElement.querySelectorAll('.voice-card').forEach(c => c.classList.remove('selected'));
+  this.classList.add('selected');
+  formData.voix = this.getAttribute('data-value');
+}));
+function updateVoiceSelection(f) {
+  const sec = document.getElementById('voiceSection'), txt = document.getElementById('voicePromptText'), cards = document.querySelectorAll('.voice-card');
+  sec.style.display = 'block';
+  cards.forEach(c => c.classList.remove('selected', 'disabled'));
+  formData.voix = '';
+  if (f.includes('Essentielle')) {
+    txt.textContent = '🎵 Essentielle : la voix masculine est choisie automatiquement.';
+    cards.forEach(c => { if (c.getAttribute('data-value') === 'Masculine') { c.classList.add('selected'); formData.voix = 'Masculine'; } else c.classList.add('disabled'); });
+  } else if (f.includes('Premium')) {
+    txt.textContent = '🎵 Premium : choisis ta voix (masculine ou féminine) :';
+    cards.forEach(c => { if (c.getAttribute('data-value') === 'Duo') c.classList.add('disabled'); });
+  } else if (f.includes('Prestige')) {
+    txt.textContent = '🎵 Prestige : toutes les voix sont ouvertes, choisis :';
+  }
 }
 
-// Voix (Dynamique)
-document.querySelectorAll('.voice-card').forEach(card => {
-    card.addEventListener('click', function() {
-        if (this.classList.contains('disabled')) return;
-        
-        const grid = this.parentElement;
-        grid.querySelectorAll('.voice-card').forEach(c => c.classList.remove('selected'));
-        this.classList.add('selected');
-        formData.voix = this.getAttribute('data-value');
-    });
-});
-
-// Émotion
-document.querySelectorAll('[data-field="emotion"]').forEach(card => {
-    card.addEventListener('click', function() {
-        const grid = this.parentElement;
-        grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
-        this.classList.add('selected');
-        formData.emotion = this.getAttribute('data-value');
-    });
-});
-
-// Formule
-document.querySelectorAll('[data-field="formule"]').forEach(card => {
-    card.addEventListener('click', function() {
-        const grid = this.parentElement;
-        grid.querySelectorAll('.occasion-card').forEach(c => c.classList.remove('selected'));
-        this.classList.add('selected');
-        formData.formule = this.getAttribute('data-value');
-        updateVoiceSelection(this.getAttribute('data-value'));
-    });
-});
-
-// ==========================================
-// COMPTEURS DE CARACTÈRES
-// ==========================================
-document.querySelectorAll('.form-textarea[maxlength]').forEach(textarea => {
-    textarea.addEventListener('input', function() {
-        const max = this.getAttribute('maxlength');
-        const counter = this.parentElement.querySelector('.char-counter');
-        if (counter) {
-            counter.textContent = `${this.value.length}/${max}`;
-        }
-    });
-});
-
-// ==========================================
-// NAVIGATION ENTRE ÉTAPES
-// ==========================================
-function nextStep() {
-    if (!validateStep()) return;
-    
-    if (currentStep < totalSteps) {
-        document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
-        document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.remove('active');
-        document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.add('completed');
-        
-        currentStep++;
-        document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
-        document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.add('active');
-        
-        if (currentStep === 6) {
-            generateSummary();
-        }
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+/* ---------- VERROU FORMULE DEPUIS LES TARIFS ---------- */
+function selectTarif(t) {
+  showFormulaire();
+  setTimeout(() => {
+    const map = { 'Essentielle': 'Essentielle - Voix Masculine (1500 FCFA)', 'Premium': 'Premium - Voix au choix (3000 FCFA)', 'Prestige': 'Prestige - Toutes voix + Duo (5000 FCFA)' };
+    const v = map[t]; if (!v) return;
+    formData.formule = v;
+    document.querySelectorAll('#formuleGrid .card-choice').forEach(c => { c.classList.remove('selected'); if (c.getAttribute('data-value') === v) c.classList.add('selected'); });
+    const sec = document.getElementById('formuleSection');
+    sec.classList.add('form-section-locked');
+    const label = sec.querySelector('.label');
+    if (label && !label.querySelector('.locked-badge')) { const b = document.createElement('span'); b.className = 'locked-badge'; b.textContent = '🔒 Choix verrouillé'; label.appendChild(b); }
+    updateVoiceSelection(v); updatePreview();
+    toast(`✅ Formule <strong>${t}</strong> verrouillée. Continue !`, 'success');
+  }, 300);
 }
 
-function prevStep() {
-    if (currentStep > 1) {
-        document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
-        document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.remove('active');
-        
-        currentStep--;
-        document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
-        document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.remove('completed');
-        document.querySelector(`.step-circle[data-step="${currentStep}"]`).classList.add('active');
-        
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-}
+/* ---------- REMIX : "Je veux la même idée" ---------- */
+document.querySelectorAll('.btn-remix').forEach(btn => btn.addEventListener('click', () => {
+  const d = btn.dataset;
+  showFormulaire();
+  setTimeout(() => {
+    const click = (f, v) => { const c = document.querySelector(`[data-field="${f}"][data-value="${v}"]`); if (c) c.click(); };
+    click('mode', d.mode); click('occasion', d.occasion); click('style', d.style); click('ambiance', d.ambiance);
+    const q = document.getElementById('quartier'); if (q) q.value = d.mots;
+    updatePreview();
+    toast('💡 Idée chargée ! Il ne te reste qu\'à donner le nom.', 'success');
+  }, 350);
+}));
 
-// ==========================================
-// VALIDATION DES ÉTAPES
-// ==========================================
+/* ---------- ÉTAPES ---------- */
+function go(n) {
+  document.querySelector(`.f-step[data-step="${currentStep}"]`).classList.remove('active');
+  const c = document.querySelector(`.circle[data-step="${currentStep}"]`);
+  c.classList.remove('active');
+  if (n > currentStep) c.classList.add('completed'); else c.classList.remove('completed');
+  currentStep = n;
+  document.querySelector(`.f-step[data-step="${n}"]`).classList.add('active');
+  document.querySelector(`.circle[data-step="${n}"]`).classList.add('active');
+  if (n === totalSteps) generateSummary();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function nextStep() { if (!validateStep()) return; if (currentStep < totalSteps) go(currentStep + 1); }
+function prevStep() { if (currentStep > 1) go(currentStep - 1); }
+
 function validateStep() {
-    switch(currentStep) {
-        case 1:
-            if (!formData.occasion) {
-                alert('Veuillez sélectionner une occasion.');
-                return false;
-            }
-            if (formData.occasion === 'Autre') {
-                const occasionAutre = document.getElementById('occasionAutre').value.trim();
-                if (!occasionAutre) {
-                    alert('Veuillez préciser l\'occasion.');
-                    return false;
-                }
-                formData.occasionDetail = occasionAutre;
-            }
-            
-            const prenom = document.getElementById('destPrenom').value.trim();
-            const relation = document.getElementById('destRelation').value;
-            if (!prenom) {
-                alert('Veuillez entrer le prénom.');
-                return false;
-            }
-            if (!relation) {
-                alert('Veuillez sélectionner votre relation.');
-                return false;
-            }
-            if (relation === 'Autre') {
-                const relationAutre = document.getElementById('relationAutre').value.trim();
-                if (!relationAutre) {
-                    alert('Veuillez préciser votre relation.');
-                    return false;
-                }
-                formData.relationDetail = relationAutre;
-            }
-            formData.destPrenom = prenom;
-            formData.destRelation = relation;
-            return true;
-        
-        case 2:
-            if (!formData.style) {
-                alert('Veuillez sélectionner un style musical.');
-                return false;
-            }
-            if (formData.style === 'Autre') {
-                const styleAutre = document.getElementById('styleAutre').value.trim();
-                if (!styleAutre) {
-                    alert('Veuillez préciser le style musical.');
-                    return false;
-                }
-                formData.styleDetail = styleAutre;
-            }
-            if (!formData.formule) {
-                alert('Veuillez choisir une formule.');
-                return false;
-            }
-            if (!formData.voix) {
-                alert('Veuillez sélectionner un type de voix.');
-                return false;
-            }
-            if (!formData.emotion) {
-                alert('Veuillez sélectionner une émotion.');
-                return false;
-            }
-            return true;
-        
-        case 3:
-            const pourquoi = document.getElementById('pourquoiImportante').value.trim();
-            const souvenir = document.getElementById('souvenir').value.trim();
-            if (!pourquoi) {
-                alert('Veuillez expliquer pourquoi c\'est important.');
-                return false;
-            }
-            if (!souvenir) {
-                alert('Veuillez raconter un souvenir.');
-                return false;
-            }
-            formData.pourquoiImportante = pourquoi;
-            formData.souvenir = souvenir;
-            return true;
-        
-        case 4:
-            const qualites = [];
-            document.querySelectorAll('.quality-checkbox:checked').forEach(cb => {
-                qualites.push(cb.value);
-            });
-            formData.qualites = qualites;
-            
-            formData.surnom = document.getElementById('surnom').value;
-            formData.expressionFrequente = document.getElementById('expressionFrequente').value;
-            formData.phraseIntegrer = document.getElementById('phraseIntegrer').value;
-            return true;
-        
-        case 5:
-            const messageFinal = document.getElementById('messageFinal').value.trim();
-            if (!messageFinal) {
-                alert('Veuillez entrer le message final.');
-                return false;
-            }
-            formData.messageFinal = messageFinal;
-            formData.lieuImportant = document.getElementById('lieuImportant').value;
-            formData.dateImportante = document.getElementById('dateImportante').value;
-            return true;
-        
-        case 6:
-            const clientPrenom = document.getElementById('clientPrenom').value.trim();
-            const clientWhatsapp = document.getElementById('clientWhatsapp').value.trim();
-            if (!clientPrenom) {
-                alert('Veuillez entrer votre prénom.');
-                return false;
-            }
-            if (!clientWhatsapp) {
-                alert('Veuillez entrer votre numéro WhatsApp.');
-                return false;
-            }
-            formData.clientPrenom = clientPrenom;
-            formData.clientWhatsapp = clientWhatsapp;
-            formData.clientEmail = document.getElementById('clientEmail').value;
-            return true;
-        
-        default:
-            return true;
+  switch (currentStep) {
+    case 1:
+      if (!formData.mode) { toast('🎯 Choisis ce que ta chanson doit faire.', 'error'); return false; }
+      if (!document.getElementById('starName').value.trim()) { toast('⭐ Donne le nom à chanter : c\'est la star !', 'error'); return false; }
+      if (!formData.occasion) { toast('🎉 Choisis une occasion.', 'error'); return false; }
+      if (formData.occasion === 'Autre' && !document.getElementById('occasionAutre').value.trim()) { toast('Précise l\'occasion.', 'error'); return false; }
+      formData.starName = document.getElementById('starName').value.trim();
+      return true;
+    case 2:
+      if (!formData.style) { toast('🎵 Choisis un style de musique.', 'error'); return false; }
+      if (formData.style === 'Autre' && !document.getElementById('styleAutre').value.trim()) { toast('Précise le style.', 'error'); return false; }
+      if (!formData.ambiance) { toast('🎭 Choisis une ambiance.', 'error'); return false; }
+      if (!formData.langue) { toast('🗣️ Choisis la langue de la chanson.', 'error'); return false; }
+      if (!formData.formule) { toast('💎 Choisis ta formule (ou retourne aux Tarifs).', 'error'); return false; }
+      if (!formData.voix) { toast('🎤 Choisis un type de voix.', 'error'); return false; }
+      return true;
+    case 3: {
+      const q = [...document.querySelectorAll('.quality-checkbox:checked')].map(c => c.value);
+      formData.qualites = q;
+      formData.surnom = document.getElementById('surnom').value.trim();
+      formData.quartier = document.getElementById('quartier').value.trim();
+      formData.histoire = document.getElementById('histoire').value.trim();
+      formData.expression = document.getElementById('expression').value.trim();
+      formData.message = document.getElementById('message').value.trim();
+      formData.interdit = document.getElementById('interdit').value.trim();
+      const ok = q.length || formData.surnom || formData.quartier || formData.histoire || formData.expression || formData.message;
+      if (!ok) { toast('✨ Donne au moins un élément (qualité, surnom, quartier…) ou clique sur « Je n\'ai pas d\'idée ».', 'error'); return false; }
+      return true;
     }
+    case 4:
+      if (!document.getElementById('clientPrenom').value.trim() || !document.getElementById('clientWhatsapp').value.trim()) { toast('📱 Ton prénom et ton WhatsApp sont obligatoires.', 'error'); return false; }
+      formData.clientPrenom = document.getElementById('clientPrenom').value.trim();
+      formData.clientWhatsapp = document.getElementById('clientWhatsapp').value.trim();
+      return true;
+  }
+  return true;
 }
 
-// ==========================================
-// GESTION DYNAMIQUE DES VOIX SELON LA FORMULE
-// ==========================================
-function updateVoiceSelection(formuleValue) {
-    const voiceSection = document.getElementById('voiceSection');
-    const voicePromptText = document.getElementById('voicePromptText');
-    const voiceCards = document.querySelectorAll('.voice-card');
-    
-    voiceSection.style.display = 'block';
-    
-    voiceCards.forEach(card => {
-        card.classList.remove('selected', 'disabled');
-    });
-    formData.voix = '';
+/* ---------- APERÇU VIVANT ---------- */
+const TITLES = {
+  celebrer: n => `${n}, la star du jour`,
+  raconter: n => `Le parcours de ${n}`,
+  ambiancer: n => `C'est la fête de ${n}`,
+  promouvoir: n => `${n}, l'hymne`
+};
+const LYRICS = {
+  celebrer: n => `« ${n}, ${n} » — tout le quartier lève la voix,\n${n}, ${n}, un nom qui brille comme ça.`,
+  raconter: n => `Il y a des parcours qui méritent une chanson,\ncelle de ${n}, écrite pour de bon.`,
+  ambiancer: n => `Faites de la place, ${n} entre en scène,\nce soir on danse jusqu'à perdre haleine !`,
+  promouvoir: n => `Chez ${n}, vous êtes les bienvenus,\nqualité et sourire, c'est le bien commun.`
+};
+function updatePreview() {
+  const t = document.getElementById('previewTitle'), l = document.getElementById('previewLyrics'), m = document.getElementById('previewMeta');
+  if (!t) return;
+  const n = (document.getElementById('starName')?.value.trim()) || '';
+  if (!formData.mode || !n) {
+    t.textContent = 'Titre provisoire : —';
+    l.textContent = 'Donne le nom et le mode pour voir un avant-goût des paroles…';
+    m.textContent = '';
+    return;
+  }
+  t.textContent = 'Titre provisoire : ' + TITLES[formData.mode](n);
+  l.textContent = LYRICS[formData.mode](n);
+  m.textContent = `${formData.style || 'Style ?'} • ${formData.ambiance || 'Ambiance ?'} • ${formData.langue || 'Langue ?'} • ${formName() !== '—' ? formName() : 'Formule ?'}`;
+}
+document.getElementById('starName')?.addEventListener('input', updatePreview);
 
-    if (formuleValue.includes('Essentielle')) {
-        voicePromptText.textContent = '🎵 Vous avez choisi la formule Essentielle. La voix masculine est sélectionnée automatiquement.';
-        voiceCards.forEach(card => {
-            if (card.getAttribute('data-value') === 'Masculine') {
-                card.classList.add('selected');
-                formData.voix = 'Masculine';
-            } else {
-                card.classList.add('disabled');
-            }
-        });
-    } else if (formuleValue.includes('Premium')) {
-        voicePromptText.textContent = '🎵 Vous avez choisi la formule Premium. Choisissez maintenant la voix que vous préférez pour votre chanson :';
-        voiceCards.forEach(card => {
-            if (card.getAttribute('data-value') === 'Duo') {
-                card.classList.add('disabled');
-            }
-        });
-    } else if (formuleValue.includes('Prestige')) {
-        voicePromptText.textContent = '🎵 Vous avez choisi la formule Prestige. Choisissez maintenant le type de voix que vous préférez :';
-    }
+/* ---------- INSPIRATION PAR MODE (français simple) ---------- */
+const inspirationData = {
+  celebrer: ['😂 Quel surnom affectueux ou drôle on lui donne ?', '🏆 De quoi est-il/elle le champion(ne) au quartier ou en famille ?', '📍 Quel quartier, quelle passion fait sa fierté ?'],
+  raconter: ['📖 Quel moment de sa vie mérite d\'être chanté ?', '⭐ Quelle qualité l\'a fait tenir bon ?', '💌 Quel message tu veux qu\'il/elle retienne ?'],
+  ambiancer: ['😂 Son surnom d\'ambiance ou son cri de guerre ?', '🥁 Sa danse ou son expression préférée en fête ?', '🏆 Son titre de gloire en soirée ?'],
+  promouvoir: ['🏪 Qu\'est-ce qui rend ta boutique unique ?', '💬 Quelle phrase les clients disent toujours ?', '📍 Dans quel quartier te trouve-t-on ?']
+};
+function showInspirationQuestions() {
+  const h = document.getElementById('inspirationHelper'), l = document.getElementById('inspirationQuestionsList');
+  if (h.style.display === 'block') { h.style.display = 'none'; return; }
+  const qs = inspirationData[formData.mode] || inspirationData.celebrer;
+  l.innerHTML = qs.map(q => `<li>${q}</li>`).join('');
+  h.style.display = 'block';
 }
 
-// ==========================================
-// GÉNÉRATION DU RÉSUMÉ
-// ==========================================
+/* ---------- RÉSUMÉ ---------- */
+const occ = () => formData.occasion === 'Autre' ? (document.getElementById('occasionAutre').value || 'Autre') : formData.occasion;
+const sty = () => formData.style === 'Autre' ? (document.getElementById('styleAutre').value || 'Autre') : formData.style;
+function formName() { return formData.formule?.includes('Essentielle') ? 'Essentielle' : formData.formule?.includes('Premium') ? 'Premium' : formData.formule?.includes('Prestige') ? 'Prestige' : '—'; }
+function formPrice() { return formData.formule?.includes('1500') ? '1 500 FCFA' : formData.formule?.includes('3000') ? '3 000 FCFA' : formData.formule?.includes('5000') ? '5 000 FCFA' : ''; }
 function generateSummary() {
-    const formule = getFormuleDisplayName();
-    const prix = getFormulePrice();
-    
-    const occasionFinale = formData.occasion === 'Autre' ? (formData.occasionDetail || 'Autre') : formData.occasion;
-    const styleFinal = formData.style === 'Autre' ? (formData.styleDetail || 'Autre') : formData.style;
-    const relationAffichee = formData.destRelation === 'Moi' ? 'Moi-même ✨' : (formData.relationDetail || formData.destRelation);
-    const destinataireAffiche = formData.destRelation === 'Moi' ? `Moi-même (${formData.destPrenom})` : `${formData.destPrenom} (${relationAffichee})`;
-    
-    const summaryHTML = `
-        <div class="summary-grid">
-            <div class="summary-item">
-                <p class="summary-label"> Occasion</p>
-                <p>${occasionFinale}</p>
-            </div>
-            <div class="summary-item">
-                <p class="summary-label">👤 Destinataire</p>
-                <p>${destinataireAffiche}</p>
-            </div>
-            <div class="summary-item">
-                <p class="summary-label">🎵 Style musical</p>
-                <p>${styleFinal}</p>
-            </div>
-            <div class="summary-item">
-                <p class="summary-label">🎤 Voix</p>
-                <p>${formData.voix}</p>
-            </div>
-            <div class="summary-item">
-                <p class="summary-label">😊 Émotion</p>
-                <p>${formData.emotion}</p>
-            </div>
-            <div class="summary-item">
-                <p class="summary-label">💎 Formule choisie</p>
-                <p>${formule} - ${prix}</p>
-            </div>
-        </div>
-        ${formData.pourquoiImportante ? `
-        <div class="summary-section">
-            <p class="summary-label">⭐ Pourquoi c'est important</p>
-            <p>${formData.pourquoiImportante}</p>
-        </div>
-        ` : ''}
-        ${formData.souvenir ? `
-        <div class="summary-section">
-            <p class="summary-label">📖 Souvenir</p>
-            <p>${formData.souvenir}</p>
-        </div>
-        ` : ''}
-        ${formData.qualites && formData.qualites.length > 0 ? `
-        <div class="summary-section">
-            <p class="summary-label">🏆 Qualités</p>
-            <p>${formData.qualites.join(', ')}</p>
-        </div>
-        ` : ''}
-        ${formData.surnom ? `
-        <div class="summary-section">
-            <p class="summary-label">😂 Surnom</p>
-            <p>${formData.surnom}</p>
-        </div>
-        ` : ''}
-        ${formData.expressionFrequente ? `
-        <div class="summary-section">
-            <p class="summary-label">🙏 Expression fréquente</p>
-            <p>${formData.expressionFrequente}</p>
-        </div>
-        ` : ''}
-        ${formData.phraseIntegrer ? `
-        <div class="summary-section">
-            <p class="summary-label">✨ Phrase à intégrer</p>
-            <p>${formData.phraseIntegrer}</p>
-        </div>
-        ` : ''}
-        <div class="summary-section">
-            <p class="summary-label">💌 Message final</p>
-            <p>${formData.messageFinal}</p>
-        </div>
-        ${formData.lieuImportant ? `
-        <div class="summary-section">
-            <p class="summary-label"> Lieu important</p>
-            <p>${formData.lieuImportant}</p>
-        </div>
-        ` : ''}
-        ${formData.dateImportante ? `
-        <div class="summary-section">
-            <p class="summary-label">📅 Date importante</p>
-            <p>${formData.dateImportante}</p>
-        </div>
-        ` : ''}
-        <div class="summary-section">
-            <p class="summary-label"> Vos coordonnées</p>
-            <p>
-                <strong>Prénom :</strong> ${formData.clientPrenom}<br>
-                <strong>WhatsApp :</strong> ${formData.clientWhatsapp}<br>
-                ${formData.clientEmail ? `<strong>Email :</strong> ${formData.clientEmail}` : ''}
-            </p>
-        </div>
-    `;
-    
-    document.getElementById('summaryContent').innerHTML = summaryHTML;
+  document.getElementById('summaryContent').innerHTML = `
+    <div class="sum-grid">
+      <div class="sum-item"><p class="sum-label">🎯 Mode</p><p>${formData.mode}</p></div>
+      <div class="sum-item"><p class="sum-label">🌟 Nom à chanter</p><p>${formData.starName}</p></div>
+      <div class="sum-item"><p class="sum-label">🎉 Occasion</p><p>${occ()}</p></div>
+      <div class="sum-item"><p class="sum-label">🎵 Son</p><p>${sty()} • ${formData.ambiance}</p></div>
+      <div class="sum-item"><p class="sum-label">🗣️ Langue</p><p>${formData.langue}</p></div>
+      <div class="sum-item"><p class="sum-label">🎤 Voix</p><p>${formData.voix}</p></div>
+      <div class="sum-item"><p class="sum-label">💎 Formule</p><p>${formName()} — ${formPrice()}</p></div>
+      <div class="sum-item"><p class="sum-label">📱 Contact</p><p>${formData.clientPrenom} • ${formData.clientWhatsapp}</p></div>
+    </div>
+    ${formData.qualites?.length ? `<div class="sum-section"><p class="sum-label">🏆 Qualités</p><p>${formData.qualites.join(', ')}</p></div>` : ''}
+    ${formData.surnom ? `<div class="sum-section"><p class="sum-label">😂 Surnom</p><p>${formData.surnom}</p></div>` : ''}
+    ${formData.quartier ? `<div class="sum-section"><p class="sum-label">📍 Quartier / passion</p><p>${formData.quartier}</p></div>` : ''}
+    ${formData.histoire ? `<div class="sum-section"><p class="sum-label">🗣️ Raconté en vrac</p><p>${formData.histoire}</p></div>` : ''}
+    ${formData.expression ? `<div class="sum-section"><p class="sum-label">💬 Expression</p><p>${formData.expression}</p></div>` : ''}
+    ${formData.message ? `<div class="sum-section"><p class="sum-label">💌 Message à glisser</p><p>${formData.message}</p></div>` : ''}
+    ${formData.interdit ? `<div class="sum-section"><p class="sum-label">🚫 Ne PAS dire (secret)</p><p>${formData.interdit}</p></div>` : ''}`;
 }
 
-function getFormuleDisplayName() {
-    if (!formData.formule) return 'Non spécifiée';
-    if (formData.formule.includes('Essentielle')) return 'Essentielle';
-    if (formData.formule.includes('Premium')) return 'Premium';
-    if (formData.formule.includes('Prestige')) return 'Prestige';
-    return formData.formule;
-}
-
-function getFormulePrice() {
-    if (!formData.formule) return '';
-    if (formData.formule.includes('1500')) return '1 500 FCFA';
-    if (formData.formule.includes('3000')) return '3 000 FCFA';
-    if (formData.formule.includes('5000')) return '5 000 FCFA';
-    return '';
-}
-
-// ==========================================
-// SOUMISSION DE LA COMMANDE
-// ==========================================
-async function submitOrder() {
-    // Récupérer TOUTES les données AVANT tout
-    const clientPrenom = document.getElementById('clientPrenom').value.trim();
-    const clientWhatsapp = document.getElementById('clientWhatsapp').value.trim();
-    const clientEmail = document.getElementById('clientEmail').value.trim();
-    
-    if (!clientPrenom || !clientWhatsapp) {
-        alert('Veuillez remplir vos coordonnées (prénom et WhatsApp).');
-        return false;
-    }
-    
-    formData.clientPrenom = clientPrenom;
-    formData.clientWhatsapp = clientWhatsapp;
-    formData.clientEmail = clientEmail;
-    
-    const occasionFinale = formData.occasion === 'Autre' ? (formData.occasionDetail || 'Autre') : formData.occasion;
-    const styleFinal = formData.style === 'Autre' ? (formData.styleDetail || 'Autre') : formData.style;
-    const relationAffichee = formData.destRelation === 'Moi' ? 'Moi-même' : (formData.relationDetail || formData.destRelation);
-    const formule = getFormuleDisplayName();
-    const prix = getFormulePrice();
-    
-    // Adapter le message si c'est pour "Moi"
-    const estPourMoi = formData.destRelation === 'Moi';
-    const titreMessage = estPourMoi ? '🎵 *Ma chanson personnelle - Lamio Melody* 🎵' : '🎵 *Nouvelle commande Lamio Melody* 🎵';
-    const destinataireText = estPourMoi ? `👤 *Pour :* Moi-même (${formData.destPrenom})` : `👤 *Destinataire :* ${formData.destPrenom} (${relationAffichee})`;
-    
-    const whatsappMessage = `${titreMessage}\n\n` +
-        `🎉 *Occasion :* ${occasionFinale}\n` +
-        `${destinataireText}\n` +
-        `🎵 *Style :* ${styleFinal}\n` +
-        `🎤 *Voix :* ${formData.voix}\n` +
-        `😊 *Émotion :* ${formData.emotion}\n\n` +
-        `⭐ *Pourquoi c'est important :*\n${formData.pourquoiImportante}\n\n` +
-        `📖 *Souvenir :*\n${formData.souvenir}\n\n` +
-        `${formData.qualites && formData.qualites.length > 0 ? `🏆 *Qualités :* ${formData.qualites.join(', ')}\n\n` : ''}` +
-        `${formData.surnom ? `😂 *Surnom :* ${formData.surnom}\n\n` : ''}` +
-        `${formData.expressionFrequente ? `💬 *Expression fréquente :* ${formData.expressionFrequente}\n\n` : ''}` +
-        `${formData.phraseIntegrer ? `✨ *Phrase à intégrer :* ${formData.phraseIntegrer}\n\n` : ''}` +
-        `💌 *Message final :*\n${formData.messageFinal}\n\n` +
-        `${formData.lieuImportant ? `📍 *Lieu important :* ${formData.lieuImportant}\n` : ''}` +
-        `${formData.dateImportante ? `📅 *Date importante :* ${formData.dateImportante}\n` : ''}\n` +
-        `👤 *Client :* ${formData.clientPrenom}\n` +
-        `📲 *WhatsApp :* ${formData.clientWhatsapp}\n` +
-        `${formData.clientEmail ? `📧 *Email :* ${formData.clientEmail}\n` : ''}\n\n` +
-        `💎 *Formule :* ${formule} (${prix})\n\n` +
-        `🙏 *Merci de confirmer ma commande*`;
-    
-    // Sauvegarder dans Supabase
-    try {
-        const SUPABASE_URL = 'https://cfneuwhgmopaguemjchf.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_a5hxJyzGt03kuCTUnkAxig_BksoIlH0';
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        const { error } = await supabaseClient.from('orders').insert([{
-            lm_voice: formData.voix,
-            occasion: occasionFinale,
-            dest_prenom: formData.destPrenom,
-            dest_relation: relationAffichee,
-            style_musical: styleFinal,
-            emotion: formData.emotion,
-            pourquoi_importante: formData.pourquoiImportante,
-            souvenir: formData.souvenir,
-            qualites: formData.qualites ? formData.qualites.join(', ') : '',
-            surnom: formData.surnom,
-            expression_frequente: formData.expressionFrequente,
-            phrase_integrer: formData.phraseIntegrer,
-            message_final: formData.messageFinal,
-            lieu_important: formData.lieuImportant,
-            date_importante: formData.dateImportante,
-            client_prenom: formData.clientPrenom,
-            client_whatsapp: formData.clientWhatsapp,
-            client_email: formData.clientEmail,
-            formule: formule,
-            prix: prix,
-            est_pour_moi: estPourMoi,
-            statut: 'en_attente_validation',
-            created_at: new Date().toISOString()
-        }]);
-        
-        if (error) console.error('Erreur Supabase:', error);
-    } catch (e) {
-        console.log('Erreur Supabase:', e);
-    }
-    
-    // Ouvrir WhatsApp
-    const whatsappUrl = `https://wa.me/242065186967?text=${encodeURIComponent(whatsappMessage)}`;
-    window.open(whatsappUrl, '_blank');
-    
-    // Afficher confirmation
+/* ---------- ENVOI : Supabase non bloquant + WhatsApp + anti-popup ---------- */
+function submitOrder() {
+  if (!validateStep()) return;
+  const msg = `🎵 *COMMANDE LAMIO MELODY* 🎵\n\n` +
+    `🎯 *Mode :* ${formData.mode}\n` +
+    `🌟 *Nom à chanter :* ${formData.starName}\n` +
+    `🎉 *Occasion :* ${occ()}\n` +
+    `🎵 *Style :* ${sty()} • ${formData.ambiance}\n` +
+    `🗣️ *Langue :* ${formData.langue}\n` +
+    `🎤 *Voix :* ${formData.voix}\n` +
+    `💎 *Formule :* ${formName()} (${formPrice()})\n\n` +
+    `${formData.qualites?.length ? `🏆 *Qualités :* ${formData.qualites.join(', ')}\n` : ''}` +
+    `${formData.surnom ? `😂 *Surnom :* ${formData.surnom}\n` : ''}` +
+    `${formData.quartier ? `📍 *Quartier / passion :* ${formData.quartier}\n` : ''}` +
+    `${formData.histoire ? `🗣️ *Raconté en vrac :* ${formData.histoire}\n` : ''}` +
+    `${formData.expression ? `💬 *Expression :* ${formData.expression}\n` : ''}` +
+    `${formData.message ? `💌 *Message :* ${formData.message}\n` : ''}` +
+    `${formData.interdit ? `🚫 *NE PAS DIRE :* ${formData.interdit}\n` : ''}\n` +
+    `👤 *Client :* ${formData.clientPrenom}\n📲 *WhatsApp :* ${formData.clientWhatsapp}\n\n` +
+    `🙏 *Merci de confirmer ma commande*`;
+  window.whatsappMessageBackup = msg;
+  /* Supabase en arrière-plan : le client n'attend jamais */
+  try {
+    const sb = supabase.createClient('https://cfneuwhgmopaguemjchf.supabase.co', 'sb_publishable_a5hxJyzGt03kuCTUnkAxig_BksoIlH0');
+    sb.from('orders').insert([{
+      lm_voice: formData.voix, occasion: occ(), dest_prenom: formData.starName, dest_relation: formData.mode,
+      style_musical: sty(), emotion: formData.ambiance, pourquoi_importante: formData.quartier || '',
+      souvenir: formData.histoire || '', qualites: (formData.qualites || []).join(', '), surnom: formData.surnom || '',
+      expression_frequente: formData.expression || '', phrase_integrer: formData.message || '',
+      message_final: `Langue : ${formData.langue}${formData.interdit ? ' • 🚫 Ne pas dire : ' + formData.interdit : ''}`,
+      lieu_important: '', date_importante: '', client_prenom: formData.clientPrenom,
+      client_whatsapp: formData.clientWhatsapp, client_email: '', formule: formName(), prix: formPrice(),
+      est_pour_moi: formData.mode === 'celebrer', statut: 'en_attente_validation', created_at: new Date().toISOString()
+    }]).then(({ error }) => { if (error) console.log('Supabase :', error); }).catch(e => console.log('Supabase :', e));
+  } catch (e) { console.log('Supabase :', e); }
+  const popup = window.open(`https://wa.me/242065186967?text=${encodeURIComponent(msg)}`, '_blank');
+  if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+    const w = document.getElementById('popupWarning'); w.style.display = 'block'; w.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } else {
+    document.getElementById('popupWarning').style.display = 'none';
     document.getElementById('formulaire').classList.remove('active');
     document.getElementById('confirmation').classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Rafraîchir la page après 3 secondes
-    setTimeout(() => {
-        window.location.reload(true);
-    }, 3000);
+    localStorage.removeItem('lamioMelody_rawValues');
+  }
+}
+function retryWhatsApp() {
+  if (!window.whatsappMessageBackup) { toast('Vérifie tes champs et réessaie.', 'error'); return; }
+  const popup = window.open(`https://wa.me/242065186967?text=${encodeURIComponent(window.whatsappMessageBackup)}`, '_blank');
+  if (popup && !popup.closed) {
+    document.getElementById('popupWarning').style.display = 'none';
+    document.getElementById('formulaire').classList.remove('active');
+    document.getElementById('confirmation').classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else toast('Blocage persistant : autorise les popups dans ton navigateur.', 'error');
 }
 
-// ==========================================
-// SÉLECTION DE TARIF (DEPUIS LA PAGE D'ACCUEIL)
-// ==========================================
-function selectTarif(formule) {
-    showFormulaire();
-    
-    setTimeout(() => {
-        let formuleValue = '';
-        if (formule === 'Essentielle') formuleValue = 'Essentielle - Voix Masculine (1500 FCFA)';
-        else if (formule === 'Premium') formuleValue = 'Premium - Voix au choix (3000 FCFA)';
-        else if (formule === 'Prestige') formuleValue = 'Prestige - Toutes voix + Duo (5000 FCFA)';
-        
-        if (formuleValue) {
-            formData.formule = formuleValue;
-            
-            const cards = document.querySelectorAll('#formuleGrid .occasion-card');
-            cards.forEach(card => {
-                card.classList.remove('selected');
-                if (card.getAttribute('data-value') === formuleValue) {
-                    card.classList.add('selected');
-                }
-            });
-            
-            const formuleSection = document.getElementById('formuleSection');
-            formuleSection.classList.add('form-section-locked');
-            
-            const label = formuleSection.querySelector('.form-label');
-            if (!label.querySelector('.locked-badge')) {
-                const badge = document.createElement('span');
-                badge.className = 'locked-badge';
-                badge.textContent = '🔒 Choix verrouillé';
-                label.appendChild(badge);
-            }
-
-            updateVoiceSelection(formuleValue);
-        }
-    }, 300);
+/* ---------- LECTEUR AUDIO ---------- */
+let curAudio = null, curBtn = null;
+function playAudio(src, btn, durId) {
+  if (curAudio && curBtn === btn) { if (curAudio.paused) { curAudio.play(); btn.textContent = '⏸'; } else { curAudio.pause(); btn.textContent = '▶'; } return; }
+  if (curAudio) { curAudio.pause(); if (curBtn) curBtn.textContent = '▶'; }
+  curAudio = new Audio(src); curBtn = btn;
+  curAudio.addEventListener('loadedmetadata', () => { const el = document.getElementById(durId); if (el) el.textContent = `${Math.floor(curAudio.duration / 60)}:${String(Math.floor(curAudio.duration % 60)).padStart(2, '0')}`; });
+  curAudio.addEventListener('ended', () => btn.textContent = '▶');
+  curAudio.addEventListener('error', () => { btn.textContent = '❌'; toast('Audio introuvable : ' + src, 'error'); });
+  curAudio.play(); btn.textContent = '⏸';
 }
 
-// ==========================================
-// SYSTÈME D'INSPIRATION INTELLIGENT
-// ==========================================
-const inspirationData = {
-    'Anniversaire': [
-        "⭐ Pourquoi est-il/elle si important(e) pour vous aujourd'hui ?",
-        "📖 Racontez votre meilleur souvenir d'anniversaire ou de moment joyeux passé ensemble.",
-        "💡 Quelle est la qualité que vous admirez le plus chez lui/elle ?"
-    ],
-    'Amour': [
-        "⭐ Qu'est-ce que cette personne a changé de beau dans votre vie ?",
-        "📖 Racontez le moment précis (rencontre, premier rendez-vous) où vous avez su que c'était la bonne personne.",
-        "💡 Quel est votre petit rituel ou moment de complicité préféré à deux ?"
-    ],
-    'Mariage': [
-        "⭐ Pourquoi avez-vous choisi cette personne pour partager votre vie ?",
-        "📖 Racontez une anecdote de votre rencontre, de la demande ou d'un moment fort de votre relation.",
-        "💡 Quel est votre plus beau projet ou rêve d'avenir ensemble ?"
-    ],
-    'Fête': [
-        "⭐ Pourquoi est-il/elle la personne qui met le plus de joie et d'ambiance autour de vous ?",
-        "📖 Racontez votre meilleur souvenir de fête, de vacances ou de moment de détente passé ensemble.",
-        "💡 Quel est son plat, sa danse ou son expression préférée quand il/elle s'amuse ?"
-    ],
-    'Hommage': [
-        "⭐ En quoi cette personne a-t-elle marqué votre vie ou celle de votre famille de manière indélébile ?",
-        "📖 Quel est le plus beau ou le plus fort souvenir que vous gardez d'elle/lui ?",
-        "💡 Quelle est la meilleure leçon ou le meilleur conseil qu'il/elle vous a donné ?"
-    ],
-    'Réussite': [
-        "⭐ Pourquoi êtes-vous si fier/fière de lui/d'elle aujourd'hui ?",
-        "📖 Racontez un moment où vous l'avez vu(e) se battre, travailler dur ou surmonter une difficulté.",
-        "💡 Quel est votre plus grand souhait pour la suite de son parcours ?"
-    ],
-    'Naissance': [
-        "⭐ En quoi l'arrivée de ce bébé a-t-elle illuminé votre vie ou votre famille ?",
-        "📖 Racontez le moment précis de sa naissance ou votre toute première rencontre.",
-        "💡 Quel petit détail, sourire ou habitude de bébé vous attendrit le plus ?"
-    ],
-    'Autre': [
-        "⭐ Qu'est-ce qui rend cette occasion ou cette personne si unique pour vous ?",
-        "📖 Racontez l'événement ou le moment précis qui vous a donné envie d'offrir cette chanson.",
-        "💡 Quel message ou quelle émotion voulez-vous absolument lui transmettre ?"
-    ]
-};
-
-function showInspirationQuestions() {
-    const helperDiv = document.getElementById('inspirationHelper');
-    const list = document.getElementById('inspirationQuestionsList');
-
-    if (helperDiv.style.display === 'block') {
-        helperDiv.style.display = 'none';
-        return;
-    }
-
-    let occasion = formData.occasion;
-    if (!occasion || occasion === 'Autre') {
-        occasion = 'Anniversaire';
-    }
-
-    const questions = inspirationData[occasion] || inspirationData['Anniversaire'];
-    list.innerHTML = questions.map(q => `<li>${q}</li>`).join('');
-
-    helperDiv.style.display = 'block';
-    helperDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+/* ---------- COMPTEUR + SAUVEGARDE AUTO ---------- */
+document.getElementById('histoire')?.addEventListener('input', function () {
+  const c = this.parentElement.querySelector('.char-counter');
+  if (c) c.textContent = `${this.value.length}/500`;
+});
+function autoSave() {
+  const raw = {};
+  document.querySelectorAll('#orderForm input, #orderForm textarea').forEach(i => { if (i.id && i.type !== 'checkbox') raw[i.id] = i.value; });
+  localStorage.setItem('lamioMelody_rawValues', JSON.stringify(raw));
 }
-
-// ==========================================
-// MENU MOBILE
-// ==========================================
-function toggleMenu() {
-    const navMenu = document.getElementById('navMenu');
-    const menuBtn = document.querySelector('.mobile-menu-btn');
-    const body = document.body;
-    
-    let overlay = document.querySelector('.nav-overlay');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.className = 'nav-overlay';
-        overlay.onclick = toggleMenu;
-        body.appendChild(overlay);
-    }
-    
-    navMenu.classList.toggle('active');
-    menuBtn.classList.toggle('active');
-    overlay.classList.toggle('active');
-    
-    if (navMenu.classList.contains('active')) {
-        body.style.overflow = 'hidden';
-    } else {
-        body.style.overflow = '';
-    }
-}
-
-document.querySelectorAll('.nav-link, .btn-commander').forEach(item => {
-    item.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-            toggleMenu();
-        }
-    });
+document.querySelectorAll('#orderForm input, #orderForm textarea').forEach(el => el.addEventListener('input', autoSave));
+window.addEventListener('DOMContentLoaded', () => {
+  const s = localStorage.getItem('lamioMelody_rawValues');
+  if (s) { const v = JSON.parse(s); for (const [id, val] of Object.entries(v)) { const el = document.getElementById(id); if (el && val) el.value = val; } }
 });
